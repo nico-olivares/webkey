@@ -7,7 +7,9 @@ const {
 async function dropTables() {
 	try {
 		await client.query(`
-      DROP TABLE IF EXISTS links_tags; 
+		
+	  DROP TABLE IF EXISTS links_tags; 
+	  DROP TABLE IF EXIST links;
     `);
 	} catch (error) {
 		throw error;
@@ -15,7 +17,19 @@ async function dropTables() {
 }
 
 async function createTables() {
-  
+	console.log("Starting to build tables...");
+	try {
+		await client.query(`CREATE TABLE links (
+			id SERIAL PRIMARY KEY,
+			url VARCHAR(255) UNIQUE NOT NULL,
+			title VARCHAR(255) UNIQUE,
+			clicks INTEGER NOT NULL
+						);`)
+	} catch (error) {
+		throw error
+	}
+
+
 }
 
 async function buildTables() {
