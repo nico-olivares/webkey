@@ -1,3 +1,21 @@
+# our story
+1. add comments to links unique not null
+2. add dates to links.
+3. get all links.
+4. add links
+
+
+
+
+
+
+
+
+
+
+
+
+
 # The Smallest Starting Point
 
 So, you want to build a full-stack JavaScript application with:
