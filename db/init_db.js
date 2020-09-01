@@ -3,7 +3,8 @@
 const {
     client,
     createTags,
-    createLinks
+    createLinks,
+    connectTagsToLinks
 } = require('./index');
 
 async function dropTables() {
@@ -32,7 +33,7 @@ async function createTables() {
             );
             CREATE TABLE tags (
                 id SERIAL PRIMARY KEY,
-                title VArCHAR(255) UNIQUE NOT NULL
+                title VARCHAR(255) UNIQUE NOT NULL
 			);
 			CREATE TABLE links_tags (
 				"linkId" INTEGER REFERENCES links(id),
@@ -47,14 +48,20 @@ async function createTables() {
 
 async function createInitialTags() {
     try {
-        console.log('creating intitial tags...')
-        await createTags({
-            title: '#badass'
-        })
-        await createTags({
+        console.log('creating intitial tags..')
+      
+        const tag1 = await createTags({
+            title: "#badass"
+        });
+        console.log('tag 1: ', tag1);
+      
+        const tag2 = await createTags({
             title: '#peaceful'
         })
-        console.log('finished creating tags & check db...')
+        console.log('tag 2: ', tag2);
+      
+        console.log('finished creating tags... check db')
+
     } catch (error) {
         throw error
     }
@@ -64,24 +71,39 @@ async function createInitialLinks() {
     try {
         console.log('Starting to create links...');
 
-        await createLinks({
+        const link1 = await createLinks({
             url: 'https://learn.fullstackacademy.com/workshop',
             title: 'learn fullstack',
             comments: 'this is fullstacks learndot',
             clicks: 1,
             date: "2020-08-01"
-
         });
-        await createLinks({
+        console.log('link 1: ', link1);
+
+        const link2 = await createLinks({
             url: 'www.brettcausey.com',
             title: 'bretts web page',
             comments: 'this is bretts comment',
             clicks: 5,
             date: "2020-08-01"
         });
+        console.log('link 2: ', link2);
+      
         console.log('finished creating links...')
     } catch (error) {
         throw error
+    }
+}
+
+
+async function createJointTagLink() {
+    try {
+        const joint1 = await connectTagsToLinks(1, 1);
+        const joint2 = await connectTagsToLinks(1, 2);
+        const joint3 = await connectTagsToLinks(2, 1);
+        console.log('joint links_tags', joint1, joint2, joint3);
+    } catch (error) {
+        throw error;
     }
 }
 
@@ -91,8 +113,7 @@ async function rebuildDb() {
         client.connect();
         await dropTables();
         await createTables();
-        await createInitialLinks();
-        await createInitialTags();
+        
         // build tables in correct order
 
         console.log('finished rebuilding db..')
@@ -102,7 +123,10 @@ async function rebuildDb() {
 }
 
 async function populateInitialData() {
-    try { // create useful starting data
+    try {
+        await createInitialLinks();
+        await createInitialTags();
+        await connectTagsToLinks();
     } catch (error) {
         throw error;
     }
