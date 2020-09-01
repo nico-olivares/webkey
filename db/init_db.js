@@ -1,8 +1,8 @@
 // code to build and initialize DB goes here
+
 const {
     client,
     createTags,
-    // other db methods
     createLinks,
     connectTagsToLinks
 } = require('./index');
@@ -42,34 +42,34 @@ async function createTables() {
 			);
         `);
     } catch (error) {
-        throw error;
+        throw error;s
     }
 }
 
 async function createInitialTags() {
     try {
         console.log('creating intitial tags..')
+      
         const tag1 = await createTags({
             title: "#badass"
         });
         console.log('tag 1: ', tag1);
+      
         const tag2 = await createTags({
             title: '#peaceful'
         })
         console.log('tag 2: ', tag2);
+      
         console.log('finished creating tags... check db')
+
     } catch (error) {
         throw error
     }
-
-
 }
 
 async function createInitialLinks() {
-
-
     try {
-        console.log("Starting to create links...");
+        console.log('Starting to create links...');
 
         const link1 = await createLinks({
             url: 'https://learn.fullstackacademy.com/workshop',
@@ -88,11 +88,13 @@ async function createInitialLinks() {
             date: "2020-08-01"
         });
         console.log('link 2: ', link2);
+      
         console.log('finished creating links...')
     } catch (error) {
         throw error
     }
 }
+
 
 async function createJointTagLink() {
     try {
@@ -104,8 +106,6 @@ async function createJointTagLink() {
         throw error;
     }
 }
-
-
 
 async function rebuildDb() {
     try {
@@ -124,18 +124,15 @@ async function rebuildDb() {
 
 async function populateInitialData() {
     try {
-        
         await createInitialLinks();
         await createInitialTags();
         await connectTagsToLinks();
-        // create useful starting data
     } catch (error) {
         throw error;
     }
 }
+
 rebuildDb()
     .then(populateInitialData)
     .catch(console.error)
     .finally(() => client.end());
-
-

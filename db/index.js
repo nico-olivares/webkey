@@ -19,7 +19,6 @@ async function createTags({ title }) {
   }
 }
 
-
 async function createLinks({ url, title, clicks, comments, date }) {
   try {
     const { rows } = await client.query(`insert into links (url, title,clicks, comments, date)
@@ -27,7 +26,6 @@ async function createLinks({ url, title, clicks, comments, date }) {
     ON CONFLICT (url) DO NOTHING
     RETURNING *;`, [url, title, clicks, comments, date])
     return rows
-
   }
   catch (error) {
     throw error
