@@ -1,6 +1,7 @@
 // code to build and initialize DB goes here
 const {
     client,
+    createTags,
     // other db methods
     createLinks
 } = require('./index');
@@ -43,7 +44,26 @@ async function createTables() {
         throw error;
     }
 }
+
+async function createInitialTags() {
+    try {
+        console.log('creating intitial tags..')
+        await createTags({
+            title: "#badass"
+        })
+        await createTags({
+            title: '#peaceful'
+        })
+        console.log('finished creating tags... check db')
+    } catch (error) {
+        throw error
+    }
+
+
+}
+
 async function createInitialLinks() {
+
 
     try {
         console.log("Starting to create links...");
@@ -72,6 +92,7 @@ async function createInitialLinks() {
 
 
 
+
 async function rebuildDb() {
     try {
         console.log('rebuilding db..')
@@ -79,7 +100,7 @@ async function rebuildDb() {
         await dropTables();
         await createTables();
         await createInitialLinks();
-
+        await createInitialTags();
         // build tables in correct order
 
         console.log('finished rebuilding db..')
