@@ -20,13 +20,12 @@ async function createTags({ title }) {
 }
 
 
-async function createLinks({ url, title, clicks, comments, posting_date }) {
+async function createLinks({ url, title, clicks, comments, date }) {
   try {
-    const { rows } = await client.query(`insert into links (url, title,clicks, comments, posting_date)
+    const { rows } = await client.query(`insert into links (url, title,clicks, comments, date)
     VALUES($1, $2, $3, $4, $5)
     ON CONFLICT (url) DO NOTHING
-    RETURNING *;`, [url, title, clicks, comments, posting_date])
-    console.log(rows, "trying to find these")
+    RETURNING *;`, [url, title, clicks, comments, date])
     return rows
 
   }
@@ -35,10 +34,26 @@ async function createLinks({ url, title, clicks, comments, posting_date }) {
   }
 }
 
+async function connectTagsToLinks (linkId, tagId) {
+  console.log(linkId);
+  try {
+    const { rows } = await client.query(`
+        INSERT INTO links_tags ("linkId", "tagId")
+        VALUES ($1, $2)
+        ON CONFLICT ("linkId", "tagId") DO NOTHING
+        RETURNING *;
+    `, [ linkId, tagId ]
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
 // export
 module.exports = {
   client,
   createLinks,
-  createTags
+  createTags,
+  connectTagsToLinks
   // db methods
 }
