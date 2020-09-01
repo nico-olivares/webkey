@@ -1,8 +1,8 @@
 // code to build and initialize DB goes here
+
 const {
     client,
     createTags,
-    // other db methods
     createLinks
 } = require('./index');
 
@@ -28,7 +28,7 @@ async function createTables() {
                 title VARCHAR(255) UNIQUE,
                 clicks INTEGER NOT NULL,
                 comments VARCHAR(255) UNIQUE NOT NULL,
-                posting_date DATE NOT NULL
+                date DATE NOT NULL
             );
             CREATE TABLE tags (
                 id SERIAL PRIMARY KEY,
@@ -41,39 +41,35 @@ async function createTables() {
 			);
         `);
     } catch (error) {
-        throw error;
+        throw error;s
     }
 }
 
 async function createInitialTags() {
     try {
-        console.log('creating intitial tags..')
+        console.log('creating intitial tags...')
         await createTags({
-            title: "#badass"
+            title: '#badass'
         })
         await createTags({
             title: '#peaceful'
         })
-        console.log('finished creating tags... check db')
+        console.log('finished creating tags & check db...')
     } catch (error) {
         throw error
     }
-
-
 }
 
 async function createInitialLinks() {
-
-
     try {
-        console.log("Starting to create links...");
+        console.log('Starting to create links...');
 
         await createLinks({
             url: 'https://learn.fullstackacademy.com/workshop',
             title: 'learn fullstack',
             comments: 'this is fullstacks learndot',
             clicks: 1,
-            posting_date: "2020-08-01"
+            date: "2020-08-01"
 
         });
         await createLinks({
@@ -81,17 +77,13 @@ async function createInitialLinks() {
             title: 'bretts web page',
             comments: 'this is bretts comment',
             clicks: 5,
-            posting_date: "2020-08-01"
+            date: "2020-08-01"
         });
         console.log('finished creating links...')
     } catch (error) {
         throw error
     }
 }
-
-
-
-
 
 async function rebuildDb() {
     try {
@@ -110,12 +102,12 @@ async function rebuildDb() {
 }
 
 async function populateInitialData() {
-    try {
-        // create useful starting data
+    try { // create useful starting data
     } catch (error) {
         throw error;
     }
 }
+
 rebuildDb()
     .then(populateInitialData)
     .catch(console.error)
