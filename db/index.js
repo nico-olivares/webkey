@@ -20,12 +20,12 @@ async function createTags({ title }) {
 }
 
 
-async function createLinks({ url, title, clicks, comments, posting_date }) {
+async function createLinks({ url, title, clicks, comments, date }) {
   try {
-    const { rows } = await client.query(`insert into links (url, title,clicks, comments, posting_date)
+    const { rows } = await client.query(`insert into links (url, title,clicks, comments, date)
     VALUES($1, $2, $3, $4, $5)
     ON CONFLICT (url) DO NOTHING
-    RETURNING *;`, [url, title, clicks, comments, posting_date])
+    RETURNING *;`, [url, title, clicks, comments, date])
     console.log(rows, "trying to find these")
     return rows
 
