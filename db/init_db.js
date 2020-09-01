@@ -1,58 +1,62 @@
 // code to build and initialize DB goes here
 const {
-	client,
-	// other db methods
+    client,
+    // other db methods
 } = require('./index');
 
 async function dropTables() {
-	try {
-		await client.query(`
-		
-	  DROP TABLE IF EXISTS links_tags; 
-	  DROP TABLE IF EXIST links;
+    try {
+        await client.query(`
+	        DROP TABLE IF EXISTS links_tags; 
+            DROP TABLE IF EXIST tags;
+            DROP TABLE IF EXIST links;
     `);
-	} catch (error) {
-		throw error;
-	}
+    } catch (error) {
+        throw error;
+    }
 }
 
 async function createTables() {
-	console.log("Starting to build tables...");
-	try {
-		await client.query(`CREATE TABLE links (
-			id SERIAL PRIMARY KEY,
-			url VARCHAR(255) UNIQUE NOT NULL,
-			title VARCHAR(255) UNIQUE,
-			clicks INTEGER NOT NULL
-						);`)
-	} catch (error) {
-		throw error
-	}
-
-
+    console.log('Starting to build tables...');
+    try {
+        await client.query(`
+            CREATE TABLE links (
+                id SERIAL PRIMARY KEY,
+                url VARCHAR(255) UNIQUE NOT NULL,
+                title VARCHAR(255) UNIQUE,
+                clicks INTEGER NOT NULL
+            );
+            CREATE TABLE tags (
+                id SERIAL PRIMARY KEY,
+                title VArCHAR(255) UNIQUE NOT NULL
+            );
+        `);
+    } catch (error) {
+        throw error;
+    }
 }
 
 async function buildTables() {
-	try {
-		client.connect();
+    try {
+        client.connect();
 
-		// drop tables in correct order
+        // drop tables in correct order
 
-		// build tables in correct order
-	} catch (error) {
-		throw error;
-	}
+        // build tables in correct order
+    } catch (error) {
+        throw error;
+    }
 }
 
 async function populateInitialData() {
-	try {
-		// create useful starting data
-	} catch (error) {
-		throw error;
-	}
+    try {
+        // create useful starting data
+    } catch (error) {
+        throw error;
+    }
 }
 
 buildTables()
-	.then(populateInitialData)
-	.catch(console.error)
-	.finally(() => client.end());
+    .then(populateInitialData)
+    .catch(console.error)
+    .finally(() => client.end());
