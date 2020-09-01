@@ -29,7 +29,12 @@ async function createTables() {
             CREATE TABLE tags (
                 id SERIAL PRIMARY KEY,
                 title VArCHAR(255) UNIQUE NOT NULL
-            );
+			);
+			CREATE TABLE links_tags (
+				"linkId" INTEGER REFERENCES links(id),
+				"tagId" INTEGER REFERENCES tags(id),
+				UNIQUE("linkId", "tagId")
+			);
         `);
     } catch (error) {
         throw error;
