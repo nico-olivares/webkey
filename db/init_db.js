@@ -1,6 +1,7 @@
 // code to build and initialize DB goes here
 const {
     client,
+    createTags,
     // other db methods
 } = require('./index');
 
@@ -8,8 +9,8 @@ async function dropTables() {
     try {
         await client.query(`
 	        DROP TABLE IF EXISTS links_tags; 
-            DROP TABLE IF EXIST tags;
-            DROP TABLE IF EXIST links;
+            DROP TABLE IF EXISTS tags;
+            DROP TABLE IF EXISTS links;
     `);
     } catch (error) {
         throw error;
@@ -40,10 +41,29 @@ async function createTables() {
         throw error;
     }
 }
+async function createInitialTags() {
+    try {
+        console.log('creating intitial tags..')
+        await createTags({
+            title: "#badass"
+        })
+        await createTags({
+            title: '#peaceful'
+        })
+        console.log('finished creating tags... check db')
+    } catch (error) {
+        throw error
+    }
+
+
+}
 
 async function buildTables() {
     try {
         client.connect();
+        await dropTables();
+        await createTables();
+        await createInitialTags();
 
         // drop tables in correct order
 
