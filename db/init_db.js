@@ -2,6 +2,7 @@
 
 const {
     client,
+    getAllLinks,
     createTags,
     createLinks,
     connectTagsToLinks
@@ -43,6 +44,14 @@ async function createTables() {
         `);
     } catch (error) {
         throw error;s
+    }
+}
+
+async function getInitialLinks() {
+    try {
+        console.log('Getting initial links: ', await getAllLinks());
+    } catch(error) {
+        throw error
     }
 }
 
@@ -127,6 +136,7 @@ async function populateInitialData() {
         await createInitialLinks();
         await createInitialTags();
         await connectTagsToLinks();
+        await getInitialLinks();
     } catch (error) {
         throw error;
     }
