@@ -8,6 +8,35 @@ const client = new Client(DB_URL);
 
 // database methods
 
+async function getAllLinks() {
+    try {
+        const { rows: links } = await client.query(`
+            SELECT * 
+            FROM links;
+        `);
+        
+        await Promise.all(links.map(
+            async function (link) {
+
+              const { rows: tagsArr } = await client.query(`
+                SELECT (tags.title)
+                FROM tags
+                JOIN links_tags ON tags.id = links_tags."tagId"
+                WHERE links_tags."linkId" = ${link.id};
+              `);
+              console.log('tags array: ', tagsArr);
+              link.tags = tagsArr;
+
+            }
+            // link => link.tags = [1, 2]
+        ));
+        return links;
+    } catch(error) {
+        throw error;
+    }
+}
+
+
 async function createTags({ title }) {
   try {
     const { rows } = await client.query(`insert into tags(title)
@@ -33,15 +62,15 @@ async function createLinks({ url, title, clicks, comments, date }) {
 }
 
 async function connectTagsToLinks (linkId, tagId) {
-  console.log(linkId);
   try {
-    const { rows } = await client.query(`
+    const { rows: [ joint ] } = await client.query(`
         INSERT INTO links_tags ("linkId", "tagId")
         VALUES ($1, $2)
         ON CONFLICT ("linkId", "tagId") DO NOTHING
         RETURNING *;
     `, [ linkId, tagId ]
     );
+    return joint;
   } catch (error) {
     throw error;
   }
@@ -49,9 +78,10 @@ async function connectTagsToLinks (linkId, tagId) {
 
 // export
 module.exports = {
-  client,
-  createLinks,
-  createTags,
-  connectTagsToLinks
-  // db methods
+    client,
+    getAllLinks,
+    createLinks,
+    createTags,
+    connectTagsToLinks
+    // db methods
 }
