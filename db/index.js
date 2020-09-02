@@ -17,7 +17,6 @@ async function getAllLinks() {
         await Promise.all(links.map(
             link => { 
                 link.tags = getTagsByLinkId(link.id) 
-                console.log('is this link tags', link.tags);
             }
             // link => link.tags = [1, 2]
         ));
@@ -27,25 +26,23 @@ async function getAllLinks() {
     }
 }
 
-async function getTagsByLinkId( tagId ) {
+async function getTagsByLinkId( linkId ) {
     try {
-        console.log('working? get tags by link id', tagId)
-        const { rows: tag } = await client.query(`
+        const { rows: [link] } = await client.query(`
             SELECT * 
-            FROM tags
-            WHERE id=$1
-            RETURNING *;
-        `, [tagId] )
-
-        console.log('this is the tag', tagId)
-
+            FROM links
+            WHERE id=$1;
+        `, [linkId]);
+        console.log('this', link)
         const { rows } = await client.query(`
-            SELECT *FROM links
-            JOIN links_tags ON links.id=links_tags."linkId"
-            WHERE links_tags."tagId"=$1;
-        `, [tagId] );
-        console.log('this is the tag', tag)
-        return tag;
+            SELECT tags.* 
+            FROM tags
+            JOIN links_tags 
+            ON tags.id=links_tags."tagId"
+            WHERE links_tags."linkId"=$1;
+        `, [linkId]);
+
+        return link;
 
     } catch(error) {
         throw error

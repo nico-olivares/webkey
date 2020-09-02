@@ -137,6 +137,7 @@ async function populateInitialData() {
         await createInitialTags();
         await connectTagsToLinks();
         await getInitialLinks();
+        await createJointTagLink();
     } catch (error) {
         throw error;
     }
