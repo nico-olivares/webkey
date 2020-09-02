@@ -110,7 +110,9 @@ async function createJointTagLink() {
         const joint1 = await connectTagsToLinks(1, 1);
         const joint2 = await connectTagsToLinks(1, 2);
         const joint3 = await connectTagsToLinks(2, 1);
-        console.log('joint links_tags', joint1, joint2, joint3);
+        console.log('joint links_tags 1 ', joint1);
+        console.log('joint links_tags 2 ', joint2);
+        console.log('joint links_tags 3 ',  joint3);
     } catch (error) {
         throw error;
     }
@@ -136,6 +138,7 @@ async function populateInitialData() {
         await createInitialLinks();
         await createInitialTags();
         await connectTagsToLinks();
+        await createJointTagLink();
         await getInitialLinks();
     } catch (error) {
         throw error;
