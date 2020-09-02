@@ -9,47 +9,47 @@ const client = new Client(DB_URL);
 // database methods
 
 async function getAllLinks() {
-    try {
-        const { rows: links } = await client.query(`
+  try {
+    const { rows: links } = await client.query(`
             SELECT * 
             FROM links;
         `);
-        await Promise.all(links.map(
-            link => { 
-                link.tags = getTagsByLinkId(link.id) 
-                console.log('is this link tags', link.tags);
-            }
-            // link => link.tags = [1, 2]
-        ));
-        return links;
-    } catch(error) {
-        throw error;
-    }
+    const linkarr = await Promise.all(links.map(
+      link => {
+        getTagsByLinkId(link.id)
+        console.log('is this link tags', link);
+      }
+      // link => link.tags = [1, 2]
+    ));
+    return linkarr;
+  } catch (error) {
+    throw error;
+  }
 }
 
-async function getTagsByLinkId( tagId ) {
-    try {
-        console.log('working? get tags by link id', tagId)
-        const { rows: tag } = await client.query(`
+async function getTagsByLinkId(linkId) {
+  try {
+    console.log('working? get tags by link id', linkId)
+    const { rows: tag } = await client.query(`
             SELECT * 
-            FROM tags
+            FROM links
             WHERE id=$1
             RETURNING *;
-        `, [tagId] )
+        `, [linkId])
 
-        console.log('this is the tag', tagId)
+    console.log('this is the tag', linkId)
 
-        const { rows } = await client.query(`
-            SELECT *FROM links
-            JOIN links_tags ON links.id=links_tags."linkId"
-            WHERE links_tags."tagId"=$1;
-        `, [tagId] );
-        console.log('this is the tag', tag)
-        return tag;
+    const { rows } = await client.query(`
+            SELECT * FROM links
+            JOIN links_tags ON tags.id=links_tags."tagId"
+            WHERE links_tags."linkId"=$1;
+        `, [linkId]);
+    console.log('this is the tag', tag)
+    return tag;
 
-    } catch(error) {
-        throw error
-    }
+  } catch (error) {
+    throw error
+  }
 }
 
 async function createTags({ title }) {
@@ -76,14 +76,14 @@ async function createLinks({ url, title, clicks, comments, date }) {
   }
 }
 
-async function connectTagsToLinks (linkId, tagId) {
+async function connectTagsToLinks(linkId, tagId) {
   try {
     const { rows } = await client.query(`
         INSERT INTO links_tags ("linkId", "tagId")
         VALUES ($1, $2)
         ON CONFLICT ("linkId", "tagId") DO NOTHING
         RETURNING *;
-    `, [ linkId, tagId ]
+    `, [linkId, tagId]
     );
   } catch (error) {
     throw error;
@@ -92,10 +92,10 @@ async function connectTagsToLinks (linkId, tagId) {
 
 // export
 module.exports = {
-    client,
-    getAllLinks,
-    createLinks,
-    createTags,
-    connectTagsToLinks
-    // db methods
+  client,
+  getAllLinks,
+  createLinks,
+  createTags,
+  connectTagsToLinks
+  // db methods
 }
