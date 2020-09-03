@@ -51,12 +51,9 @@ async function createTables() {
 async function getInitialLinks() {
     try {
         console.log('Getting initial links: ', await getAllLinks());
-<<<<<<< HEAD
-    } catch (error) {
-=======
+
         console.log('Getting only one link (2)', await getAllLinks(2));
-    } catch(error) {
->>>>>>> 7f7e9bad8e2d818f402003fe37a73bb1c703a0ed
+    } catch (error) {
         throw error
     }
 }

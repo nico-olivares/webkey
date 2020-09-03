@@ -1,4 +1,3 @@
-// Connect to DB
 const { Client } = require('pg');
 
 const DB_NAME = 'webkey'
@@ -8,23 +7,17 @@ const client = new Client(DB_URL);
 
 // database methods
 
-<<<<<<< HEAD
-async function getAllLinks() {
+
+async function getAllLinks(linkId = null) {
   try {
     const { rows: links } = await client.query(`
-=======
-async function getAllLinks(linkId = null) {
-    try {
-        const { rows: links } = await client.query(`
->>>>>>> 7f7e9bad8e2d818f402003fe37a73bb1c703a0ed
+
             SELECT * 
             FROM links
-            ${linkId ? `WHERE id = ${ linkId };` : ';'}
-        `);
-
+            ${linkId ? `WHERE id = ${linkId};` : ';'}
+      `);
     await Promise.all(links.map(
       async function (link) {
-
         const { rows: tagsArr } = await client.query(`
                 SELECT (tags.title)
                 FROM tags
@@ -33,7 +26,6 @@ async function getAllLinks(linkId = null) {
               `);
         console.log('tags array: ', tagsArr);
         link.tags = tagsArr;
-
       }
       // link => link.tags = [1, 2]
     ));
@@ -42,8 +34,6 @@ async function getAllLinks(linkId = null) {
     throw error;
   }
 }
-
-
 async function createTags({ title }) {
   try {
     const { rows } = await client.query(`insert into tags(title)
@@ -54,7 +44,6 @@ async function createTags({ title }) {
     throw error
   }
 }
-
 async function createLinks({ url, title, clicks, comments, date }) {
   try {
     const { rows } = await client.query(`insert into links (url, title,clicks, comments, date)
@@ -67,7 +56,6 @@ async function createLinks({ url, title, clicks, comments, date }) {
     throw error
   }
 }
-
 async function connectTagsToLinks(linkId, tagId) {
   try {
     const { rows: [joint] } = await client.query(`
@@ -82,40 +70,36 @@ async function connectTagsToLinks(linkId, tagId) {
     throw error;
   }
 }
-
-async function getLinksByTagName( tagName ) {
-
+async function getLinksByTagName(tagName) {
   try {
-
     const links = await getAllLinks();
-    
-    const { rows: [ tagId ]} = await client.query(`
+
+    const { rows: [tagId] } = await client.query(`
         SELECT id
         FROM tags
         WHERE title=$1;
-    `, [ tagName ]
+    `, [tagName]
     );
-    
 
     const { rows: linkArray } = await client.query(`
           SELECT (links.id)
           FROM links
           JOIN links_tags ON links.id = links_tags."linkId"
           WHERE links_tags."tagId" = $1;
-        `, [ tagId.id ]
-        );
-        
-      
-      const requestedLinks = await Promise.all(linkArray.map(async function (arrayItem) {
-        try {
+        `, [tagId.id]
+    );
+
+
+    const requestedLinks = await Promise.all(linkArray.map(async function (arrayItem) {
+      try {
         return await getAllLinks(arrayItem.id);
-        } catch (error) {
-          throw error;
-        }
-      }));
-  
-  console.log('return of the get Links by Tag Name ', requestedLinks);
-  return requestedLinks;
+      } catch (error) {
+        throw error;
+      }
+    }));
+
+    console.log('return of the get Links by Tag Name ', requestedLinks);
+    return requestedLinks;
 
 
   } catch (error) {
@@ -125,22 +109,12 @@ async function getLinksByTagName( tagName ) {
 
 }
 
-// export
 module.exports = {
-<<<<<<< HEAD
   client,
   getAllLinks,
   createLinks,
   createTags,
-  connectTagsToLinks
+  connectTagsToLinks,
+  getLinksByTagName
   // db methods
-=======
-    client,
-    getAllLinks,
-    createLinks,
-    createTags,
-    connectTagsToLinks,
-    getLinksByTagName
-    // db methods
->>>>>>> 7f7e9bad8e2d818f402003fe37a73bb1c703a0ed
 }
