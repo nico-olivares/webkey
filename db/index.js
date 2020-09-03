@@ -9,31 +9,31 @@ const client = new Client(DB_URL);
 // database methods
 
 async function getAllLinks() {
-    try {
-        const { rows: links } = await client.query(`
+  try {
+    const { rows: links } = await client.query(`
             SELECT * 
             FROM links;
         `);
-        
-        await Promise.all(links.map(
-            async function (link) {
 
-              const { rows: tagsArr } = await client.query(`
+    await Promise.all(links.map(
+      async function (link) {
+
+        const { rows: tagsArr } = await client.query(`
                 SELECT (tags.title)
                 FROM tags
                 JOIN links_tags ON tags.id = links_tags."tagId"
                 WHERE links_tags."linkId" = ${link.id};
               `);
-              console.log('tags array: ', tagsArr);
-              link.tags = tagsArr;
+        console.log('tags array: ', tagsArr);
+        link.tags = tagsArr;
 
-            }
-            // link => link.tags = [1, 2]
-        ));
-        return links;
-    } catch(error) {
-        throw error;
-    }
+      }
+      // link => link.tags = [1, 2]
+    ));
+    return links;
+  } catch (error) {
+    throw error;
+  }
 }
 
 
@@ -61,14 +61,14 @@ async function createLinks({ url, title, clicks, comments, date }) {
   }
 }
 
-async function connectTagsToLinks (linkId, tagId) {
+async function connectTagsToLinks(linkId, tagId) {
   try {
-    const { rows: [ joint ] } = await client.query(`
+    const { rows: [joint] } = await client.query(`
         INSERT INTO links_tags ("linkId", "tagId")
         VALUES ($1, $2)
         ON CONFLICT ("linkId", "tagId") DO NOTHING
         RETURNING *;
-    `, [ linkId, tagId ]
+    `, [linkId, tagId]
     );
     return joint;
   } catch (error) {
@@ -78,10 +78,10 @@ async function connectTagsToLinks (linkId, tagId) {
 
 // export
 module.exports = {
-    client,
-    getAllLinks,
-    createLinks,
-    createTags,
-    connectTagsToLinks
-    // db methods
+  client,
+  getAllLinks,
+  createLinks,
+  createTags,
+  connectTagsToLinks
+  // db methods
 }

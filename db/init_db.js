@@ -43,14 +43,14 @@ async function createTables() {
 			);
         `);
     } catch (error) {
-        throw error;s
+        throw error; s
     }
 }
 
 async function getInitialLinks() {
     try {
         console.log('Getting initial links: ', await getAllLinks());
-    } catch(error) {
+    } catch (error) {
         throw error
     }
 }
@@ -58,17 +58,17 @@ async function getInitialLinks() {
 async function createInitialTags() {
     try {
         console.log('creating intitial tags..')
-      
+
         const tag1 = await createTags({
             title: "#badass"
         });
         console.log('tag 1: ', tag1);
-      
+
         const tag2 = await createTags({
             title: '#peaceful'
         })
         console.log('tag 2: ', tag2);
-      
+
         console.log('finished creating tags... check db')
 
     } catch (error) {
@@ -97,7 +97,7 @@ async function createInitialLinks() {
             date: "2020-08-01"
         });
         console.log('link 2: ', link2);
-      
+
         console.log('finished creating links...')
     } catch (error) {
         throw error
@@ -112,7 +112,7 @@ async function createJointTagLink() {
         const joint3 = await connectTagsToLinks(2, 1);
         console.log('joint links_tags 1 ', joint1);
         console.log('joint links_tags 2 ', joint2);
-        console.log('joint links_tags 3 ',  joint3);
+        console.log('joint links_tags 3 ', joint3);
     } catch (error) {
         throw error;
     }
@@ -124,7 +124,7 @@ async function rebuildDb() {
         client.connect();
         await dropTables();
         await createTables();
-        
+
         // build tables in correct order
 
         console.log('finished rebuilding db..')
