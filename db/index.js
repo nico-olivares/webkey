@@ -8,11 +8,12 @@ const client = new Client(DB_URL);
 
 // database methods
 
-async function getAllLinks() {
+async function getAllLinks(linkId = null) {
     try {
         const { rows: links } = await client.query(`
             SELECT * 
-            FROM links;
+            FROM links
+            ${linkId ? `WHERE id = ${ linkId };` : ';'}
         `);
         
         await Promise.all(links.map(
@@ -76,12 +77,55 @@ async function connectTagsToLinks (linkId, tagId) {
   }
 }
 
+async function getLinksByTagName( tagName ) {
+
+  try {
+
+    const links = await getAllLinks();
+    
+    const { rows: [ tagId ]} = await client.query(`
+        SELECT id
+        FROM tags
+        WHERE title=$1;
+    `, [ tagName ]
+    );
+    
+
+    const { rows: linkArray } = await client.query(`
+          SELECT (links.id)
+          FROM links
+          JOIN links_tags ON links.id = links_tags."linkId"
+          WHERE links_tags."tagId" = $1;
+        `, [ tagId.id ]
+        );
+        
+      
+      const requestedLinks = await Promise.all(linkArray.map(async function (arrayItem) {
+        try {
+        return await getAllLinks(arrayItem.id);
+        } catch (error) {
+          throw error;
+        }
+      }));
+  
+  console.log('return of the get Links by Tag Name ', requestedLinks);
+  return requestedLinks;
+
+
+  } catch (error) {
+    throw error;
+  }
+
+
+}
+
 // export
 module.exports = {
     client,
     getAllLinks,
     createLinks,
     createTags,
-    connectTagsToLinks
+    connectTagsToLinks,
+    getLinksByTagName
     // db methods
 }

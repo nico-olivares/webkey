@@ -5,7 +5,8 @@ const {
     getAllLinks,
     createTags,
     createLinks,
-    connectTagsToLinks
+    connectTagsToLinks,
+    getLinksByTagName
 } = require('./index');
 
 async function dropTables() {
@@ -50,6 +51,7 @@ async function createTables() {
 async function getInitialLinks() {
     try {
         console.log('Getting initial links: ', await getAllLinks());
+        console.log('Getting only one link (2)', await getAllLinks(2));
     } catch(error) {
         throw error
     }
@@ -140,6 +142,7 @@ async function populateInitialData() {
         await connectTagsToLinks();
         await createJointTagLink();
         await getInitialLinks();
+        await getLinksByTagName('#peaceful');
     } catch (error) {
         throw error;
     }
