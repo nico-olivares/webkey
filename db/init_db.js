@@ -245,13 +245,13 @@ async function populateInitialData() {
     try {
         await createInitialUsers();
         await getInitialUser();
-        // await createInitialLinks();
-        // await createInitialTags();
-        // await addTagToLink();
-        // await createJointTagLink();
-        // await getInitialLinks();
-        // await getLinksByTagName('#popular');
-        // await updateInitialLinks();
+        await createInitialLinks();
+        await createInitialTags();
+        await addTagToLink();
+        await createJointTagLink();
+        await getInitialLinks();
+        await getLinksByTagName('#popular');
+        await updateInitialLinks();
     } catch (error) {
         throw error;
     }
