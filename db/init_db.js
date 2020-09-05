@@ -2,15 +2,17 @@
 
 const {
     client,
+    getAllUsers,
     createUser,
     getUserByUsername,
+    getUserById,
     getAllLinks,
     createLink,
     updateLink,
     createTag,
     addTagToLink,
-    getLinksByTagName,
-    getUserById
+    getLinksByTagName
+   
 } = require('./index');
 
 // drop the tables before rebuilding
@@ -41,6 +43,7 @@ async function createTables() {
             );
             CREATE TABLE links (
                 id SERIAL PRIMARY KEY,
+                "creatorId" INTEGER REFERENCES users(id),
                 url VARCHAR(255) UNIQUE NOT NULL,
                 title VARCHAR(255) UNIQUE NOT NULL,
                 clicks INTEGER NOT NULL,
@@ -68,7 +71,7 @@ async function createInitialUsers() {
     try {
         console.log('creating intital users..')
         const user1 = await createUser({
-            username: 'JohnMarcello',
+            username: 'Marcello',
             password: 'coyotwind1'
         })
         const user2 = await createUser({
@@ -102,24 +105,20 @@ async function getInitialUser() {
     }
 }
 
-
-
-
 // create the tags
 
 async function createInitialTags() {
     try {
         console.log('creating intitial tags...')
 
-        const tag1 = await createTag(
-            '#popular'
-        );
+        const tag1 = await createTag('#popular');
         console.log('tag 1: ', tag1);
 
-        const tag2 = await createTag(
-            '#code'
-        )
+        const tag2 = await createTag('#code')
         console.log('tag 2: ', tag2);
+
+        const tag3 = await createTag('#front-end')
+        console.log('tag 3: ', tag3);
 
         console.log('finished creating tags...')
 
@@ -134,7 +133,10 @@ async function createInitialLinks() {
     try {
         console.log('Starting to create links...');
 
+        const [Marcello, Kamikaze1, NicoIsCool] = await getAllUsers();
+
         const link1 = await createLink({
+            creatorId: Marcello.id,
             url: 'https://learn.fullstackacademy.com/workshop',
             title: 'learn fullstack',
             comments: 'This is fullstack\'s Learndot',
@@ -145,6 +147,7 @@ async function createInitialLinks() {
         console.log('link 1: ', link1);
 
         const link2 = await createLink({
+            creatorId: Kamikaze1.id,
             url: 'https://github.com',
             title: 'Git Hub',
             comments: 'This is where the code lives',
@@ -155,6 +158,7 @@ async function createInitialLinks() {
         console.log('link 2: ', link2);
 
         const link3 = await createLink({
+            creatorId: NicoIsCool.id,
             url: 'https://zoom.com',
             title: 'Zoom Room',
             comments: 'Use this to talk to teammates',
@@ -245,13 +249,13 @@ async function populateInitialData() {
     try {
         await createInitialUsers();
         await getInitialUser();
-        // await createInitialLinks();
-        // await createInitialTags();
-        // await addTagToLink();
-        // await createJointTagLink();
-        // await getInitialLinks();
-        // await getLinksByTagName('#popular');
-        // await updateInitialLinks();
+        await createInitialLinks();
+        await createInitialTags();
+        await addTagToLink();
+        await createJointTagLink();
+        await getInitialLinks();
+        await getLinksByTagName('#popular');
+        await updateInitialLinks();
     } catch (error) {
         throw error;
     }
