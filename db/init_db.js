@@ -44,11 +44,11 @@ async function createTables() {
             CREATE TABLE links (
                 id SERIAL PRIMARY KEY,
                 "creatorId" INTEGER REFERENCES users(id),
-                url VARCHAR(255) UNIQUE NOT NULL,
+                url VARCHAR(255) UNIQUE,
                 title VARCHAR(255) UNIQUE NOT NULL,
                 clicks INTEGER NOT NULL,
                 comments VARCHAR(255) UNIQUE,
-                date DATE NOT NULL
+                date VARCHAR(10) NOT NULL
             );
             CREATE TABLE tags (
                 id SERIAL PRIMARY KEY,
@@ -140,8 +140,6 @@ async function createInitialLinks() {
             url: 'https://learn.fullstackacademy.com/workshop',
             title: 'learn fullstack',
             comments: 'This is fullstack\'s Learndot',
-            clicks: 0,
-            date: '2020-08-01',
             tags: ['#test', '#another']
         });
         console.log('link 1: ', link1);
@@ -151,8 +149,6 @@ async function createInitialLinks() {
             url: 'https://github.com',
             title: 'Git Hub',
             comments: 'This is where the code lives',
-            clicks: 0,
-            date: '020-08-01',
             tags: []
         });
         console.log('link 2: ', link2);
@@ -162,8 +158,6 @@ async function createInitialLinks() {
             url: 'https://zoom.com',
             title: 'Zoom Room',
             comments: 'Use this to talk to teammates',
-            clicks: 0,
-            date: '2020-08-01',
             tags: ['#test', '#more']
         });
         console.log('link 3: ', link3);

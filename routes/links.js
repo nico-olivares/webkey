@@ -2,7 +2,7 @@ const express = require('express');
 const linksRouter = express.Router();
 const { 
     getAllLinks, 
-    createLinks, 
+    createLink, 
     getLinksByTagName 
 } = require('../db');
 
@@ -27,12 +27,13 @@ linksRouter.get('/', async (req, res, next) => {
 // add new link
 linksRouter.post('/', requireUser, async (req,res, next) => {
     const { url, title, comments } = req.body;
+    console.log ('url', url);
     const creatorId = req.user.id;
     link = await createLink({ creatorId, url, title, comments });
     
-    res.send ({
+    res.send (
         link
-    });
+    );
 })
 
 module.exports = linksRouter
