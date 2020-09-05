@@ -5,6 +5,7 @@ const DB_NAME = 'webkey'
 
 const DB_URL = process.env.DATABASE_URL || `postgres://localhost:5432/webkey`;
 const client = new Client(DB_URL);
+const bcrypt = require('bcrypt')
 
 // database methods
 
@@ -43,7 +44,7 @@ async function getUserByUsername({ username }) {
   }
 }
 
-async function getUserById( id ) {
+async function getUserById(id) {
   try {
     const { rows: [user] } = await client.query(`
           SELECT *
@@ -56,6 +57,23 @@ async function getUserById( id ) {
     return user
   } catch (error) {
     throw error
+  }
+}
+async function getUser({ username, password }) {
+  try {
+    const user = await getUserByUsername({ username });
+    console.log('user', user)
+    if (!user) {
+      return
+    }
+    const matchingPassword = bcrypt.compareSync(password, user.password)
+    console.log(matchingPassword)
+    if (!matchingPassword) {
+      return
+    }
+    return user;
+  } catch (error) {
+    throw error;
   }
 }
 
@@ -223,6 +241,7 @@ async function getLinksByTagName(tagName) {
 module.exports = {
   client,
   createUser,
+  getUser,
   getUserByUsername,
   getAllLinks,
   createLink,

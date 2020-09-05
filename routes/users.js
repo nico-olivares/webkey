@@ -2,11 +2,11 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const usersRouter = express.Router();
-const { createUser, getUserByUsername } = require('../db');
+const { createUser, getUserByUsername, getUser } = require('../db');
 
 usersRouter.post('/register', async (req, res, next) => {
-    
-    
+
+
     try {
 
         const { username, password } = req.body;
@@ -19,7 +19,7 @@ usersRouter.post('/register', async (req, res, next) => {
                 message: 'A user by that username already exists.',
             });
         }
-        if  (password.length<=7) {
+        if (password.length <= 7) {
             next({
                 name: 'PasswordLengthError',
                 message: 'The password must be a minimum of at least 8 characters.',
@@ -43,6 +43,7 @@ usersRouter.post('/register', async (req, res, next) => {
 
 usersRouter.post('/login', async (req, res, next) => {
     const { username, password } = req.body;
+    // request must have both
     if (!username || !password) {
         next({
             name: "MissingCredentialsError",
@@ -50,14 +51,25 @@ usersRouter.post('/login', async (req, res, next) => {
         });
     }
     try {
-        const user = await getUserByUsername({ username })
-        if (user.password === password) {
-            res.send(
-                user
-            )
+        const user = await getUser({ username, password });
+        if (!user) {
+            next({
+                name: 'IncorrectCredentialsError',
+                message: 'Username or password is incorrect'
+            });
+        } else {
+            const token = jwt.sign({
+                id: user.id,
+                username
+            }, process.env.JWT_SECRET, {
+                expiresIn: '1w'
+            });
+            res.send({ message: "you're logged in!", token: `${token}` });
         }
+        // console.log('my user', user)
     } catch (error) {
-        throw error
+        console.log(error);
+        next(error);
     }
-})
+});
 module.exports = usersRouter
