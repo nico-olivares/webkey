@@ -2,6 +2,7 @@
 const express = require('express');
 const server = express();
 
+
 // create logs for everything
 const morgan = require('morgan');
 server.use(morgan('dev'));
@@ -28,7 +29,7 @@ const { client } = require('./db');
 // connect to the server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, async () => {
-  console.log(`Server is running on ${ PORT }!`);
+  console.log(`Server is running on ${PORT}!`);
 
   try {
     await client.connect();
