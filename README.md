@@ -1,15 +1,12 @@
 # Database Tables
 
-Users Table
+1. Users Table
     - id, username, password
-
-Links Table
+2. Links Table
     - id, user, url, title, clicks, comments, date
-
-Tags Table
+3. Tags Table
     - id, title
-
-Links_tags Table
+4. Links_tags Table
     - linkId, tagId
 
 
