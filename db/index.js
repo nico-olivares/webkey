@@ -8,9 +8,14 @@ const client = new Client(DB_URL);
 
 // database methods
 
+async function getAllUsers() {
+    const { rows } = await client.query(`SELECT id, username FROM users;`);
+    return rows;
+}
+
 // goal: create a new user that can be validated 
 // input: takes in username and password 
-// output: returns a new user
+// outp
 
 async function createUser({ username, password }) {
   try {
@@ -222,6 +227,7 @@ async function getLinksByTagName(tagName) {
 
 module.exports = {
   client,
+  getAllUsers,
   createUser,
   getUserByUsername,
   getAllLinks,
