@@ -59,14 +59,14 @@ async function createInitialTags() {
     try {
         console.log('creating intitial tags...')
 
-        const tag1 = await createTag({
-            title: "#popular"
-        });
+        const tag1 = await createTag(
+            '#popular'
+        );
         console.log('tag 1: ', tag1);
 
-        const tag2 = await createTag({
-            title: '#code'
-        })
+        const tag2 = await createTag(
+            '#code'
+        )
         console.log('tag 2: ', tag2);
 
         console.log('finished creating tags...')
@@ -87,7 +87,8 @@ async function createInitialLinks() {
             title: 'learn fullstack',
             comments: 'This is fullstack\'s Learndot',
             clicks: 0,
-            date: "2020-08-01"
+            date: '2020-08-01',
+            tags: ['#test', '#another']
         });
         console.log('link 1: ', link1);
 
@@ -96,7 +97,8 @@ async function createInitialLinks() {
             title: 'Git Hub',
             comments: 'This is where the code lives',
             clicks: 0,
-            date: "2020-08-01"
+            date: '020-08-01',
+            tags: []
         });
         console.log('link 2: ', link2);
 
@@ -105,7 +107,8 @@ async function createInitialLinks() {
             title: 'Zoom Room',
             comments: 'Use this to talk to teammates',
             clicks: 0,
-            date: "2020-08-01"
+            date: '2020-08-01',
+            tags: ['#test', '#more']
         });
         console.log('link 3: ', link3);
 

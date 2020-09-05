@@ -8,6 +8,30 @@ const client = new Client(DB_URL);
 
 // database methods
 
+// goal: create a new link that tags can be add to
+// input: takes in parameters of url, title, clicks, comments, date
+// output: returns a new link
+
+async function createLink({ url, title, clicks, comments, date, tags = [] }) {
+    try {
+        const { rows } = await client.query(`insert into links (url, title,clicks, comments, date)
+            VALUES($1, $2, $3, $4, $5)
+            ON CONFLICT (url) DO NOTHING
+            RETURNING *;`, [url, title, clicks, comments, date])
+
+            if (tags.length > 0) {
+                tags.forEach ( async function(tag) {
+                    const tagged = await createTag(tag);
+                    console.log('this is the tag', tagged);
+                })
+            }       
+      return rows
+    }
+    catch (error) {
+      throw error
+    }
+  }
+
 // goal: update the link
 // input: link id and fields as an object
 // output: returns an updated link
@@ -65,35 +89,21 @@ async function getAllLinks(linkId = null) {
   }
 }
 
-// goal: create a new link that tags can be add to
-// input: takes in parameters of url, title, clicks, comments, date
-// output: returns a new link
-
-async function createLink({ url, title, clicks, comments, date }) {
-  try {
-    const { rows } = await client.query(`insert into links (url, title,clicks, comments, date)
-    VALUES($1, $2, $3, $4, $5)
-    ON CONFLICT (url) DO NOTHING
-    RETURNING *;`, [url, title, clicks, comments, date])
-    return rows
-  }
-  catch (error) {
-    throw error
-  }
-}
-
 // goal: create a new tag that can be added to links
 // input: takes in a parameter of 'title'
 // output: returns a new tag
 
-async function createTag({ title }) {
+async function createTag(title) {
     try {
-      const { rows } = await client.query(`insert into tags(title)
-      VALUES($1)
-      RETURNING *;`, [title])
-      return rows
+        const { rows } = await client.query(`
+            INSERT INTO tags(title)
+            VALUES($1)
+            ON CONFLICT (title) DO NOTHING
+            RETURNING *;
+        `, [title])
+        return rows
     } catch (error) {
-      throw error
+        throw error
     }
   }
 
@@ -138,6 +148,10 @@ async function getLinksByTagName(tagName) {
           WHERE links_tags."tagId" = $1;
         `, [tagId.id]
     );
+
+    console.log('this is the tagId', tagId);
+    console.log('this is the tagName', tagName);
+
 
     const { requestedLinks } = await Promise.all(linkArray.map(
         async function (arrayItem) {
