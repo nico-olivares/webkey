@@ -229,7 +229,7 @@ async function getLinksByTagName(tagName) {
             JOIN links_tags ON links.id = links_tags."linkId"
             WHERE links_tags."tagId" = $1;
         `, [tagId.id]
-        );
+        );  
 
         const { requestedLinks } = await Promise.all(
             linkArray.map(async function (arrayItem) {
