@@ -12,7 +12,6 @@ const {
     createTag,
     addTagToLink,
     getLinksByTagName
-   
 } = require('./index');
 
 // drop the tables before rebuilding
@@ -67,24 +66,27 @@ async function createTables() {
 
 //create the user
 async function createInitialUsers() {
-
     try {
         console.log('creating intital users..')
+
         const user1 = await createUser({
             username: 'Marcello',
             password: 'coyotwind1'
         })
+        console.log('this is user1', user1);
+
         const user2 = await createUser({
             username: 'Kamikaze1',
             password: 'Password1'
         })
+        console.log('this is user2', user2);
+
         const user3 = await createUser({
             username: 'NicoIsCool',
             password: 'Olivares123'
         })
-        console.log('this is user1', user1);
-        console.log('this is user2', user2);
         console.log('this is user3', user3)
+
         console.log("finsihed creating intitial users..")
     } catch (error) {
         throw error
@@ -94,12 +96,13 @@ async function createInitialUsers() {
 
 async function getInitialUser() {
     try {
-        const getUser1 = await getUserByUsername({
-            username: "JohnMarcello"
-        })
+
+        const getUser1 = await getUserByUsername({ username: "Marcello" })
         console.log('retrieving first user', getUser1);
+
         const userById1 = await getUserById(1);
         console.log('Getting user by id=1: ', userById1);
+
     } catch (error) {
         throw error
     }
@@ -121,7 +124,6 @@ async function createInitialTags() {
         console.log('tag 3: ', tag3);
 
         console.log('finished creating tags...')
-
     } catch (error) {
         throw error
     }
@@ -215,6 +217,7 @@ async function createJointTagLink() {
         const joint3 = await addTagToLink(2, 1);
         const joint4 = await addTagToLink(2, 2);
         const joint5 = await addTagToLink(3, 1);
+
         console.log('joint links_tags 1 ', joint1);
         console.log('joint links_tags 2 ', joint2);
         console.log('joint links_tags 3 ', joint3);
@@ -228,9 +231,11 @@ async function createJointTagLink() {
 async function rebuildDb() {
     try {
         console.log('rebuilding db..')
+
         client.connect();
         await dropTables();
         await createTables();
+        
         console.log('finished rebuilding db..')
     } catch (error) {
         throw error;

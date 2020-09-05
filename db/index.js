@@ -20,17 +20,12 @@ async function getAllUsers() {
 
 async function createUser({ username, password }) {
     try {
-        const {
-            rows: [user],
-        } = await client.query(
-            `
-    INSERT INTO users(username, password)
-    VALUES ($1, $2)
-    ON CONFLICT (username) DO NOTHING 
-    RETURNING *;
-  `,
-            [username, password]
-        );
+        const { rows: [user],} = await client.query(`
+            INSERT INTO users(username, password)
+            VALUES ($1, $2)
+            ON CONFLICT (username) DO NOTHING 
+            RETURNING *;
+        `,[username, password]);
         return user;
     } catch (error) {
         throw error;
@@ -39,16 +34,11 @@ async function createUser({ username, password }) {
 
 async function getUserByUsername({ username }) {
     try {
-        const {
-            rows: [user],
-        } = await client.query(
-            `
-          SELECT *
-          FROM users
-          WHERE username=$1;
-      `,
-            [username]
-        );
+        const { rows: [user] } = await client.query(`
+            SELECT *
+            FROM users
+            WHERE username=$1;
+        `,[username]);
         if (!user || user.length === 0) {
             return null;
         }
@@ -62,14 +52,11 @@ async function getUserById(id) {
     try {
         const {
             rows: [user],
-        } = await client.query(
-            `
-          SELECT *
-          FROM users
-          WHERE id=$1;
-      `,
-            [id]
-        );
+        } = await client.query(`
+            SELECT *
+            FROM users
+            WHERE id=$1;
+        `,[id]);
         if (!user || user.length === 0) {
             return null;
         }
@@ -141,17 +128,12 @@ async function updateLink(linkId, fields = {}) {
     }
 
     try {
-        const {
-            rows: [link],
-        } = await client.query(
-            `
+        const { rows: [link] } = await client.query(`
             UPDATE links
             SET ${setString}
             WHERE id=${linkId}
             RETURNING *;
-        `,
-            Object.values(fields)
-        );
+        `, Object.values(fields));
         return getAllLinks(linkId);
     } catch (error) {
         throw error;
@@ -168,7 +150,7 @@ async function getAllLinks(linkId = null) {
             SELECT * 
             FROM links
             ${linkId ? `WHERE id = ${linkId};` : ';'}
-      `);
+        `);
         await Promise.all(
             links.map(async function (link) {
                 const { rows: tagsArr } = await client.query(`
@@ -193,15 +175,12 @@ async function getAllLinks(linkId = null) {
 
 async function createTag(title) {
     try {
-        const { rows } = await client.query(
-            `
+        const { rows } = await client.query(`
             INSERT INTO tags(title)
             VALUES($1)
             ON CONFLICT (title) DO NOTHING
             RETURNING *;
-        `,
-            [title]
-        );
+        `,[title]);
         return rows;
     } catch (error) {
         throw error;
@@ -216,13 +195,12 @@ async function addTagToLink(linkId, tagId) {
     try {
         const {
             rows: [joint],
-        } = await client.query(
-            `
-        INSERT INTO links_tags ("linkId", "tagId")
-        VALUES ($1, $2)
-        ON CONFLICT ("linkId", "tagId") DO NOTHING
-        RETURNING *;
-    `,
+        } = await client.query(`
+            INSERT INTO links_tags ("linkId", "tagId")
+            VALUES ($1, $2)
+            ON CONFLICT ("linkId", "tagId") DO NOTHING
+            RETURNING *;
+        `,
             [linkId, tagId]
         );
         return joint;
@@ -239,29 +217,19 @@ async function getLinksByTagName(tagName) {
     try {
         const links = await getAllLinks();
 
-        const {
-            rows: [tagId],
-        } = await client.query(
-            `
-        SELECT id
-        FROM tags
-        WHERE title=$1;
-    `,
-            [tagName]
-        );
+        const { rows: [tagId] } = await client.query(`
+                SELECT id
+                FROM tags
+                WHERE title=$1;
+        `,[tagName]);
 
-        const { rows: linkArray } = await client.query(
-            `
-          SELECT (links.id)
-          FROM links
-          JOIN links_tags ON links.id = links_tags."linkId"
-          WHERE links_tags."tagId" = $1;
-        `,
-            [tagId.id]
+        const { rows: linkArray } = await client.query(`
+            SELECT (links.id)
+            FROM links
+            JOIN links_tags ON links.id = links_tags."linkId"
+            WHERE links_tags."tagId" = $1;
+        `, [tagId.id]
         );
-
-        console.log('this is the tagId', tagId);
-        console.log('this is the tagName', tagName);
 
         const { requestedLinks } = await Promise.all(
             linkArray.map(async function (arrayItem) {
