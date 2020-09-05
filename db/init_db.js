@@ -2,8 +2,10 @@
 
 const {
     client,
+    getAllUsers,
     createUser,
     getUserByUsername,
+    getUserById,
     getAllLinks,
     createLink,
     updateLink,
@@ -13,6 +15,7 @@ const {
     getUserById,
     removeTagFromLink,
     destroyTag
+
 } = require('./index');
 
 // drop the tables before rebuilding
@@ -43,11 +46,12 @@ async function createTables() {
             );
             CREATE TABLE links (
                 id SERIAL PRIMARY KEY,
-                url VARCHAR(255) UNIQUE NOT NULL,
+                "creatorId" INTEGER REFERENCES users(id),
+                url VARCHAR(255) UNIQUE,
                 title VARCHAR(255) UNIQUE NOT NULL,
                 clicks INTEGER NOT NULL,
                 comments VARCHAR(255) UNIQUE,
-                date DATE NOT NULL
+                date VARCHAR(10) NOT NULL
             );
             CREATE TABLE tags (
                 id SERIAL PRIMARY KEY,
@@ -66,24 +70,27 @@ async function createTables() {
 
 //create the user
 async function createInitialUsers() {
-
     try {
         console.log('creating intital users..')
+
         const user1 = await createUser({
-            username: 'JohnMarcello',
+            username: 'Marcello',
             password: 'coyotwind1'
         })
+        console.log('this is user1', user1);
+
         const user2 = await createUser({
             username: 'Kamikaze1',
             password: 'Password1'
         })
+        console.log('this is user2', user2);
+
         const user3 = await createUser({
             username: 'NicoIsCool',
             password: 'Olivares123'
         })
-        console.log('this is user1', user1);
-        console.log('this is user2', user2);
         console.log('this is user3', user3)
+
         console.log("finsihed creating intitial users..")
     } catch (error) {
         throw error
@@ -93,19 +100,17 @@ async function createInitialUsers() {
 
 async function getInitialUser() {
     try {
-        const getUser1 = await getUserByUsername({
-            username: "JohnMarcello"
-        })
+
+        const getUser1 = await getUserByUsername({ username: "Marcello" })
         console.log('retrieving first user', getUser1);
+
         const userById1 = await getUserById(1);
         console.log('Getting user by id=1: ', userById1);
+
     } catch (error) {
         throw error
     }
 }
-
-
-
 
 // create the tags
 
@@ -113,18 +118,16 @@ async function createInitialTags() {
     try {
         console.log('creating intitial tags...')
 
-        const tag1 = await createTag(
-            '#popular'
-        );
+        const tag1 = await createTag('#popular');
         console.log('tag 1: ', tag1);
 
-        const tag2 = await createTag(
-            '#code'
-        )
+        const tag2 = await createTag('#code')
         console.log('tag 2: ', tag2);
 
-        console.log('finished creating tags...')
+        const tag3 = await createTag('#front-end')
+        console.log('tag 3: ', tag3);
 
+        console.log('finished creating tags...')
     } catch (error) {
         throw error
     }
@@ -136,32 +139,31 @@ async function createInitialLinks() {
     try {
         console.log('Starting to create links...');
 
+        const [Marcello, Kamikaze1, NicoIsCool] = await getAllUsers();
+
         const link1 = await createLink({
+            creatorId: Marcello.id,
             url: 'https://learn.fullstackacademy.com/workshop',
             title: 'learn fullstack',
             comments: 'This is fullstack\'s Learndot',
-            clicks: 0,
-            date: '2020-08-01',
             tags: ['#test', '#another']
         });
         console.log('link 1: ', link1);
 
         const link2 = await createLink({
+            creatorId: Kamikaze1.id,
             url: 'https://github.com',
             title: 'Git Hub',
             comments: 'This is where the code lives',
-            clicks: 0,
-            date: '020-08-01',
             tags: []
         });
         console.log('link 2: ', link2);
 
         const link3 = await createLink({
+            creatorId: NicoIsCool.id,
             url: 'https://zoom.com',
             title: 'Zoom Room',
             comments: 'Use this to talk to teammates',
-            clicks: 0,
-            date: '2020-08-01',
             tags: ['#test', '#more']
         });
         console.log('link 3: ', link3);
@@ -219,6 +221,7 @@ async function createJointTagLink() {
         const joint3 = await addTagToLink(2, 1);
         const joint4 = await addTagToLink(2, 2);
         const joint5 = await addTagToLink(3, 1);
+
         console.log('joint links_tags 1 ', joint1);
         console.log('joint links_tags 2 ', joint2);
         console.log('joint links_tags 3 ', joint3);
@@ -267,9 +270,11 @@ async function deleteTag() {
 async function rebuildDb() {
     try {
         console.log('rebuilding db..')
+
         client.connect();
         await dropTables();
         await createTables();
+        
         console.log('finished rebuilding db..')
     } catch (error) {
         throw error;
@@ -284,9 +289,14 @@ async function populateInitialData() {
         await getInitialUser();
         await createInitialLinks();
         await createInitialTags();
+
         await createJointTagLink();
         await deleteLinksTagsPair();
         await deleteTag();
+
+ 
+        await createJointTagLink();
+
         await getInitialLinks();
         await getLinksByTagName('#popular');
         await updateInitialLinks();

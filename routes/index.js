@@ -6,6 +6,7 @@ const { getUserById } = require('../db/index.js');
 
 const linksRouter = require('./links');
 const usersRouter = require('./users');
+const tagsRouter = require('./tags')
 
 apiRouter.use(async (req, res, next) => {
 	const prefix = 'Bearer ';
@@ -21,7 +22,7 @@ apiRouter.use(async (req, res, next) => {
 			const { id } = jwt.verify(token, JWT_SECRET);
 
 			if (id) {
-				req.user = await getUserById( id );
+				req.user = await getUserById(id);
 				next();
 			}
 		} catch ({ name, message }) {
@@ -45,10 +46,11 @@ apiRouter.get('/', (req, res, next) => {
 
 apiRouter.use('/links', linksRouter);
 apiRouter.use('/users', usersRouter);
+apiRouter.use('/tags', tagsRouter)
 
 
 apiRouter.use('/', (error, req, res, next) => {
-    res.send(error);
+	res.send(error);
 })
 
 module.exports = apiRouter;
