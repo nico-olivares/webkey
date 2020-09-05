@@ -1,19 +1,46 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const usersRouter = express.Router();
 const { createUser, getUserByUsername } = require('../db');
 
 usersRouter.post('/register', async (req, res, next) => {
-
-    const { username, password } = req.body
+    
+    
     try {
-        const user = await createUser({ username, password })
-        res.send({
-            user
-        })
-    } catch (error) {
-        throw error
+
+        const { username, password } = req.body;
+        const SALT_COUNT = 11;
+        let securedPassword;
+        const _user = await getUserByUsername({ username });
+        if (_user) {
+            next({
+                name: 'UserExistsError',
+                message: 'A user by that username already exists.',
+            });
+        }
+        if  (password.length<=7) {
+            next({
+                name: 'PasswordLengthError',
+                message: 'The password must be a minimum of at least 8 characters.',
+            });
+        } else {
+            bcrypt.hash(password, SALT_COUNT, async (err, hashedPassword) => {
+                securedPassword = hashedPassword;
+                const user = await createUser({ username, password: securedPassword });
+                console.log('user id: ', user.id);
+                console.log('username: ', username);
+                console.log('user: ', user);
+                const token = jwt.sign({ id: user.id, username }, process.env.JWT_SECRET, { expiresIn: '1w' });
+                res.send({ message: 'The user was successfully created', token });
+            });
+        }
+    } catch ({ name, message }) {
+        next({ name, message });
     }
-})
+});
+
+
 usersRouter.post('/login', async (req, res, next) => {
     const { username, password } = req.body;
     if (!username || !password) {

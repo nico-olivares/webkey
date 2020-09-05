@@ -43,7 +43,21 @@ async function getUserByUsername({ username }) {
   }
 }
 
-
+async function getUserById( id ) {
+  try {
+    const { rows: [user] } = await client.query(`
+          SELECT *
+          FROM users
+          WHERE id=$1;
+      `, [id]);
+    if (!user || user.length === 0) {
+      return null
+    }
+    return user
+  } catch (error) {
+    throw error
+  }
+}
 
 // goal: create a new link that tags can be add to
 // input: takes in parameters of url, title, clicks, comments, date
@@ -216,5 +230,6 @@ module.exports = {
   createTag,
   addTagToLink,
   getLinksByTagName,
+  getUserById
   // db methods
 }
