@@ -1,4 +1,4 @@
-# Database
+# Database Tables
 
 Users Table
     - id, username, password
@@ -13,7 +13,7 @@ Links_tags Table
     - linkId, tagId
 
 
-# Data Base Functions (db/index.js)  
+# Database Methods & Functions (db/index.js)  
 
 updateLink(linkId, fields={})
     - Updates any or all of the link fields except for id, clicks, and date
