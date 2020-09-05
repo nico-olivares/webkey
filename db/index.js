@@ -1,6 +1,7 @@
 // sets up DB
 
 const { Client } = require('pg');
+
 const DB_NAME = 'webkey';
 
 const DB_URL = process.env.DATABASE_URL || `postgres://localhost:5432/webkey`;
@@ -82,11 +83,13 @@ async function getUser({ username, password }) {
     } catch (error) {
         throw error;
     }
+
 }
 
 // goal: create a new link that tags can be add to
 // input: takes in parameters of url, title, clicks, comments, date
 // output: returns a new link
+
 
 async function createLink({ creatorId, url, title, comments, tags = [] }) {
     let today = new Date();
@@ -111,6 +114,7 @@ async function createLink({ creatorId, url, title, comments, tags = [] }) {
     } catch (error) {
         throw error;
     }
+
 }
 
 // goal: update the link
@@ -119,6 +123,7 @@ async function createLink({ creatorId, url, title, comments, tags = [] }) {
 // debt: need to also update tags
 
 async function updateLink(linkId, fields = {}) {
+
     const setString = Object.keys(fields)
         .map((key, index) => `"${key}"=$${index + 1}`)
         .join(', ');
@@ -129,15 +134,18 @@ async function updateLink(linkId, fields = {}) {
 
     try {
         const { rows: [link] } = await client.query(`
+
             UPDATE links
             SET ${setString}
             WHERE id=${linkId}
             RETURNING *;
+
         `, Object.values(fields));
         return getAllLinks(linkId);
     } catch (error) {
         throw error;
     }
+
 }
 
 // goal: get a list of all links
@@ -145,6 +153,7 @@ async function updateLink(linkId, fields = {}) {
 // output: returns an array of objects
 
 async function getAllLinks(linkId = null) {
+
     try {
         const { rows: links } = await client.query(`
             SELECT * 
@@ -154,11 +163,13 @@ async function getAllLinks(linkId = null) {
         await Promise.all(
             links.map(async function (link) {
                 const { rows: tagsArr } = await client.query(`
+
                 SELECT (tags.title)
                 FROM tags
                 JOIN links_tags ON tags.id = links_tags."tagId"
                 WHERE links_tags."linkId" = ${link.id};
               `);
+
                 console.log('tags array: ', tagsArr);
                 link.tags = tagsArr;
             })
@@ -167,6 +178,7 @@ async function getAllLinks(linkId = null) {
     } catch (error) {
         throw error;
     }
+
 }
 
 // goal: create a new tag that can be added to links
@@ -174,24 +186,105 @@ async function getAllLinks(linkId = null) {
 // output: returns a new tag
 
 async function createTag(title) {
+
     try {
         const { rows } = await client.query(`
+
             INSERT INTO tags(title)
             VALUES($1)
             ON CONFLICT (title) DO NOTHING
             RETURNING *;
+
         `,[title]);
         return rows;
     } catch (error) {
         throw error;
     }
+
 }
 
-// goal: adds a tag to a link
+
+
+
+
+// goal: to remove a tag-link pair in the joint table
+// input: link id, and tag title
+// output: true if success, false otherwise
+
+async function removeTagFromLink(linkId, tagTitle) {
+	try {
+		const {
+			rows: [id],
+		} = await client.query(
+			`
+        SELECT id
+        FROM tags
+        WHERE title=$1;
+    `,
+			[tagTitle],
+		);
+		let tagId;
+		if (id) {
+			tagId = id.id;
+		} else {
+			tagId = null;
+		}
+
+		let rows;
+		if (tagId) {
+			rows = await client.query(
+				`
+        DELETE
+        FROM links_tags
+        WHERE "linkId"=$1 
+        AND "tagId"=$2;
+    `,
+				[linkId, tagId],
+			);
+		} else {
+			return false;
+		}
+		const { rowCount } = rows;
+
+		if (rowCount === 1) {
+			return true;
+		} else {
+			return false;
+		}
+	} catch (error) {
+		throw error;
+	}
+}
+
+// goal: permanently delete a tag from the tags table
+// input: tag name
+// output: true if success, false otherwise
+
+async function destroyTag(tagName) {
+	try {
+		const { rowCount } = await client.query(
+			`
+        DELETE FROM tags
+        WHERE title=$1;
+    `,
+			[tagName],
+		);
+		if (rowCount === 1) {
+			return true;
+		} else {
+			return false;
+		}
+	} catch (error) {
+		throw error;
+	}
+
+  // goal: adds a tag to a link
 // input: take in a link id and a tag id
 // output: makes a connection between the link and tag
-
-async function addTagToLink(linkId, tagId) {
+  
+  
+  async function addTagToLink(linkId, tagId) {
+  
     try {
         const {
             rows: [joint],
@@ -207,6 +300,7 @@ async function addTagToLink(linkId, tagId) {
     } catch (error) {
         throw error;
     }
+
 }
 
 // goal: get a list of links by tag name
@@ -214,6 +308,9 @@ async function addTagToLink(linkId, tagId) {
 // output: an array of links associated with the tag
 
 async function getLinksByTagName(tagName) {
+
+
+
     try {
         const links = await getAllLinks();
 
@@ -247,17 +344,17 @@ async function getLinksByTagName(tagName) {
 }
 
 module.exports = {
-    client,
-    getAllUsers,
-    createUser,
-    getUser,
-    getUserByUsername,
-    getAllLinks,
-    createLink,
-    updateLink,
-    createTag,
-    addTagToLink,
-    getLinksByTagName,
-    getUserById,
-    // db methods
+	client,
+	createUser,
+	getUserByUsername,
+	getAllLinks,
+	createLink,
+	updateLink,
+	createTag,
+	addTagToLink,
+	getLinksByTagName,
+	getUserById,
+	removeTagFromLink,
+	destroyTag,
+	// db methods
 };

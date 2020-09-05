@@ -11,7 +11,11 @@ const {
     updateLink,
     createTag,
     addTagToLink,
-    getLinksByTagName
+    getLinksByTagName,
+    getUserById,
+    removeTagFromLink,
+    destroyTag
+
 } = require('./index');
 
 // drop the tables before rebuilding
@@ -208,7 +212,7 @@ async function updateInitialLinks() {
     }
 }
 
-// coonect some tags to links
+// connect some tags to links
 
 async function createJointTagLink() {
     try {
@@ -223,6 +227,41 @@ async function createJointTagLink() {
         console.log('joint links_tags 3 ', joint3);
         console.log('joint links_tags 4 ', joint4);
         console.log('joint links_tags 5 ', joint5);
+    } catch (error) {
+        throw error;
+    }
+}
+
+// Delete a link-tag pair
+async function deleteLinksTagsPair() {
+    try {
+        //correct pairing
+        const deleted = await removeTagFromLink(1, '#test');
+        console.log('Deleted links tag pair. Link 1 to tag 1 (#test): ', deleted);
+        //correct link, wrong tag
+        const deleted2 = await removeTagFromLink(1, 'whatever');
+        console.log('Deleted correct link wrong tag ', deleted2);
+        //incorrect link, correct tag
+        const deleted3 = await removeTagFromLink(15, '#popular');
+        console.log('Deleted incorrect link, correct tag ', deleted3);
+        //incorrect link and tag
+        const deleted4 = await removeTagFromLink(17, 'whatever');
+        console.log('Deleted incorrect link and tag ', deleted4);
+    } catch (error) {
+        throw error;
+    }
+}
+
+// Delete a tag
+async function deleteTag() {
+    try {
+        //delete existing tag
+        const deleted1 = await destroyTag('#more');
+        console.log('#more tag deleted ', deleted1);
+        //delete non existing tag
+        const deleted2 = await destroyTag('whatever');
+        console.log('non existing tag deletion ', deleted2);
+        
     } catch (error) {
         throw error;
     }
@@ -250,8 +289,14 @@ async function populateInitialData() {
         await getInitialUser();
         await createInitialLinks();
         await createInitialTags();
-        await addTagToLink();
+
         await createJointTagLink();
+        await deleteLinksTagsPair();
+        await deleteTag();
+
+ 
+        await createJointTagLink();
+
         await getInitialLinks();
         await getLinksByTagName('#popular');
         await updateInitialLinks();
