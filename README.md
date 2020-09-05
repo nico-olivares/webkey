@@ -1,3 +1,54 @@
+# Database
+
+Users Table
+    - id, username, password
+
+Links Table
+    - id, user, url, title, clicks, comments, date
+
+Tags Table
+    - id, title
+
+Links_tags Table
+    - linkId, tagId
+
+
+# db/index.js  Data Base Functions
+
+updateLink(linkId, fields={})
+    - Updates any or all of the link fields except for id, clicks, and date
+    - It returns the modified link with its tags
+
+getAllLinksByUser(userId, linkId = null)  ** needs to be modified
+    - Returns either all of the links for a given user if linkId is null, or a single link if userId and linkId are provided and match
+
+createLink({ url, title, clicks (change to nothing), comments, date, tags=[] })
+    - Creates new links and if tags is not null it adds tags to the links
+    - It returns the newly created link without the tags in it
+
+createTag(title)
+    - Creates a new tag (tags table)
+    - Returns the newly created tag
+
+addTagToLink(linkId, tagId)
+    - It connects a linkId to a tagId
+    - It returns the newly created joint table row
+
+getLinksByTagName(userId, tagName)  ** needs to be modified
+    - Provided a userId and tag name it returns all the links that match
+
+
+
+# routs
+
+
+
+
+
+
+
+
+
 # our story
 1. add comments to links unique not null
 2. add dates to links.
