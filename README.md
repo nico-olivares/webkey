@@ -1,9 +1,9 @@
 # Database Tables
 
 1. users
-- id
-- username
-- password
+  - id
+  - username
+  - password
 
 2. links
     - id, user, url, title, clicks, comments, date
