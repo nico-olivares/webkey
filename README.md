@@ -13,7 +13,9 @@ Links_tags Table
     - linkId, tagId
 
 
-# Database Methods & Functions (db/index.js)  
+# Database Methods & Functions
+
+## (db/index.js)  
 
 updateLink(linkId, fields={})
     - Updates any or all of the link fields except for id, clicks, and date
