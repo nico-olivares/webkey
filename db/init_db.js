@@ -3,12 +3,14 @@
 const {
     client,
     getAllLinks,
-    createLinks,
-    updateLinks,
-    createTags,
-    connectTagsToLinks,
+    createLink,
+    updateLink,
+    createTag,
+    addTagToLink,
     getLinksByTagName
 } = require('./index');
+
+// drop the tables before rebuilding
 
 async function dropTables() {
     try {
@@ -21,6 +23,8 @@ async function dropTables() {
         throw error;
     }
 }
+
+// create the tables
 
 async function createTables() {
     console.log('Starting to build tables...');
@@ -49,63 +53,57 @@ async function createTables() {
     }
 }
 
-async function getInitialLinks() {
-    try {
-        console.log('Getting initial links: ', await getAllLinks());
-
-        console.log('Getting only one link (2)', await getAllLinks(2));
-    } catch (error) {
-        throw error
-    }
-}
+// create the tags
 
 async function createInitialTags() {
     try {
-        console.log('creating intitial tags..')
+        console.log('creating intitial tags...')
 
-        const tag1 = await createTags({
-            title: "#badass"
+        const tag1 = await createTag({
+            title: "#popular"
         });
         console.log('tag 1: ', tag1);
 
-        const tag2 = await createTags({
-            title: '#peaceful'
+        const tag2 = await createTag({
+            title: '#code'
         })
         console.log('tag 2: ', tag2);
 
-        console.log('finished creating tags... check db')
+        console.log('finished creating tags...')
 
     } catch (error) {
         throw error
     }
 }
+
+// create the links
 
 async function createInitialLinks() {
     try {
         console.log('Starting to create links...');
 
-        const link1 = await createLinks({
+        const link1 = await createLink({
             url: 'https://learn.fullstackacademy.com/workshop',
             title: 'learn fullstack',
-            comments: 'this is fullstacks learndot',
+            comments: 'This is fullstack\'s Learndot',
             clicks: 0,
             date: "2020-08-01"
         });
         console.log('link 1: ', link1);
 
-        const link2 = await createLinks({
-            url: 'https://brettcausey.com',
-            title: 'bretts web page',
-            comments: 'this is bretts comment',
+        const link2 = await createLink({
+            url: 'https://github.com',
+            title: 'Git Hub',
+            comments: 'This is where the code lives',
             clicks: 0,
             date: "2020-08-01"
         });
         console.log('link 2: ', link2);
 
-        const link3 = await createLinks({
-            url: 'https://john-marcello.com',
-            title: 'john\'s personal site',
-            comments: 'john\'s site is so-so',
+        const link3 = await createLink({
+            url: 'https://zoom.com',
+            title: 'Zoom Room',
+            comments: 'Use this to talk to teammates',
             clicks: 0,
             date: "2020-08-01"
         });
@@ -117,21 +115,34 @@ async function createInitialLinks() {
     }
 }
 
+// log out all the initial links
+
+async function getInitialLinks() {
+    try {
+        console.log('Getting initial links: ', await getAllLinks());
+        console.log('Getting only one link (2)', await getAllLinks(2));
+    } catch (error) {
+        throw error
+    }
+}
+
+// update the links
+
 async function updateInitialLinks() {
     try {
         console.log('Starting to update links');
-        const updatedLink2 = await updateLinks(2, {
-            url: 'awesome.brettcausey.com',
-            title: 'bretts awesome web page',
-            comments: 'this is bretts awesome comment',
+        const updatedLink2 = await updateLink(2, {
+            url: 'https://github.com/',
+            title: 'Git Hub Repo',
+            comments: 'The code repos live here',
             date: "2020-09-15"
         });
         console.log('link 2: ', updatedLink2);
 
-        const updatedLink3 = await updateLinks(3, {
-            url: 'awesome.john-marcello.com',
-            title: 'john\'s not so good web page',
-            comments: 'this is john not soawesome comment',
+        const updatedLink3 = await updateLink(3, {
+            url: 'https://zoom.com/',
+            title: 'Zoom Room',
+            comments: 'Teleconference software',
             date: "2020-09-15"
         });
         console.log('link 3: ', updatedLink3);
@@ -142,13 +153,15 @@ async function updateInitialLinks() {
     }
 }
 
+// coonect some tags to links
+
 async function createJointTagLink() {
     try {
-        const joint1 = await connectTagsToLinks(1, 1);
-        const joint2 = await connectTagsToLinks(1, 2);
-        const joint3 = await connectTagsToLinks(2, 1);
-        const joint4 = await connectTagsToLinks(2, 2);
-        const joint5 = await connectTagsToLinks(3, 1);
+        const joint1 = await addTagToLink(1, 1);
+        const joint2 = await addTagToLink(1, 2);
+        const joint3 = await addTagToLink(2, 1);
+        const joint4 = await addTagToLink(2, 2);
+        const joint5 = await addTagToLink(3, 1);
         console.log('joint links_tags 1 ', joint1);
         console.log('joint links_tags 2 ', joint2);
         console.log('joint links_tags 3 ', joint3);
@@ -165,28 +178,29 @@ async function rebuildDb() {
         client.connect();
         await dropTables();
         await createTables();
-
-        // build tables in correct order
-
         console.log('finished rebuilding db..')
     } catch (error) {
         throw error;
     }
 }
 
+// populate the data, runs the tests
+
 async function populateInitialData() {
     try {
         await createInitialLinks();
         await createInitialTags();
-        await connectTagsToLinks();
+        await addTagToLink();
         await createJointTagLink();
         await getInitialLinks();
-        await getLinksByTagName('#peaceful');
+        await getLinksByTagName('#popular');
         await updateInitialLinks();
     } catch (error) {
         throw error;
     }
 }
+
+// initializes the test run
 
 rebuildDb()
     .then(populateInitialData)
