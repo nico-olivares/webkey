@@ -1,11 +1,41 @@
 const { Client } = require('pg');
-
 const DB_NAME = 'webkey'
 
 const DB_URL = process.env.DATABASE_URL || `postgres://localhost:5432/webkey`;
 const client = new Client(DB_URL);
 
 // database methods
+
+async function updateCount() {
+
+
+}
+
+async function updateLinks(linkId, fields={}) {
+
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${key}"=$${index + 1}`
+    ).join(', ');
+
+    if (setString.length === 0) {
+        return;
+    }
+
+    try {
+        const { rows: [link]} = await client.query(`
+            UPDATE links
+            SET ${setString}
+            WHERE id=${linkId}
+            RETURNING *;
+        `, Object.values(fields)
+        );
+        return getAllLinks(linkId);
+    } catch(error) {
+        throw error;
+    }
+
+}
+
 
 
 async function getAllLinks(linkId = null) {
@@ -44,6 +74,7 @@ async function createTags({ title }) {
     throw error
   }
 }
+
 async function createLinks({ url, title, clicks, comments, date }) {
   try {
     const { rows } = await client.query(`insert into links (url, title,clicks, comments, date)
@@ -56,6 +87,7 @@ async function createLinks({ url, title, clicks, comments, date }) {
     throw error
   }
 }
+
 async function connectTagsToLinks(linkId, tagId) {
   try {
     const { rows: [joint] } = await client.query(`
@@ -89,8 +121,7 @@ async function getLinksByTagName(tagName) {
         `, [tagId.id]
     );
 
-
-    const requestedLinks = await Promise.all(linkArray.map(async function (arrayItem) {
+    const { requestedLinks } = await Promise.all(linkArray.map(async function (arrayItem) {
       try {
         return await getAllLinks(arrayItem.id);
       } catch (error) {
@@ -100,12 +131,9 @@ async function getLinksByTagName(tagName) {
 
     console.log('return of the get Links by Tag Name ', requestedLinks);
     return requestedLinks;
-
-
   } catch (error) {
     throw error;
   }
-
 
 }
 
@@ -113,8 +141,9 @@ module.exports = {
   client,
   getAllLinks,
   createLinks,
+  updateLinks,
   createTags,
   connectTagsToLinks,
-  getLinksByTagName
+  getLinksByTagName,
   // db methods
 }
