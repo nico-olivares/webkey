@@ -13,7 +13,7 @@ Links_tags Table
     - linkId, tagId
 
 
-# db/index.js  Data Base Functions
+# Data Base Functions (db/index.js)  
 
 updateLink(linkId, fields={})
     - Updates any or all of the link fields except for id, clicks, and date
@@ -39,7 +39,7 @@ getLinksByTagName(userId, tagName)  ** needs to be modified
 
 
 
-# routes
+# Routes
 
 
 
@@ -49,7 +49,7 @@ getLinksByTagName(userId, tagName)  ** needs to be modified
 
 
 
-# our story
+# Our Story
 1. add comments to links unique not null
 2. add dates to links.
 3. get all links.
