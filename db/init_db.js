@@ -9,7 +9,8 @@ const {
     updateLink,
     createTag,
     addTagToLink,
-    getLinksByTagName
+    getLinksByTagName,
+    getUserById
 } = require('./index');
 
 // drop the tables before rebuilding
@@ -93,7 +94,9 @@ async function getInitialUser() {
         const getUser1 = await getUserByUsername({
             username: "JohnMarcello"
         })
-        console.log('retrieving first user', getUser1)
+        console.log('retrieving first user', getUser1);
+        const userById1 = await getUserById(1);
+        console.log('Getting user by id=1: ', userById1);
     } catch (error) {
         throw error
     }
