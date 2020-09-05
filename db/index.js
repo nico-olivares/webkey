@@ -8,56 +8,93 @@ const client = new Client(DB_URL);
 
 // database methods
 
+// goal: create a new user that can be validated 
+// input: takes in username and password 
+// output: returns a new user
+
+async function createUser({ username, password }) {
+  try {
+    const { rows: [user] } = await client.query(`
+    INSERT INTO users(username, password)
+    VALUES ($1, $2)
+    ON CONFLICT (username) DO NOTHING 
+    RETURNING *;
+  `, [username, password])
+    return user
+  } catch (error) {
+    throw (error)
+  }
+
+}
+
+async function getUserByUsername({ username }) {
+  try {
+    const { rows: [user] } = await client.query(`
+          SELECT *
+          FROM users
+          WHERE username=$1;
+      `, [username]);
+    if (!user || user.length === 0) {
+      return null
+    }
+    return user
+  } catch (error) {
+    throw error
+  }
+}
+
+
+
 // goal: create a new link that tags can be add to
 // input: takes in parameters of url, title, clicks, comments, date
 // output: returns a new link
 
 async function createLink({ url, title, clicks, comments, date, tags = [] }) {
-    try {
-        const { rows } = await client.query(`insert into links (url, title,clicks, comments, date)
+  try {
+    const { rows } = await client.query(`insert into links (url, title,clicks, comments, date)
             VALUES($1, $2, $3, $4, $5)
             ON CONFLICT (url) DO NOTHING
             RETURNING *;`, [url, title, clicks, comments, date])
 
-            if (tags.length > 0) {
-                tags.forEach ( async function(tag) {
-                    const tagged = await createTag(tag);
-                    console.log('this is the tag', tagged);
-                })
-            }       
-      return rows
+    if (tags.length > 0) {
+      tags.forEach(async function (tag) {
+        const tagged = await createTag(tag);
+        console.log('this is the tag', tagged);
+      })
     }
-    catch (error) {
-      throw error
-    }
+    return rows
   }
+  catch (error) {
+    throw error
+  }
+}
 
 // goal: update the link
 // input: link id and fields as an object
 // output: returns an updated link
 // debt: need to also update tags
 
-async function updateLink(linkId, fields={}) {
-    const setString = Object.keys(fields).map(
-        (key, index) => `"${key}"=$${index + 1}`
-    ).join(', ');
+async function updateLink(linkId, fields = {}) {
+  const setString = Object.keys(fields).map(
+    (key, index) => `"${key}"=$${index + 1}`
+  ).join(', ');
 
-    if (setString.length === 0) {
-        return;
-    }
+  if (setString.length === 0) {
+    return;
+  }
 
-    try {
-        const { rows: [link]} = await client.query(`
+  try {
+    const { rows: [link] } = await client.query(`
             UPDATE links
             SET ${setString}
             WHERE id=${linkId}
             RETURNING *;
         `, Object.values(fields)
-        );
-        return getAllLinks(linkId);
-    } catch(error) {
-        throw error;
-    }
+    );
+    return getAllLinks(linkId);
+  } catch (error) {
+    throw error;
+  }
 }
 
 // goal: get a list of all links
@@ -94,18 +131,18 @@ async function getAllLinks(linkId = null) {
 // output: returns a new tag
 
 async function createTag(title) {
-    try {
-        const { rows } = await client.query(`
+  try {
+    const { rows } = await client.query(`
             INSERT INTO tags(title)
             VALUES($1)
             ON CONFLICT (title) DO NOTHING
             RETURNING *;
         `, [title])
-        return rows
-    } catch (error) {
-        throw error
-    }
+    return rows
+  } catch (error) {
+    throw error
   }
+}
 
 // goal: adds a tag to a link
 // input: take in a link id and a tag id
@@ -154,13 +191,13 @@ async function getLinksByTagName(tagName) {
 
 
     const { requestedLinks } = await Promise.all(linkArray.map(
-        async function (arrayItem) {
-            try {
-                return await getAllLinks(arrayItem.id);
-            } catch (error) {
-                throw error;
-            }
+      async function (arrayItem) {
+        try {
+          return await getAllLinks(arrayItem.id);
+        } catch (error) {
+          throw error;
         }
+      }
     ));
     return requestedLinks;
   } catch (error) {
@@ -171,6 +208,8 @@ async function getLinksByTagName(tagName) {
 
 module.exports = {
   client,
+  createUser,
+  getUserByUsername,
   getAllLinks,
   createLink,
   updateLink,
