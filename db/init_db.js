@@ -2,6 +2,8 @@
 
 const {
     client,
+    createUser,
+    getUserByUsername,
     getAllLinks,
     createLink,
     updateLink,
@@ -18,6 +20,7 @@ async function dropTables() {
 	        DROP TABLE IF EXISTS links_tags; 
             DROP TABLE IF EXISTS tags;
             DROP TABLE IF EXISTS links;
+            DROP TABLE IF EXISTS users;
     `);
     } catch (error) {
         throw error;
@@ -30,6 +33,11 @@ async function createTables() {
     console.log('Starting to build tables...');
     try {
         await client.query(`
+            CREATE TABLE users(
+                id SERIAL PRIMARY KEY,
+                username VARCHAR(50) NOT NULL UNIQUE,
+                password VARCHAR(255) NOT NULL
+            );
             CREATE TABLE links (
                 id SERIAL PRIMARY KEY,
                 url VARCHAR(255) UNIQUE NOT NULL,
@@ -49,9 +57,50 @@ async function createTables() {
 			);
         `);
     } catch (error) {
-        throw error; s
+        throw error;
     }
 }
+
+//create the user
+async function createInitialUsers() {
+
+    try {
+        console.log('creating intital users..')
+        const user1 = await createUser({
+            username: 'JohnMarcello',
+            password: 'coyotwind1'
+        })
+        const user2 = await createUser({
+            username: 'Kamikaze1',
+            password: 'Password1'
+        })
+        const user3 = await createUser({
+            username: 'NicoIsCool',
+            password: 'Olivares123'
+        })
+        console.log('this is user1', user1);
+        console.log('this is user2', user2);
+        console.log('this is user3', user3)
+        console.log("finsihed creating intitial users..")
+    } catch (error) {
+        throw error
+    }
+
+}
+
+async function getInitialUser() {
+    try {
+        const getUser1 = await getUserByUsername({
+            username: "JohnMarcello"
+        })
+        console.log('retrieving first user', getUser1)
+    } catch (error) {
+        throw error
+    }
+}
+
+
+
 
 // create the tags
 
@@ -151,7 +200,7 @@ async function updateInitialLinks() {
         console.log('link 3: ', updatedLink3);
 
         console.log('Finished updating links');
-    } catch(error) {
+    } catch (error) {
         throw error;
     }
 }
@@ -191,13 +240,15 @@ async function rebuildDb() {
 
 async function populateInitialData() {
     try {
-        await createInitialLinks();
-        await createInitialTags();
-        await addTagToLink();
-        await createJointTagLink();
-        await getInitialLinks();
-        await getLinksByTagName('#popular');
-        await updateInitialLinks();
+        await createInitialUsers();
+        await getInitialUser();
+        // await createInitialLinks();
+        // await createInitialTags();
+        // await addTagToLink();
+        // await createJointTagLink();
+        // await getInitialLinks();
+        // await getLinksByTagName('#popular');
+        // await updateInitialLinks();
     } catch (error) {
         throw error;
     }
