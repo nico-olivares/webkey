@@ -39,7 +39,7 @@ getLinksByTagName(userId, tagName)  ** needs to be modified
 
 
 
-# routs
+# routes
 
 
 
