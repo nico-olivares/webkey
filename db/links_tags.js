@@ -10,6 +10,7 @@
 const client = require('./client');
 
 const bcrypt = require('bcrypt');
+const e = require('express');
 
 // database methods
 
@@ -23,10 +24,11 @@ async function addTagsToLinkObject(link) {
     console.log('link ', link);
     console.log('linkId ', linkId);
     const { rows: tagIds } = await client.query(`
-        SELECT "tagId"
+        SELECT *
         FROM links_tags
-        WHERE "linkId"=$1;
-    `, [ linkId ]
+		WHERE "linkId"=$1
+		;
+    `, [ link.id ]
     );
     console.log('tagIds ', tagIds);
     const tags = await Promise.all(
@@ -127,10 +129,29 @@ async function addTagToLink(linkId, tagId) {
 }
 
 
+async function removeTagFromAllLinks(tagId) {
+	try {
+		const { rowCount } = await client.query(`
+			DELETE FROM links_tags
+			WHERE "tagId"=$1;
+		`, [ tagId ]
+		);
+		if (rowCount > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	} catch (error) {
+		throw error;
+	}
+}
+
 
 
 
 module.exports = {
 	addTagToLink,
 	removeTagFromLink,
+	removeTagFromAllLinks,
+	addTagsToLinkObject
 };

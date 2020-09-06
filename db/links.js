@@ -8,8 +8,11 @@
 // const client = new Client(DB_URL);
 
 const client = require('./client');
-
 const bcrypt = require('bcrypt');
+
+const { addTagToLink, addTagsToLinkObject } = require('./links_tags.js');
+const { createTag } = require('./tags');
+
 
 // database methods
 
@@ -44,10 +47,39 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 		if (tags.length > 0 && newLink) {
 			tags.forEach(async function (tag) {
 				const [newTag] = await createTag(creatorId, tag);
+				
 				await addTagToLink(newLink.id, newTag.id);
 			});
 		}
-		return ((newLink));
+	// 	setTimeout(()=>{}, 4000);
+	// 	console.log('newLink ', newLink);
+	// 	console.log('linkId ', newLink.id);
+		
+	// 	const { rows: tagIds } = await client.query(`
+    //     SELECT *
+    //     FROM links_tags
+	// 	WHERE "linkId"=${newLink.id}
+	// 	;
+    // `
+	// );
+	
+    // console.log('tagIds ', tagIds);
+    // const tagsArray = await Promise.all(
+    //     tagIds.map(async (tagId) => {
+    //       const { rows: [ id ] } = client.query(`
+    //           SELECT title
+    //           FROM tags
+    //           WHERE id = $1;
+    //       `, [ tagId ]);
+    //       return id;
+    //   })
+    // );
+
+	 newLink.tags = tags;
+	
+
+    return newLink;
+
 	} catch (error) {
 		throw error;
 	}

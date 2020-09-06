@@ -11,6 +11,8 @@ const client = require('./client');
 
 const bcrypt = require('bcrypt');
 
+const { removeTagFromAllLinks } = require('./index');
+
 // database methods
 
 // goal: create a new tag that can be added to links
@@ -46,6 +48,11 @@ async function createTag(userId, title) {
 
 async function destroyTag(userId, tagName) {
 	try {
+
+		const tagId = await getTagIdFromTitle(userId, tagName);
+
+		await removeTagFromAllLinks(tagId);
+
 		const { rowCount } = await client.query(
 			`
         DELETE FROM tags
