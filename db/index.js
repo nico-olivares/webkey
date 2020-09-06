@@ -11,8 +11,8 @@ const bcrypt = require('bcrypt');
 // database methods
 
 async function getAllUsers() {
-    const { rows } = await client.query(`SELECT id, username FROM users;`);
-    return rows;
+	const { rows } = await client.query(`SELECT id, username FROM users;`);
+	return rows;
 }
 
 // goal: create a new user that can be validated
@@ -20,70 +20,82 @@ async function getAllUsers() {
 // output: returns the user object
 
 async function createUser({ username, password }) {
-    try {
-        const { rows: [user],} = await client.query(`
+	try {
+		const {
+			rows: [user],
+		} = await client.query(
+			`
             INSERT INTO users(username, password)
             VALUES ($1, $2)
             ON CONFLICT (username) DO NOTHING 
             RETURNING *;
-        `,[username, password]);
-        return user;
-    } catch (error) {
-        throw error;
-    }
+        `,
+			[username, password],
+		);
+		return user;
+	} catch (error) {
+		throw error;
+	}
 }
 
 async function getUserByUsername({ username }) {
-    try {
-        const { rows: [user] } = await client.query(`
+	try {
+		const {
+			rows: [user],
+		} = await client.query(
+			`
             SELECT *
             FROM users
             WHERE username=$1;
-        `,[username]);
-        if (!user || user.length === 0) {
-            return null;
-        }
-        return user;
-    } catch (error) {
-        throw error;
-    }
+        `,
+			[username],
+		);
+		if (!user || user.length === 0) {
+			return null;
+		}
+		return user;
+	} catch (error) {
+		throw error;
+	}
 }
 
 async function getUserById(id) {
-    try {
-        const {
-            rows: [user],
-        } = await client.query(`
+	try {
+		const {
+			rows: [user],
+		} = await client.query(
+			`
             SELECT *
             FROM users
             WHERE id=$1;
-        `,[id]);
-        if (!user || user.length === 0) {
-            return null;
-        }
-        return user;
-    } catch (error) {
-        throw error;
-    }
+        `,
+			[id],
+		);
+		if (!user || user.length === 0) {
+			return null;
+		}
+		return user;
+	} catch (error) {
+		throw error;
+	}
 }
 
 async function getUser({ username, password }) {
-    try {
-        const user = await getUserByUsername({ username });
-        console.log('user', user);
-        if (!user) {
-            return;
-        }
-        const matchingPassword = bcrypt.compareSync(password, user.password);
-        console.log(matchingPassword);
-        if (!matchingPassword) {
-            return;
-        }
-        return user;
-    } catch (error) {
-        throw error;
-    }
+	try {
+		const user = await getUserByUsername({ username });
 
+		if (!user) {
+			return;
+		}
+		const matchingPassword = bcrypt.compareSync(password, user.password);
+
+		if (!matchingPassword) {
+			return;
+		}
+		return user;
+	} catch (error) {
+		throw error;
+	}
 }
 
 // goal: create a new link that tags can be add to
@@ -91,29 +103,29 @@ async function getUser({ username, password }) {
 // output: returns a new link
 
 async function createLink({ creatorId, url, title, comments, tags = [] }) {
-    let today = new Date();
-    let date = today.getFullYear()  + '/' + today.getDate() + '/' + (today.getMonth()+1) 
-    console.log('url =', url);
-    
-    try {
-        const { rows } = await client.query(`
+	let today = new Date();
+	let date = today.getFullYear() + '/' + today.getDate() + '/' + (today.getMonth() + 1);
+
+	try {
+		const { rows } = await client.query(
+			`
             INSERT into links ("creatorId", url, title, clicks, comments, date)
             VALUES($1, $2, $3, $4, $5, $6)
             ON CONFLICT (url) DO NOTHING
             RETURNING *;
-        `, [creatorId, url, title, 0, comments, date] );
+        `,
+			[creatorId, url, title, 0, comments, date],
+		);
 
-        if (tags.length > 0) {
-            tags.forEach(async function (tag) {
-                const tagged = await createTag(tag);
-                console.log('this is the tag', tagged);
-            });
-        }
-        return rows;
-    } catch (error) {
-        throw error;
-    }
-
+		if (tags.length > 0) {
+			tags.forEach(async function (tag) {
+				const tagged = await createTag(creatorId, tag);
+			});
+		}
+		return rows;
+	} catch (error) {
+		throw error;
+	}
 }
 
 // goal: update the link
@@ -121,46 +133,49 @@ async function createLink({ creatorId, url, title, comments, tags = [] }) {
 // output: returns an updated link
 
 async function updateLink(linkId, fields = {}) {
+	const setString = Object.keys(fields)
+		.map((key, index) => `"${key}"=$${index + 1}`)
+		.join(', ');
 
-    const setString = Object.keys(fields)
-        .map((key, index) => `"${key}"=$${index + 1}`)
-        .join(', ');
+	if (setString.length === 0) {
+		return;
+	}
 
-    if (setString.length === 0) {
-        return;
-    }
-
-    try {
-        const { rows: [link] } = await client.query(`
+	try {
+		const {
+			rows: [link],
+		} = await client.query(
+			`
 
             UPDATE links
             SET ${setString}
             WHERE id=${linkId}
             RETURNING *;
 
-        `, Object.values(fields));
-        return getAllLinks(linkId);
-    } catch (error) {
-        throw error;
-    }
-
+        `,
+			Object.values(fields),
+		);
+		return getAllLinks(linkId);
+	} catch (error) {
+		throw error;
+	}
 }
 
 // goal: get a list of all links
 // input: linkId as null
 // output: returns an array of objects
 
-async function getAllLinks(linkId = null) {
-
-    try {
-        const { rows: links } = await client.query(`
+async function getAllLinks(userId, linkId = null) {
+	try {
+		const { rows: links } = await client.query(`
             SELECT * 
             FROM links
-            ${linkId ? `WHERE id = ${linkId};` : ';'}
+            WHERE "creatorId"=${userId}
+            ${linkId ? `AND id = ${linkId};` : ';'}
         `);
-        await Promise.all(
-            links.map(async function (link) {
-                const { rows: tagsArr } = await client.query(`
+		await Promise.all(
+			links.map(async function (link) {
+				const { rows: tagsArr } = await client.query(`
 
                 SELECT (tags.title)
                 FROM tags
@@ -168,48 +183,43 @@ async function getAllLinks(linkId = null) {
                 WHERE links_tags."linkId" = ${link.id};
               `);
 
-                console.log('tags array: ', tagsArr);
-                link.tags = tagsArr;
-            })
-        );
-        return links;
-    } catch (error) {
-        throw error;
-    }
-
+				link.tags = tagsArr;
+			}),
+		);
+		return links;
+	} catch (error) {
+		throw error;
+	}
 }
 
 // goal: create a new tag that can be added to links
 // input: takes in a parameter of 'title'
 // output: returns a new tag
 
-async function createTag(title) {
+async function createTag(userId, title) {
+	try {
+		const { rows } = await client.query(
+			`
 
-    try {
-        const { rows } = await client.query(`
-
-            INSERT INTO tags(title)
-            VALUES($1)
+            INSERT INTO tags("creatorId", title)
+            VALUES($1, $2)
             ON CONFLICT (title) DO NOTHING
             RETURNING *;
 
-        `,[title]);
-        return rows;
-    } catch (error) {
-        throw error;
-    }
-
+        `,
+			[userId, title],
+		);
+		return rows;
+	} catch (error) {
+		throw error;
+	}
 }
-
-
-
-
 
 // goal: to remove a tag-link pair in the joint table
 // input: link id, and tag title
 // output: true if success, false otherwise
 
-async function removeTagFromLink(linkId, tagTitle) {
+async function removeTagFromLink(userId, linkId, tagTitle) {
 	try {
 		const {
 			rows: [id],
@@ -217,9 +227,10 @@ async function removeTagFromLink(linkId, tagTitle) {
 			`
         SELECT id
         FROM tags
-        WHERE title=$1;
+        WHERE "creatorId"=$1
+        AND title=$2;
     `,
-			[tagTitle],
+			[userId, tagTitle],
 		);
 		let tagId;
 		if (id) {
@@ -258,14 +269,15 @@ async function removeTagFromLink(linkId, tagTitle) {
 // input: tag name
 // output: true if success, false otherwise
 
-async function destroyTag(tagName) {
+async function destroyTag(userId, tagName) {
 	try {
 		const { rowCount } = await client.query(
 			`
         DELETE FROM tags
-        WHERE title=$1;
+        WHERE "creatorId"=$1
+        AND title=$2;
     `,
-			[tagName],
+			[userId, tagName],
 		);
 		if (rowCount === 1) {
 			return true;
@@ -277,93 +289,119 @@ async function destroyTag(tagName) {
 	}
 }
 
-  // goal: adds a tag to a link
+// goal: adds a tag to a link
 // input: take in a link id and a tag id
 // output: makes a connection between the link and tag
-  
-  
-  async function addTagToLink(linkId, tagId) {
-  
-    try {
-        const {
-            rows: [joint],
-        } = await client.query(`
+
+async function addTagToLink(linkId, tagId) {
+	try {
+		const {
+			rows: [joint],
+		} = await client.query(
+			`
             INSERT INTO links_tags ("linkId", "tagId")
             VALUES ($1, $2)
             ON CONFLICT ("linkId", "tagId") DO NOTHING
             RETURNING *;
         `,
-            [linkId, tagId]
-        );
-        return joint;
-    } catch (error) {
-        throw error;
-    }
-
+			[linkId, tagId],
+		);
+		return joint;
+	} catch (error) {
+		throw error;
+	}
 }
 
-async function getTagIdFromTitle(tagTitle) {
-  try {
-    const { rows: [ tagId ]} = await client.query(`
+async function getTagIdFromTitle(userId, tagTitle) {
+	try {
+		const {
+			rows: [tagId],
+		} = await client.query(
+			`
         SELECT id
         FROM tags
-        WHERE title=$1;
-    `, [tagTitle]
-    );
-    if (tagId) {
-      return tagId;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    throw error;
-  }
+        WHERE "creatorId"=$1
+        AND title=$2;
+    `,
+			[userId, tagTitle],
+		);
+		if (tagId) {
+			return tagId;
+		} else {
+			return false;
+		}
+	} catch (error) {
+		throw error;
+	}
 }
 
 // goal: get a list of links by tag name
 // input: take in a a tagname
 // output: an array of links associated with the tag
 
-async function getLinksByTagName(tagName) {
+async function getLinksByTagName(userId, tagName) {
+	try {
+		const links = await getAllLinks(userId);
 
-
-
-    try {
-        const links = await getAllLinks();
-
-        const { rows: [tagId] } = await client.query(`
+		const {
+			rows: [tagId],
+		} = await client.query(
+			`
                 SELECT id
                 FROM tags
-                WHERE title=$1;
-        `,[tagName]);
+                WHERE "creatorId"=$1
+                AND title=$2;
+        `,
+			[userId, tagName],
+		);
 
-        const { rows: linkArray } = await client.query(`
-            SELECT (links.id)
+		if (!tagId) {
+			return { name: 'No such user or tag name', message: "couldn't get the tag id" };
+		}
+
+		const { rows: linkArray } = await client.query(
+			`
+            SELECT *
             FROM links
             JOIN links_tags ON links.id = links_tags."linkId"
-            WHERE links_tags."tagId" = $1;
-        `, [tagId.id]
-        );  
+            WHERE links_tags."tagId" = $1
+            AND links."creatorId"=$2;
+        `,
+			[tagId.id, userId],
+		);
 
-        const { requestedLinks } = await Promise.all(
-            linkArray.map(async function (arrayItem) {
-                try {
-                    return await getAllLinks(arrayItem.id);
-                } catch (error) {
-                    throw error;
-                }
-            })
-        );
-        return requestedLinks;
-    } catch (error) {
-        throw error;
-    }
+		if (linkArray) {
+			linkArray.map((link) => {
+				delete link.linkId;
+				delete link.tagId;
+			});
+		} else {
+			return {
+				name: 'No links for user',
+				message: "This user doesn't have any links for that tag",
+			};
+		}
+
+		const requestedLinks = await Promise.all(
+			linkArray.map(async function (arrayItem) {
+				try {
+					return await getAllLinks(userId, arrayItem.id);
+				} catch (error) {
+					throw error;
+				}
+			}),
+		);
+
+		return requestedLinks;
+	} catch (error) {
+		throw error;
+	}
 }
 
 module.exports = {
 	client,
-  createUser,
-  getUser,
+	createUser,
+	getUser,
 	getUserByUsername,
 	getAllLinks,
 	createLink,
@@ -373,10 +411,7 @@ module.exports = {
 	getLinksByTagName,
 	getUserById,
 	removeTagFromLink,
-  destroyTag,
-  getAllUsers,
-  getTagIdFromTitle
-  
-
-
-}
+	destroyTag,
+	getAllUsers,
+	getTagIdFromTitle,
+};

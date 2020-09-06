@@ -49,11 +49,12 @@ async function createTables() {
                 url VARCHAR(255) UNIQUE,
                 title VARCHAR(255) UNIQUE NOT NULL,
                 clicks INTEGER NOT NULL,
-                comments VARCHAR(255) UNIQUE,
+                description VARCHAR(255) UNIQUE,
                 date VARCHAR(10) NOT NULL
             );
             CREATE TABLE tags (
                 id SERIAL PRIMARY KEY,
+                "creatorId" INTEGER REFERENCES users(id),
                 title VARCHAR(255) UNIQUE NOT NULL
 			);
 			CREATE TABLE links_tags (
@@ -111,26 +112,7 @@ async function getInitialUser() {
     }
 }
 
-// create the tags
 
-async function createInitialTags() {
-    try {
-        console.log('creating intitial tags...')
-
-        const tag1 = await createTag('popular');
-        console.log('tag 1: ', tag1);
-
-        const tag2 = await createTag('code')
-        console.log('tag 2: ', tag2);
-
-        const tag3 = await createTag('front-end')
-        console.log('tag 3: ', tag3);
-
-        console.log('finished creating tags...')
-    } catch (error) {
-        throw error
-    }
-}
 
 // create the links
 
@@ -173,12 +155,33 @@ async function createInitialLinks() {
     }
 }
 
+// create the tags
+
+async function createInitialTags() {
+    try {
+        console.log('creating initial tags...')
+
+        const tag1 = await createTag(1, 'popular');
+        console.log('tag 1 for user 1: ', tag1);
+
+        const tag2 = await createTag(1, 'code')
+        console.log('tag 2 for user 1: ', tag2);
+
+        const tag3 = await createTag(2, 'front-end')
+        console.log('tag 1 for user 2: ', tag3);
+
+        console.log('finished creating tags...')
+    } catch (error) {
+        throw error
+    }
+}
+
 // log out all the initial links
 
 async function getInitialLinks() {
     try {
-        console.log('Getting initial links: ', await getAllLinks());
-        console.log('Getting only one link (2)', await getAllLinks(2));
+        console.log('Getting initial links for user 1: ', await getAllLinks(1));
+        console.log('Getting only one link (2) for user 2', await getAllLinks(2, 2));
     } catch (error) {
         throw error
     }
@@ -235,16 +238,16 @@ async function createJointTagLink() {
 async function deleteLinksTagsPair() {
     try {
         //correct pairing
-        const deleted = await removeTagFromLink(1, 'test');
-        console.log('Deleted links tag pair. Link 1 to tag 1 (test): ', deleted);
+        const deleted = await removeTagFromLink(1, 1, 'test');
+        console.log('Deleted links tag pair. Link 1 to tag 1 (test) from user 1: ', deleted);
         //correct link, wrong tag
-        const deleted2 = await removeTagFromLink(1, 'whatever');
+        const deleted2 = await removeTagFromLink(1, 1, 'whatever');
         console.log('Deleted correct link wrong tag ', deleted2);
         //incorrect link, correct tag
-        const deleted3 = await removeTagFromLink(15, 'popular');
+        const deleted3 = await removeTagFromLink(2, 15, 'another');
         console.log('Deleted incorrect link, correct tag ', deleted3);
         //incorrect link and tag
-        const deleted4 = await removeTagFromLink(17, 'whatever');
+        const deleted4 = await removeTagFromLink(3, 17, 'whatever');
         console.log('Deleted incorrect link and tag ', deleted4);
     } catch (error) {
         throw error;
@@ -255,12 +258,28 @@ async function deleteLinksTagsPair() {
 async function deleteTag() {
     try {
         //delete existing tag
-        const deleted1 = await destroyTag('more');
+        const deleted1 = await destroyTag(3, 'more');
         console.log('more tag deleted ', deleted1);
         //delete non existing tag
-        const deleted2 = await destroyTag('whatever');
+        const deleted2 = await destroyTag(1, 'whatever');
         console.log('non existing tag deletion ', deleted2);
         
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function getLinksFromTags() {
+    try {
+        // get links for user1 with tag name test
+        const links1 = await getLinksByTagName(1, 'another');
+        console.log('Links for user 1 with tag name "test": ', links1);
+        // non existing user, existing tag
+        const links2 = await getLinksByTagName(7, 'test');
+        console.log('Getting links for non existing user with existing tag ("test"): ', links2);
+        // existing user, wrong tag
+        const link3 = await getLinksByTagName(1, 'front-end');
+        console.log('Getting links from existing user, but wrong tag: ', link3);
     } catch (error) {
         throw error;
     }
@@ -292,7 +311,7 @@ async function populateInitialData() {
         await deleteLinksTagsPair();
         await deleteTag();
         await getInitialLinks();
-        await getLinksByTagName('popular');
+        await getLinksFromTags();
         await updateInitialLinks();
     } catch (error) {
         throw error;
