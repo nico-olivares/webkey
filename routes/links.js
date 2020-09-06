@@ -3,7 +3,7 @@ const linksRouter = express.Router();
 const { 
     getAllLinks, 
     createLink, 
-    getLinksByTagName 
+    updateLink 
 } = require('../db');
 
 const { requireUser } = require('./utils');
@@ -34,6 +34,32 @@ linksRouter.post('/', requireUser, async (req,res, next) => {
     res.send (
         link
     );
-})
+});
+
+// update link
+
+linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
+    const [link] = await getAllLinks(req.params.linkId);
+    const { url, title, comments  } = req.body;
+    const updateFields = {};
+
+    if(url) { updateFields.url = url }
+    if(title) { updateFields.title = title }
+    if(comments) { updateFields.comments = comments }
+
+    try {
+        if(link && link.creatorId === req.user.id) {
+            console.log('link creator id = ', link.creatorId);
+            console.log('req user id = ', req.user.id); 
+            
+            const updatedLink = await updateLink( link.id, updateFields );
+            res.send({
+                link: updatedLink
+            })
+        }
+    } catch ({ name, message }) {
+        next({ name, message });
+    }
+});
 
 module.exports = linksRouter
