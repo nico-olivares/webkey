@@ -105,9 +105,11 @@ async function getUser({ username, password }) {
 async function createLink({ creatorId, url, title, description, tags = [] }) {
 	let today = new Date();
 	let date = today.getFullYear() + '/' + today.getDate() + '/' + (today.getMonth() + 1);
-
+	
 	try {
-		const { rows } = await client.query(
+		const {
+			rows: [newLink],
+		} = await client.query(
 			`
             INSERT into links ("creatorId", url, title, clicks, description, date)
             VALUES($1, $2, $3, $4, $5, $6)
@@ -116,13 +118,20 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
         `,
 			[creatorId, url, title, 0, description, date],
 		);
+		if (!newLink) {
+			return {
+				name: 'Error creating link',
+				message: `Couldn't create the new link. It may already exist`,
+			};
+		}
 
-		if (tags.length > 0) {
+		if (tags.length > 0 && newLink) {
 			tags.forEach(async function (tag) {
-				const tagged = await createTag(creatorId, tag);
+				const [newTag] = await createTag(creatorId, tag);
+				await addTagToLink(newLink.id, newTag.id);
 			});
 		}
-		return rows;
+		return ((newLink));
 	} catch (error) {
 		throw error;
 	}
@@ -132,7 +141,7 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 // input: link id and fields as an object
 // output: returns an updated link
 
-async function updateLink(linkId, fields = {}) {
+async function updateLink(linkId, fields = {}, tags = []) {
 	const setString = Object.keys(fields)
 		.map((key, index) => `"${key}"=$${index + 1}`)
 		.join(', ');
@@ -191,6 +200,39 @@ async function getAllLinks(userId, linkId = null) {
 		throw error;
 	}
 }
+
+async function addTagsToLinkObject(link) {
+  try {
+    const { id: linkId } = link;
+    console.log('link ', link);
+    console.log('linkId ', linkId);
+    const { rows: tagIds } = await client.query(`
+        SELECT "tagId"
+        FROM links_tags
+        WHERE "linkId"=$1;
+    `, [ linkId ]
+    );
+    console.log('tagIds ', tagIds);
+    const tags = await Promise.all(
+        tagIds.map(async (tagId) => {
+          const { rows: [ id ] } = client.query(`
+              SELECT title
+              FROM tags
+              WHERE id = $1;
+          `, [ tagId ]);
+          return id;
+      })
+    );
+
+    link.tags = tags;
+    return link;
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+
 
 // goal: create a new tag that can be added to links
 // input: takes in a parameter of 'title'

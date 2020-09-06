@@ -26,10 +26,10 @@ linksRouter.get('/', requireUser, async (req, res, next) => {
 
 // add new link
 linksRouter.post('/', requireUser, async (req,res, next) => {
-    const { url, title, description } = req.body;
+    const { url, title, description, tags } = req.body;
    
     const creatorId = req.user.id;
-    link = await createLink({ creatorId, url, title, description });
+    link = await createLink({ creatorId, url, title, description, tags });
     
     res.send (
         link
@@ -42,9 +42,9 @@ linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
     
     const [link] = await getAllLinks(req.user.id, req.params.linkId);
     console.log('the links', link);
-    const { url, title, description  } = req.body;
+    const { url, title, description, tags  } = req.body;
     const updateFields = {};
-
+    
     if(url) { updateFields.url = url }
     if(title) { updateFields.title = title }
     if(description) { updateFields.description = description }
@@ -54,7 +54,7 @@ linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
             console.log('link creator id = ', link.creatorId);
             console.log('req user id = ', req.user.id); 
             
-            const updatedLink = await updateLink( link.id, updateFields );
+            const updatedLink = await updateLink( link.id, updateFields, tags );
             res.send({
                 link: updatedLink
             })
