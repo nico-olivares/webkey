@@ -376,6 +376,7 @@ module.exports = {
 	removeTagFromLink,
   destroyTag,
   getAllUsers,
-  getTagIdFromTitle
+  getTagIdFromTitle,
+  getUser
 	// db methods
 }
