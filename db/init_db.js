@@ -12,10 +12,9 @@ const {
     createTag,
     addTagToLink,
     getLinksByTagName,
-    getUserById,
     removeTagFromLink,
-    destroyTag
-
+    destroyTag,
+    
 } = require('./index');
 
 // drop the tables before rebuilding
@@ -289,14 +288,9 @@ async function populateInitialData() {
         await getInitialUser();
         await createInitialLinks();
         await createInitialTags();
-
         await createJointTagLink();
         await deleteLinksTagsPair();
         await deleteTag();
-
- 
-        await createJointTagLink();
-
         await getInitialLinks();
         await getLinksByTagName('#popular');
         await updateInitialLinks();

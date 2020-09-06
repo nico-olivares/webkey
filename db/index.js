@@ -17,7 +17,7 @@ async function getAllUsers() {
 
 // goal: create a new user that can be validated
 // input: takes in username and password
-// outp
+// output: returns the user object
 
 async function createUser({ username, password }) {
     try {
@@ -277,6 +277,7 @@ async function destroyTag(tagName) {
 	} catch (error) {
 		throw error;
 	}
+}
 
   // goal: adds a tag to a link
 // input: take in a link id and a tag id
@@ -355,6 +356,7 @@ module.exports = {
 	getLinksByTagName,
 	getUserById,
 	removeTagFromLink,
-	destroyTag,
+  destroyTag,
+  getAllUsers
 	// db methods
-};
+}
