@@ -1,7 +1,9 @@
 // code to build and initialize DB goes here
 
+const client = require('./client');
+
 const {
-    client,
+    
     getAllUsers,
     createUser,
     getUserByUsername,
