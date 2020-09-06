@@ -6,7 +6,8 @@ const { getUserById } = require('../db/index.js');
 
 const linksRouter = require('./links');
 const usersRouter = require('./users');
-const tagsRouter = require('./tags')
+const tagsRouter = require('./tags');
+const linksTagsRouter = require('./links_tags');
 
 apiRouter.use(async (req, res, next) => {
 	const prefix = 'Bearer ';
@@ -46,7 +47,8 @@ apiRouter.get('/', (req, res, next) => {
 
 apiRouter.use('/links', linksRouter);
 apiRouter.use('/users', usersRouter);
-apiRouter.use('/tags', tagsRouter)
+apiRouter.use('/tags', tagsRouter);
+apiRouter.use('./linkstags', linksTagsRouter);
 
 
 apiRouter.use('/', (error, req, res, next) => {

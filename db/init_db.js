@@ -117,13 +117,13 @@ async function createInitialTags() {
     try {
         console.log('creating intitial tags...')
 
-        const tag1 = await createTag('#popular');
+        const tag1 = await createTag('popular');
         console.log('tag 1: ', tag1);
 
-        const tag2 = await createTag('#code')
+        const tag2 = await createTag('code')
         console.log('tag 2: ', tag2);
 
-        const tag3 = await createTag('#front-end')
+        const tag3 = await createTag('front-end')
         console.log('tag 3: ', tag3);
 
         console.log('finished creating tags...')
@@ -145,7 +145,7 @@ async function createInitialLinks() {
             url: 'https://learn.fullstackacademy.com/workshop',
             title: 'learn fullstack',
             comments: 'This is fullstack\'s Learndot',
-            tags: ['#test', '#another']
+            tags: ['test', 'another']
         });
         console.log('link 1: ', link1);
 
@@ -163,7 +163,7 @@ async function createInitialLinks() {
             url: 'https://zoom.com',
             title: 'Zoom Room',
             comments: 'Use this to talk to teammates',
-            tags: ['#test', '#more']
+            tags: ['test', 'more']
         });
         console.log('link 3: ', link3);
 
@@ -235,13 +235,13 @@ async function createJointTagLink() {
 async function deleteLinksTagsPair() {
     try {
         //correct pairing
-        const deleted = await removeTagFromLink(1, '#test');
-        console.log('Deleted links tag pair. Link 1 to tag 1 (#test): ', deleted);
+        const deleted = await removeTagFromLink(1, 'test');
+        console.log('Deleted links tag pair. Link 1 to tag 1 (test): ', deleted);
         //correct link, wrong tag
         const deleted2 = await removeTagFromLink(1, 'whatever');
         console.log('Deleted correct link wrong tag ', deleted2);
         //incorrect link, correct tag
-        const deleted3 = await removeTagFromLink(15, '#popular');
+        const deleted3 = await removeTagFromLink(15, 'popular');
         console.log('Deleted incorrect link, correct tag ', deleted3);
         //incorrect link and tag
         const deleted4 = await removeTagFromLink(17, 'whatever');
@@ -255,8 +255,8 @@ async function deleteLinksTagsPair() {
 async function deleteTag() {
     try {
         //delete existing tag
-        const deleted1 = await destroyTag('#more');
-        console.log('#more tag deleted ', deleted1);
+        const deleted1 = await destroyTag('more');
+        console.log('more tag deleted ', deleted1);
         //delete non existing tag
         const deleted2 = await destroyTag('whatever');
         console.log('non existing tag deletion ', deleted2);
@@ -292,7 +292,7 @@ async function populateInitialData() {
         await deleteLinksTagsPair();
         await deleteTag();
         await getInitialLinks();
-        await getLinksByTagName('#popular');
+        await getLinksByTagName('popular');
         await updateInitialLinks();
     } catch (error) {
         throw error;

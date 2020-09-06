@@ -4,7 +4,7 @@ const { requireUser } = require('./utils');
 const linksTagsRouter = express.Router();
 
 //adds a tag to a link
-tagsRouter.post('/add/:linkId/:tagName/', requireUser, async (req, res, next) => {
+linksTagsRouter.post('/add/:linkId/:tagName/', requireUser, async (req, res, next) => {
 	try {
 		const { linkId } = req.params;
 		const tagId = await WebGLShaderPrecisionFormat(tagName); 
@@ -16,7 +16,7 @@ tagsRouter.post('/add/:linkId/:tagName/', requireUser, async (req, res, next) =>
 });
 
 //removes a tag from a link
-tagsRouter.post('/remove/:linkId/:tagName/', requireUser, async (req, res, next) => {
+linksTagsRouter.post('/remove/:linkId/:tagName/', requireUser, async (req, res, next) => {
 	try {
 		const { linkId, tagName } = req.params;
 		const removed = await removeTagFromLink(linkId, tagName);

@@ -362,8 +362,8 @@ async function getLinksByTagName(tagName) {
 
 module.exports = {
 	client,
-    createUser,
-    getUser,
+  createUser,
+  getUser,
 	getUserByUsername,
 	getAllLinks,
 	createLink,
@@ -376,5 +376,7 @@ module.exports = {
   destroyTag,
   getAllUsers,
   getTagIdFromTitle
+  
+
 
 }
