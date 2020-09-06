@@ -90,7 +90,6 @@ async function getUser({ username, password }) {
 // input: takes in parameters of url, title, clicks, comments, date
 // output: returns a new link
 
-
 async function createLink({ creatorId, url, title, comments, tags = [] }) {
     let today = new Date();
     let date = today.getFullYear()  + '/' + today.getDate() + '/' + (today.getMonth()+1) 
@@ -120,7 +119,6 @@ async function createLink({ creatorId, url, title, comments, tags = [] }) {
 // goal: update the link
 // input: link id and fields as an object
 // output: returns an updated link
-// debt: need to also update tags
 
 async function updateLink(linkId, fields = {}) {
 
@@ -346,7 +344,8 @@ async function getLinksByTagName(tagName) {
 
 module.exports = {
 	client,
-	createUser,
+    createUser,
+    getUser,
 	getUserByUsername,
 	getAllLinks,
 	createLink,
@@ -356,7 +355,6 @@ module.exports = {
 	getLinksByTagName,
 	getUserById,
 	removeTagFromLink,
-  destroyTag,
-  getAllUsers
-	// db methods
+    destroyTag,
+    getAllUsers
 }
