@@ -304,6 +304,24 @@ async function destroyTag(tagName) {
 
 }
 
+async function getTagIdFromTitle(tagTitle) {
+  try {
+    const { rows: [ tagId ]} = await client.query(`
+        SELECT id
+        FROM tags
+        WHERE title=$1;
+    `, [tagTitle]
+    );
+    if (tagId) {
+      return tagId;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
 // goal: get a list of links by tag name
 // input: take in a a tagname
 // output: an array of links associated with the tag
@@ -357,6 +375,7 @@ module.exports = {
 	getUserById,
 	removeTagFromLink,
   destroyTag,
-  getAllUsers
+  getAllUsers,
+  getTagIdFromTitle
 	// db methods
 }
