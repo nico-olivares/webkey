@@ -46,16 +46,18 @@ async function createTables() {
             CREATE TABLE links (
                 id SERIAL PRIMARY KEY,
                 "creatorId" INTEGER REFERENCES users(id),
-                url VARCHAR(255) UNIQUE,
-                title VARCHAR(255) UNIQUE NOT NULL,
+                url VARCHAR(255),
+                title VARCHAR(255) NOT NULL,
                 clicks INTEGER NOT NULL,
-                description VARCHAR(255) UNIQUE,
-                date VARCHAR(10) NOT NULL
+                description VARCHAR(255),
+                date VARCHAR(10) NOT NULL,
+                UNIQUE ("creatorId", url)
             );
             CREATE TABLE tags (
                 id SERIAL PRIMARY KEY,
                 "creatorId" INTEGER REFERENCES users(id),
-                title VARCHAR(255) UNIQUE NOT NULL
+                title VARCHAR(255) NOT NULL,
+                UNIQUE ("creatorId", title)
 			);
 			CREATE TABLE links_tags (
 				"linkId" INTEGER REFERENCES links(id),
@@ -126,7 +128,7 @@ async function createInitialLinks() {
             creatorId: Marcello.id,
             url: 'https://learn.fullstackacademy.com/workshop',
             title: 'learn fullstack',
-            comments: 'This is fullstack\'s Learndot',
+            description: 'This is fullstack\'s Learndot',
             tags: ['test', 'another']
         });
         console.log('link 1: ', link1);
@@ -135,7 +137,7 @@ async function createInitialLinks() {
             creatorId: Kamikaze1.id,
             url: 'https://github.com',
             title: 'Git Hub',
-            comments: 'This is where the code lives',
+            description: 'This is where the code lives',
             tags: []
         });
         console.log('link 2: ', link2);
@@ -144,7 +146,7 @@ async function createInitialLinks() {
             creatorId: NicoIsCool.id,
             url: 'https://zoom.com',
             title: 'Zoom Room',
-            comments: 'Use this to talk to teammates',
+            description: 'Use this to talk to teammates',
             tags: ['test', 'more']
         });
         console.log('link 3: ', link3);
@@ -195,7 +197,7 @@ async function updateInitialLinks() {
         const updatedLink2 = await updateLink(2, {
             url: 'https://github.com/',
             title: 'Git Hub Repo',
-            comments: 'The code repos live here',
+            description: 'The code repos live here',
             date: "2020-09-15"
         });
         console.log('link 2: ', updatedLink2);
@@ -203,7 +205,7 @@ async function updateInitialLinks() {
         const updatedLink3 = await updateLink(3, {
             url: 'https://zoom.com/',
             title: 'Zoom Room',
-            comments: 'Teleconference software',
+            description: 'Teleconference software',
             date: "2020-09-15"
         });
         console.log('link 3: ', updatedLink3);

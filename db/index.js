@@ -99,22 +99,22 @@ async function getUser({ username, password }) {
 }
 
 // goal: create a new link that tags can be add to
-// input: takes in parameters of url, title, clicks, comments, date
+// input: takes in parameters of url, title, clicks, description, date
 // output: returns a new link
 
-async function createLink({ creatorId, url, title, comments, tags = [] }) {
+async function createLink({ creatorId, url, title, description, tags = [] }) {
 	let today = new Date();
 	let date = today.getFullYear() + '/' + today.getDate() + '/' + (today.getMonth() + 1);
 
 	try {
 		const { rows } = await client.query(
 			`
-            INSERT into links ("creatorId", url, title, clicks, comments, date)
+            INSERT into links ("creatorId", url, title, clicks, description, date)
             VALUES($1, $2, $3, $4, $5, $6)
-            ON CONFLICT (url) DO NOTHING
+            ON CONFLICT ("creatorId", url) DO NOTHING
             RETURNING *;
         `,
-			[creatorId, url, title, 0, comments, date],
+			[creatorId, url, title, 0, description, date],
 		);
 
 		if (tags.length > 0) {
@@ -203,7 +203,7 @@ async function createTag(userId, title) {
 
             INSERT INTO tags("creatorId", title)
             VALUES($1, $2)
-            ON CONFLICT (title) DO NOTHING
+            ON CONFLICT ("creatorId", title) DO NOTHING
             RETURNING *;
 
         `,
