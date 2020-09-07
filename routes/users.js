@@ -5,8 +5,6 @@ const usersRouter = express.Router();
 const { createUser, getUserByUsername, getUser } = require('../db');
 
 usersRouter.post('/register', async (req, res, next) => {
-
-
     try {
 
         const { username, password } = req.body;
