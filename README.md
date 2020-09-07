@@ -48,6 +48,47 @@ Each link has a title, the actual link, and a description and will store the num
 
 # React components
 
+1.	REACT APP
+    * start new component *
+    a.	HEADER (ONE COMPONENT)
+        i.	Left - Logo
+        ii.	Right – Entry Point
+            1.	Authorized
+                a.	Logout
+            2.	Non-Authorized
+                a.	Register
+                b.	Login
+    * end component*
+
+    b.	BODY
+        * start new componet
+        i.	Sidebar
+            1.	Filter Tags Field
+            2.	Search Content 
+                a.	List Of Tags (default state)
+                b.	Filters List (based off filter results)
+        ii.	Main
+            1.	Content Head
+                a.	Title (left)
+                b.	Sorting (alpha/clicks/date
+                c.	Add New Link Button
+                d.	Search Links field
+            2.	Content Body
+                a.	List of Links (Accordion Menu)
+                    i.	Accordion Head
+                        1.	Title as a hyperlink (left)
+                        2.	Click Count (left)
+                        3.	Last Visited Date (right)
+                        4.	Icon To Toggle Menu (right)
+                    ii.	Accordion Body
+                        1.	Form Components (One component 4 elements)
+                            a.	Text Field URL
+                            b.	Text Field Title
+                            c.	Textarea Description
+                            d.	Button to save
+    c.	FOOTER
+        i.	Some component
+        ii.	Maybe git hub
 
 
 
