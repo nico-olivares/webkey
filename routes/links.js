@@ -41,7 +41,7 @@ linksRouter.post('/', requireUser, async (req,res, next) => {
 linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
     
     const [link] = await getAllLinks(req.user.id, req.params.linkId);
-    console.log('the links', link);
+    
     const { url, title, description, tags  } = req.body;
     const updateFields = {};
     
@@ -51,8 +51,6 @@ linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
 
     try {
         if(link && link.creatorId === req.user.id) {
-            console.log('link creator id = ', link.creatorId);
-            console.log('req user id = ', req.user.id); 
             
             const updatedLink = await updateLink( link.id, updateFields, tags );
             res.send({

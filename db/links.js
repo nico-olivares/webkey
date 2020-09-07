@@ -1,21 +1,10 @@
-// sets up DB
-
-// const { Client } = require('pg');
-
-// const DB_NAME = 'webkey';
-
-// const DB_URL = process.env.DATABASE_URL || `postgres://localhost:5432/webkey`;
-// const client = new Client(DB_URL);
-
 const client = require('./client');
-const bcrypt = require('bcrypt');
+//const bcrypt = require('bcrypt');
 
-const { addTagToLink, addTagsToLinkObject } = require('./links_tags.js');
-const { createTag } = require('./tags');
-
+const { addTagToLink, addTagsToLinkObject, getTagsForLinkId } = require('./links_tags.js');
+const { createTag, getTagIdFromTitle } = require('./tags');
 
 // database methods
-
 
 // goal: create a new link that tags can be add to
 // input: takes in parameters of url, title, clicks, description, date
@@ -24,9 +13,9 @@ const { createTag } = require('./tags');
 async function createLink({ creatorId, url, title, description, tags = [] }) {
 	let today = new Date();
 	let date = today.getFullYear() + '/' + today.getDate() + '/' + (today.getMonth() + 1);
-	
+
 	try {
-		const {
+		let {
 			rows: [newLink],
 		} = await client.query(
 			`
@@ -44,42 +33,24 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 			};
 		}
 
-		if (tags.length > 0 && newLink) {
+		if (tags.length > 0) {
+			
 			tags.forEach(async function (tag) {
-				const [newTag] = await createTag(creatorId, tag);
+				let tagId = await getTagIdFromTitle(creatorId, tag);
+				if (!tagId) {
+					const newTag = await createTag(creatorId, tag);
+					tagId = newTag.id;
+				}
+
+				await addTagToLink(newLink.id, tagId);
 				
-				await addTagToLink(newLink.id, newTag.id);
 			});
 		}
-	// 	setTimeout(()=>{}, 4000);
-	// 	console.log('newLink ', newLink);
-	// 	console.log('linkId ', newLink.id);
-		
-	// 	const { rows: tagIds } = await client.query(`
-    //     SELECT *
-    //     FROM links_tags
-	// 	WHERE "linkId"=${newLink.id}
-	// 	;
-    // `
-	// );
-	
-    // console.log('tagIds ', tagIds);
-    // const tagsArray = await Promise.all(
-    //     tagIds.map(async (tagId) => {
-    //       const { rows: [ id ] } = client.query(`
-    //           SELECT title
-    //           FROM tags
-    //           WHERE id = $1;
-    //       `, [ tagId ]);
-    //       return id;
-    //   })
-    // );
 
-	 newLink.tags = tags;
-	
+		// newLink = await addTagsToLinkObject(newLink);   Why is it not working?
+		newLink.tags = tags;
 
-    return newLink;
-
+		return newLink;
 	} catch (error) {
 		throw error;
 	}
@@ -94,25 +65,36 @@ async function updateLink(linkId, fields = {}, tags = []) {
 		.map((key, index) => `"${key}"=$${index + 1}`)
 		.join(', ');
 
-	if (setString.length === 0) {
+	if (setString.length === 0 && tags.length === 0) {
 		return;
 	}
 
 	try {
-		const {
-			rows: [link],
-		} = await client.query(
-			`
-
+		if (setString.length !== 0) {
+			const {
+				rows: [link],
+			} = await client.query(
+				`
             UPDATE links
             SET ${setString}
-            WHERE id=${linkId}
+			WHERE id=${linkId} 
+			AND "creatorId"=${userId}
             RETURNING *;
-
         `,
-			Object.values(fields),
-		);
-		return getAllLinks(linkId);
+				Object.values(fields),
+			);
+		}
+
+		if (tags.length !== 0) {
+			//check if tag exists for user. If it does, add to link
+			//if tag doesn't exist, create and add to link
+			//check to see if there's a tag that was in the link and isn't there anymore
+			//then check to see if once removed this is going to be belong to no link
+			//no link destroy. Other links then remove from link only
+		}
+
+
+		return getAllLinks(link.creatorId, linkId);
 	} catch (error) {
 		throw error;
 	}
@@ -120,7 +102,7 @@ async function updateLink(linkId, fields = {}, tags = []) {
 
 // goal: get a list of all links
 // input: linkId as null
-// output: returns an array of objects
+// output: returns an array of objects (links with their tags)
 
 async function getAllLinks(userId, linkId = null) {
 	try {
@@ -149,8 +131,29 @@ async function getAllLinks(userId, linkId = null) {
 	}
 }
 
+async function getLinkById(linkId) {
+	try {
+		const {
+			rows: [link],
+		} = await client.query(
+			`
+			SELECT *
+			FROM links
+			WHERE id=$1;
+		`,
+			[linkId],
+		);
 
-
+		if (link) {
+			link.tags = await getTagsForLinkId(linkId);
+			return link;
+		} else {
+			return { name: 'No link found', message: 'No link with that id' };
+		}
+	} catch (error) {
+		throw error;
+	}
+}
 
 // goal: get a list of links by tag name
 // input: take in a a tagname
