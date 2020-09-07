@@ -1,15 +1,8 @@
-// sets up DB
 
-// const { Client } = require('pg');
-
-// const DB_NAME = 'webkey';
-
-// const DB_URL = process.env.DATABASE_URL || `postgres://localhost:5432/webkey`;
-// const client = new Client(DB_URL);
 
 const client = require('./client');
 
-const bcrypt = require('bcrypt');
+//const bcrypt = require('bcrypt');
 
 const { removeTagFromAllLinks } = require('./links_tags');
 
@@ -21,7 +14,7 @@ const { removeTagFromAllLinks } = require('./links_tags');
 
 async function createTag(userId, title) {
 	try {
-		const { rows } = await client.query(
+		const { rows: [ tag ] } = await client.query(
 			`
 
             INSERT INTO tags("creatorId", title)
@@ -32,7 +25,7 @@ async function createTag(userId, title) {
         `,
 			[userId, title],
 		);
-		return rows;
+		return tag;
 	} catch (error) {
 		throw error;
 	}
@@ -49,10 +42,9 @@ async function createTag(userId, title) {
 async function destroyTag(userId, tagName) {
 	
 	try {
-		console.log('userId... ', userId);
-		console.log('tagName... ', tagName);
+		
 		const tagId = await getTagIdFromTitle(userId.id, tagName);
-		console.log('tagId', tagId);
+		
 
 		if (tagId) {
 		await removeTagFromAllLinks(tagId);

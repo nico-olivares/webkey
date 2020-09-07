@@ -1,16 +1,8 @@
-// sets up DB
-
-// const { Client } = require('pg');
-
-// const DB_NAME = 'webkey';
-
-// const DB_URL = process.env.DATABASE_URL || `postgres://localhost:5432/webkey`;
-// const client = new Client(DB_URL);
 
 const client = require('./client');
 
-const bcrypt = require('bcrypt');
-const e = require('express');
+//const bcrypt = require('bcrypt');
+//const e = require('express');
 
 // database methods
 
@@ -21,16 +13,19 @@ const e = require('express');
 async function addTagsToLinkObject(link) {
   try {
     const { id: linkId } = link;
-    console.log('link ', link);
-    console.log('linkId ', linkId);
-    const { rows: tagIds } = await client.query(`
-        SELECT *
+    console.log('link id ', linkId);
+    let { rows: tagIds } = await client.query(`
+        SELECT "tagId"
         FROM links_tags
 		WHERE "linkId"=$1
 		;
-    `, [ link.id ]
+    `, [ linkId ]
     );
-    console.log('tagIds ', tagIds);
+	
+	tagIds.map((tag) => {
+		return tag.id;
+	});
+	console.log('tagIds from addTagsToLinkObjects ', tagIds);
     const tags = await Promise.all(
         tagIds.map(async (tagId) => {
           const { rows: [ id ] } = client.query(`
@@ -148,12 +143,25 @@ async function removeTagFromAllLinks(tagId) {
 	}
 }
 
-
+async function getTagsForLinkId(linkId) {
+	try {
+		const { rows: tagIds } = await client.query(`
+			SELECT "tagId"
+			FROM links_tags
+			WHERE "linkId"=$1;
+		`, [ linkId ]
+		);
+		console.log('tagIds ', tagIds);
+	} catch (error) {
+		throw error;
+	}
+}
 
 
 module.exports = {
 	addTagToLink,
 	removeTagFromLink,
 	removeTagFromAllLinks,
-	addTagsToLinkObject
+	addTagsToLinkObject,
+	getTagsForLinkId
 };
