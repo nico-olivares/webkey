@@ -22,7 +22,7 @@ server.use('/api', require('./routes'));
 server.use((req, res, next) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
-const { client } = require('./db');
+const client = require('./db/client');
 
 // connect to the server
 

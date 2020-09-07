@@ -17,8 +17,8 @@ linksRouter.use((req, res, next) => {
 
 // get all links
 
-linksRouter.get('/', async (req, res, next) => {
-    const links = await getAllLinks();
+linksRouter.get('/', requireUser, async (req, res, next) => {
+    const links = await getAllLinks(req.user.id);
     res.send({
         links
     });
@@ -26,10 +26,10 @@ linksRouter.get('/', async (req, res, next) => {
 
 // add new link
 linksRouter.post('/', requireUser, async (req,res, next) => {
-    const { url, title, comments } = req.body;
-    console.log ('url', url);
+    const { url, title, description, tags } = req.body;
+   
     const creatorId = req.user.id;
-    link = await createLink({ creatorId, url, title, comments });
+    link = await createLink({ creatorId, url, title, description, tags });
     
     res.send (
         link
@@ -39,20 +39,22 @@ linksRouter.post('/', requireUser, async (req,res, next) => {
 // update link
 
 linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
-    const [link] = await getAllLinks(req.params.linkId);
-    const { url, title, comments  } = req.body;
+    
+    const [link] = await getAllLinks(req.user.id, req.params.linkId);
+    console.log('the links', link);
+    const { url, title, description, tags  } = req.body;
     const updateFields = {};
-
+    
     if(url) { updateFields.url = url }
     if(title) { updateFields.title = title }
-    if(comments) { updateFields.comments = comments }
+    if(description) { updateFields.description = description }
 
     try {
         if(link && link.creatorId === req.user.id) {
             console.log('link creator id = ', link.creatorId);
             console.log('req user id = ', req.user.id); 
             
-            const updatedLink = await updateLink( link.id, updateFields );
+            const updatedLink = await updateLink( link.id, updateFields, tags );
             res.send({
                 link: updatedLink
             })
