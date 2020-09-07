@@ -130,12 +130,14 @@ async function addTagToLink(linkId, tagId) {
 
 
 async function removeTagFromAllLinks(tagId) {
+	
 	try {
 		const { rowCount } = await client.query(`
 			DELETE FROM links_tags
 			WHERE "tagId"=$1;
 		`, [ tagId ]
 		);
+		
 		if (rowCount > 0) {
 			return true;
 		} else {

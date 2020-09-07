@@ -312,11 +312,11 @@ async function populateInitialData() {
         await createInitialLinks();
         await createInitialTags();
         await createJointTagLink();
-        await deleteLinksTagsPair();
+        // await deleteLinksTagsPair();
         await deleteTag();
-        await getInitialLinks();
-        await getLinksFromTags();
-        await updateInitialLinks();
+        // await getInitialLinks();
+        // await getLinksFromTags();
+        // await updateInitialLinks();
     } catch (error) {
         throw error;
     }

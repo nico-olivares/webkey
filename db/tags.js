@@ -11,7 +11,7 @@ const client = require('./client');
 
 const bcrypt = require('bcrypt');
 
-const { removeTagFromAllLinks } = require('./index');
+const { removeTagFromAllLinks } = require('./links_tags');
 
 // database methods
 
@@ -47,10 +47,14 @@ async function createTag(userId, title) {
 // output: true if success, false otherwise
 
 async function destroyTag(userId, tagName) {
+	
 	try {
+		console.log('userId... ', userId);
+		console.log('tagName... ', tagName);
+		const tagId = await getTagIdFromTitle(userId.id, tagName);
+		console.log('tagId', tagId);
 
-		const tagId = await getTagIdFromTitle(userId, tagName);
-
+		if (tagId) {
 		await removeTagFromAllLinks(tagId);
 
 		const { rowCount } = await client.query(
@@ -61,11 +65,15 @@ async function destroyTag(userId, tagName) {
     `,
 			[userId, tagName],
 		);
-		if (rowCount === 1) {
+		
+		if (rowCount > 0) {
 			return true;
 		} else {
 			return false;
 		}
+	} else {
+		return false;
+	}
 	} catch (error) {
 		throw error;
 	}
@@ -74,18 +82,18 @@ async function destroyTag(userId, tagName) {
 async function getTagIdFromTitle(userId, tagTitle) {
 	try {
 		const {
-			rows: [tagId],
+			rows: [ tagId ],
 		} = await client.query(
 			`
         SELECT id
         FROM tags
-        WHERE "creatorId"=$1
-        AND title=$2;
+        WHERE title=$1;
     `,
-			[userId, tagTitle],
+			[ tagTitle],
 		);
+		
 		if (tagId) {
-			return tagId;
+			return tagId.id;
 		} else {
 			return false;
 		}
