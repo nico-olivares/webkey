@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { getSomething } from '../api';
 
 const App = () => {
@@ -17,8 +19,10 @@ const App = () => {
 
     return (
         <div className='App'>
-            <h1>Hello, World!</h1>
-            <h2>{message}</h2>
+            <>
+                <Header />
+                <Footer />
+            </>
         </div>
     );
 };
