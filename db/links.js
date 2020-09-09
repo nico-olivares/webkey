@@ -54,9 +54,11 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 
         // newLink = await addTagsToLinkObject(newLink);
         // Why is it not working?
-        // Office hours?
+		// Office hours?
+		
+		newLink = await getAllLinks(newLink.creatorId, newLink.id);
 
-        newLink.tags = tags;
+        //newLink.tags = tags;
 
         return newLink;
     } catch (error) {
