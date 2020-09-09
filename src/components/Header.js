@@ -15,7 +15,7 @@ function Header() {
                     <div>Web Key Logo</div>  
                 </Col>
                 <Col id="info" md={6} sm={12}>
-                    <div>Login | Register</div>
+                    <div>Home | Login | Register</div>
                 </Col>
             </Row>
         </Container>
