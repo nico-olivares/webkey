@@ -17,6 +17,7 @@ const {
     getLinksByTagName,
     removeTagFromLink,
     destroyTag,
+    linkClick
 } = require("./index");
 const { addTagsToLinkObject } = require("./links_tags");
 
@@ -314,6 +315,18 @@ async function getLinksFromTags() {
     }
 }
 
+async function clickClick() {
+    try {
+        //2 clicks to link 1
+        await linkClick(1, 1);
+        console.log('2 clicks to link 1: ', await linkClick(1, 1));
+        //1 click to link 2
+        console.log('One click to link 2: ', await linkClick(2, 2));
+    } catch (error) {
+        throw error;
+    }
+}
+
 // async function addTagsToLinkObjectTest() {
 //     try {
 //         const emptyLink1 = await getAllLinks(1, 1);
@@ -361,6 +374,7 @@ async function populateInitialData() {
         await getLinksFromTags();
         // await addTagsToLinkObjectTest();
         await updateInitialLinks();
+        await clickClick();
     } catch (error) {
         throw error;
     }
