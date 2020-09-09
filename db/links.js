@@ -344,9 +344,32 @@ async function getLinksByTagName(userId, tagName) {
     }
 }
 
+async function linkClick(linkId) {
+	try {
+		const { rows: [ link ]} = await client.query(`
+			SELECT *
+			FROM links
+			WHERE id=$1;
+		`, [ linkId ]
+		);
+		const clicks = link.clicks + 1;
+		const {rows: [ newLink ]} = await client.query(`
+			UPDATE links
+			SET clicks=${clicks}
+			WHERE id=$1
+			RETURNING *
+		`, [ linkId ]
+		);
+		return await getAllLinks(newLink.creatorId, linkId);
+	} catch (error) {
+		throw error;
+	}
+}
+
 module.exports = {
     getAllLinks,
     createLink,
     updateLink,
-    getLinksByTagName,
+	getLinksByTagName,
+	linkClick
 };
