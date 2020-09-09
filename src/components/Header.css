@@ -1,0 +1,23 @@
+/* container component */
+#header {
+    background-color: #20232a;
+    color: #DDDDDD;
+    
+}
+
+/* left col component */
+#logo {
+    align-items: center;
+    display: flex;
+    height: 70px;
+    justify-content: flex-start;
+}
+
+/* left col component */
+#info {
+    align-items: center;
+    display: flex;
+    height: 70px;
+    justify-content: flex-end;
+    text-align: right;
+}

@@ -34,21 +34,21 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 		}
 
 		if (tags.length > 0) {
-			
 			tags.forEach(async function (tag) {
 				let tagId = await getTagIdFromTitle(creatorId, tag);
 				if (!tagId) {
 					const newTag = await createTag(creatorId, tag);
 					tagId = newTag.id;
 				}
-
 				await addTagToLink(newLink.id, tagId);
-				
 			});
 		}
 
-		// newLink = await addTagsToLinkObject(newLink);   Why is it not working?
-		newLink.tags = tags;
+        // newLink = await addTagsToLinkObject(newLink);   
+        // Why is it not working?
+        // Office hours?
+        
+        newLink.tags = tags;
 
 		return newLink;
 	} catch (error) {
@@ -104,6 +104,7 @@ async function updateLink(linkId, fields = {}, tags = []) {
 				console.log('new link from within no old tags, but some new tags ', newLink);
 			} else {
 
+
 			const removeTagsBin = oldTags.map(tag => {
 				let absent = true;
 				tags.forEach(newTagTitle => {
@@ -133,13 +134,13 @@ async function updateLink(linkId, fields = {}, tags = []) {
 			console.log('addTagsBin ', addTagsBin);
 			newLink = await getAllLinks(newLink.creatorId, newLink.id);;
 			console.log('newLink from within both old and new tags ', newLink);
+
 		}
 			
 		return newLink;
 
-		} catch (error) {
-	
-		}
+
+		
 	} catch (error) {
 		throw error;
 	}
@@ -147,32 +148,15 @@ async function updateLink(linkId, fields = {}, tags = []) {
 
 
 
-//make add bin and remove bin
-async function compareNewAndOldTags(oldTags, newTags) {
-	try {
 
-	} catch (error) {
 
-	}
-}
 
-//Return same removeTagBins
-async function removeRemovalTags(removeTagsBin) {
-	try {
-
-	} catch (error) {
-
-	}
-}
-
-//destroy if there's no more connections
-async function checkForMoreConnections(removeTagsBin) {
-	try {
-
-	} catch (error) {
-
-	}
-}
+        //check if tag exists for user. If it does, add to link
+        //if tag doesn't exist, create and add to link
+        //check to see if there's a tag that was in the link and isn't there anymore
+        //then check to see if once removed this is going to be belong to no link
+        //no link destroy. Other links then remove from link only
+            
 
 
 

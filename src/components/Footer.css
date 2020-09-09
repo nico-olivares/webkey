@@ -1,0 +1,13 @@
+#footer {
+    background-color: #20232a;
+    color: #DDDDDD;
+    
+}
+
+/* col component */
+#footer .col {
+    align-items: center;
+    display: flex;
+    height: 70px;
+    justify-content: center;
+}
