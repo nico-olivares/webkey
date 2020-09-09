@@ -1,8 +1,8 @@
 const client = require('./client');
 //const bcrypt = require('bcrypt');
 
-const { addTagToLink, addTagsToLinkObject, getTagsForLinkId } = require('./links_tags.js');
-const { createTag, getTagIdFromTitle } = require('./tags');
+const { addTagToLink, addTagsToLinkObject, getTagsFromLinkId } = require('./links_tags.js');
+const { createTag, getTagIdFromTitle, getTitleFromTagId } = require('./tags');
 
 // database methods
 
@@ -61,44 +61,121 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 // output: returns an updated link
 
 async function updateLink(linkId, fields = {}, tags = []) {
-	const setString = Object.keys(fields)
-		.map((key, index) => `"${key}"=$${index + 1}`)
-		.join(', ');
-
-	if (setString.length === 0 && tags.length === 0) {
-		return;
-	}
-
 	try {
-		if (setString.length !== 0) {
-			const {
-				rows: [link],
-			} = await client.query(
-				`
-            UPDATE links
-            SET ${setString}
-			WHERE id=${linkId} 
-			AND "creatorId"=${userId}
-            RETURNING *;
-        `,
-				Object.values(fields),
-			);
+		try {
+			const setString = Object.keys(fields)
+			.map((key, index) => `"${key}"=$${index + 1}`)
+			.join(', ');
+	
+		if (setString.length === 0 && tags.length === 0) {
+			return;
 		}
+			let newLink;
+			if (setString.length !== 0) {
+				const {
+					rows: [link],
+				} = await client.query(
+					`
+				UPDATE links
+				SET ${setString}
+				WHERE id=${linkId} 
+				RETURNING *;
+			`,
+					Object.values(fields),
+				);
+				newLink = link;	//without tags
+			}
+			
+			const oldTags = await getTagsFromLinkId(linkId);
+			console.log('the new link without tags ', newLink);
+			
 
-		if (tags.length !== 0) {
-			//check if tag exists for user. If it does, add to link
-			//if tag doesn't exist, create and add to link
-			//check to see if there's a tag that was in the link and isn't there anymore
-			//then check to see if once removed this is going to be belong to no link
-			//no link destroy. Other links then remove from link only
+			//From here on out it needs some work. Make sure everything is working properly
+			//If removing a tag I need to check that the tag isn't unlink from everywhere, if it is it needs to be destroyed
+			if (oldTags && tags.length === 0) {
+				newLink = await getAllLinks(newLink.creatorId, newLink.id);
+				console.log('new link from within oldTags, but no new tags: ', newLink);
+				return newLink;
+			} else if (tags.length > 0 && !oldTags) {
+				Promise.all(tags.forEach(async tag => {
+					await createTag(newLink.creatorId, tag);
+				}));
+				newLink = await getAllLinks(newLink.creatorId, newLink.id);
+				console.log('new link from within no old tags, but some new tags ', newLink);
+			} else {
+
+			const removeTagsBin = oldTags.map(tag => {
+				let absent = true;
+				tags.forEach(newTagTitle => {
+					if (tag.title === newTagTitle) {
+						absent = false;
+					}
+				})
+				if (absent) {
+					return tag;
+				}
+			});
+			
+
+			const addTagsBin = tags.map(newTag => {
+				let newTagBoolean = true;
+				oldTags.forEach(oldTag => {
+					if (oldTag.title === newTag) {
+						newTag = false;
+					}
+				});
+				if (newTagBoolean) {
+					return newTag;
+				}
+			});
+
+			console.log('removeTagsBin ', removeTagsBin);
+			console.log('addTagsBin ', addTagsBin);
+			newLink = await getAllLinks(newLink.creatorId, newLink.id);;
+			console.log('newLink from within both old and new tags ', newLink);
 		}
+			
+		return newLink;
 
-
-		return getAllLinks(link.creatorId, linkId);
+		} catch (error) {
+	
+		}
 	} catch (error) {
 		throw error;
 	}
 }
+
+
+
+//make add bin and remove bin
+async function compareNewAndOldTags(oldTags, newTags) {
+	try {
+
+	} catch (error) {
+
+	}
+}
+
+//Return same removeTagBins
+async function removeRemovalTags(removeTagsBin) {
+	try {
+
+	} catch (error) {
+
+	}
+}
+
+//destroy if there's no more connections
+async function checkForMoreConnections(removeTagsBin) {
+	try {
+
+	} catch (error) {
+
+	}
+}
+
+
+
 
 // goal: get a list of all links
 // input: linkId as null
@@ -121,8 +198,11 @@ async function getAllLinks(userId, linkId = null) {
                 JOIN links_tags ON tags.id = links_tags."tagId"
                 WHERE links_tags."linkId" = ${link.id};
               `);
-
-				link.tags = tagsArr;
+				console.log('tags arrays ', tagsArr);
+				const tagTitleArray = tagsArr.map(tags => {
+					return tags.title;
+				});
+				link.tags = tagTitleArray;
 			}),
 		);
 		return links;
@@ -145,7 +225,7 @@ async function getLinkById(linkId) {
 		);
 
 		if (link) {
-			link.tags = await getTagsForLinkId(linkId);
+			link.tags = await getTagTitlesFromLinkId(linkId);
 			return link;
 		} else {
 			return { name: 'No link found', message: 'No link with that id' };

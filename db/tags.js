@@ -1,10 +1,8 @@
-
-
 const client = require('./client');
 
 //const bcrypt = require('bcrypt');
 
-const { removeTagFromAllLinks } = require('./links_tags');
+const { removeTagFromAllLinks } = require('./links_tags.js');
 
 // database methods
 
@@ -14,7 +12,9 @@ const { removeTagFromAllLinks } = require('./links_tags');
 
 async function createTag(userId, title) {
 	try {
-		const { rows: [ tag ] } = await client.query(
+		const {
+			rows: [tag],
+		} = await client.query(
 			`
 
             INSERT INTO tags("creatorId", title)
@@ -40,32 +40,29 @@ async function createTag(userId, title) {
 // output: true if success, false otherwise
 
 async function destroyTag(userId, tagName) {
-	
 	try {
-		
 		const tagId = await getTagIdFromTitle(userId.id, tagName);
-		
 
 		if (tagId) {
-		await removeTagFromAllLinks(tagId);
+			await removeTagFromAllLinks(tagId);
 
-		const { rowCount } = await client.query(
-			`
+			const { rowCount } = await client.query(
+				`
         DELETE FROM tags
         WHERE "creatorId"=$1
         AND title=$2;
     `,
-			[userId, tagName],
-		);
-		
-		if (rowCount > 0) {
-			return true;
+				[userId, tagName],
+			);
+
+			if (rowCount > 0) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}
-	} else {
-		return false;
-	}
 	} catch (error) {
 		throw error;
 	}
@@ -74,16 +71,16 @@ async function destroyTag(userId, tagName) {
 async function getTagIdFromTitle(userId, tagTitle) {
 	try {
 		const {
-			rows: [ tagId ],
+			rows: [tagId],
 		} = await client.query(
 			`
         SELECT id
         FROM tags
         WHERE title=$1;
     `,
-			[ tagTitle],
+			[tagTitle],
 		);
-		
+
 		if (tagId) {
 			return tagId.id;
 		} else {
@@ -94,8 +91,31 @@ async function getTagIdFromTitle(userId, tagTitle) {
 	}
 }
 
+async function getTitleFromTagId(userId, tagId) {
+	try {
+		const {rows: [ title ] } = await client.query(`
+			SELECT title
+			FROM tags
+			WHERE "creatorId"=$1
+			AND id=$2;
+		`, [ userId, tagId ]
+		);
+
+		if (title) {
+			return title;
+		} else {
+			return { name: 'no match',
+		message: `Couldn't find a matching user-tag pair`}
+		}
+
+	} catch (error) {
+		throw error;
+	}
+}
+
 module.exports = {
 	createTag,
 	destroyTag,
 	getTagIdFromTitle,
+	getTitleFromTagId
 };
