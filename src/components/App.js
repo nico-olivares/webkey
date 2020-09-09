@@ -24,14 +24,13 @@ const App = () => {
     return (
         <div className='App'>
             <>
+                <Header />
                 <Router>
                     <Link className="nav-link" to="/auth">Create Account or login</Link>
                     <Link to="/" >This is the links view</Link>
                     <Route path='/auth' exact render={() => <Auth />} />
-                    <Route path='/' exact render={() => <Links />}>Home</Route>
+                    <Route path='/' exact render={() => <Links />} />
                 </Router>
-                <Header />
-                <Main />
                 <Footer />
             </>
         </div>
