@@ -1,0 +1,8 @@
+#sidebar {
+    background: #F7F7F7;
+    height: calc(100vh - 140px);
+}
+
+.col-pixel-width-400 {
+    flex: 0 0 400px !important;
+}
