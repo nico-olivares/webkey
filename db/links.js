@@ -34,21 +34,21 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 		}
 
 		if (tags.length > 0) {
-			
 			tags.forEach(async function (tag) {
 				let tagId = await getTagIdFromTitle(creatorId, tag);
 				if (!tagId) {
 					const newTag = await createTag(creatorId, tag);
 					tagId = newTag.id;
 				}
-
 				await addTagToLink(newLink.id, tagId);
-				
 			});
 		}
 
-		// newLink = await addTagsToLinkObject(newLink);   Why is it not working?
-		newLink.tags = tags;
+        // newLink = await addTagsToLinkObject(newLink);   
+        // Why is it not working?
+        // Office hours?
+        
+        newLink.tags = tags;
 
 		return newLink;
 	} catch (error) {
@@ -71,30 +71,21 @@ async function updateLink(linkId, fields = {}, tags = []) {
 
 	try {
 		if (setString.length !== 0) {
-			const {
-				rows: [link],
-			} = await client.query(
-				`
-            UPDATE links
-            SET ${setString}
-			WHERE id=${linkId} 
-			AND "creatorId"=${userId}
-            RETURNING *;
-        `,
-				Object.values(fields),
-			);
+			const { rows: [link] } = await client.query(`
+                UPDATE links
+                SET ${setString}
+                WHERE id=${linkId} 
+                RETURNING *;
+            `, Object.values(fields));
+            return getAllLinks(link.creatorId, linkId);
 		}
 
-		if (tags.length !== 0) {
-			//check if tag exists for user. If it does, add to link
-			//if tag doesn't exist, create and add to link
-			//check to see if there's a tag that was in the link and isn't there anymore
-			//then check to see if once removed this is going to be belong to no link
-			//no link destroy. Other links then remove from link only
-		}
-
-
-		return getAllLinks(link.creatorId, linkId);
+        //check if tag exists for user. If it does, add to link
+        //if tag doesn't exist, create and add to link
+        //check to see if there's a tag that was in the link and isn't there anymore
+        //then check to see if once removed this is going to be belong to no link
+        //no link destroy. Other links then remove from link only
+            
 	} catch (error) {
 		throw error;
 	}
