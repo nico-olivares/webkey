@@ -221,7 +221,7 @@ async function updateInitialLinks() {
                 title: "Git Hub Repo",
                 description: "The code repos live here"
             },
-            ["newTag"]
+            ["newTag2"]
         );
         console.log("link 2: ", updatedLink2);
 
