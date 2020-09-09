@@ -194,24 +194,24 @@ async function updateInitialLinks() {
         console.log("Starting to update links");
 
         //2 tags to no tags
-        // const updatedLink0 = await updateLink(1, {
-        //     url: "https://cnn.com/",
-        //     title: "The news",
-        //     description: "Good news",
-        // });
-        // console.log("link 1: ", updatedLink0);
+        const updatedLink0 = await updateLink(1, {
+            url: "https://cnn.com/",
+            title: "The news",
+            description: "Good news",
+        });
+        console.log("link 1.0: ", updatedLink0);
 
         //no tags to 1 tag (or 2 tags to 1 tag)
-        // const updatedLink1 = await updateLink(
-        //     1,
-        //     {
-        //         url: "https://cnn.com/",
-        //         title: "The news",
-        //         description: "Good news",
-        //     },
-        //     ["newTag"]
-        // );
-        // console.log("link 1: ", updatedLink1);
+        const updatedLink1 = await updateLink(
+            1,
+            {
+                url: "https://cnn.com/",
+                title: "The news",
+                description: "Good news"
+            },
+            ["newTag"]
+        );
+        console.log("link 1.1: ", updatedLink1);
 
         //no tags to 1 tag
         const updatedLink2 = await updateLink(
@@ -219,23 +219,23 @@ async function updateInitialLinks() {
             {
                 url: "https://github.com/",
                 title: "Git Hub Repo",
-                description: "The code repos live here",
+                description: "The code repos live here"
             },
             ["newTag"]
         );
         console.log("link 2: ", updatedLink2);
 
         //2 tags to one repeated and one new tag
-        // const updatedLink3 = await updateLink(
-        //   3,
-        //   {
-        //     url: "https://zoom.com/",
-        //     title: "Zoom Room",
-        //     description: "Teleconference software",
-        //   },
-        //   ["test", "newTag3"]
-        // );
-        // console.log("link 3: ", updatedLink3);
+        const updatedLink3 = await updateLink(
+          3,
+          {
+            url: "https://zoom.com/",
+            title: "Zoom Room",
+            description: "Teleconference software",
+          },
+          ["test", "newTag3"]
+        );
+        console.log("link 3: ", updatedLink3);
 
         console.log("Finished updating links");
     } catch (error) {

@@ -94,55 +94,55 @@ async function updateLink(linkId, fields = {}, tags = []) {
                     );
                     newLink = link; //without tags
                 }
-                console.log("the new link without tags ", newLink);
+                
                 return newLink;
             } catch (error) {
                 throw error;
             }
         }
 
-        async function addOrRemoveTags(newLink, tags) {
+        async function addOrRemoveTags(newLink, tags) {		//variables passing in correctly
+			
             try {
-                const oldTags = await getTagsFromLinkId(linkId);
-
-                //drop all old tags
-                if (oldTags && tags.length === 0) {
-                    oldTags.forEach(async (tag) => {
+				const oldTags = await getTagsFromLinkId(linkId);		//working
+				
+				
+                //drop all old tags WORKING
+                if (oldTags.length > 0 && tags.length === 0) {
+                    await Promise.all(oldTags.map(async (tag) => {
                         try {
                             await removeTagFromLink(newLink.creatorId, newLink.id, tag.title); //working
 
-                            const moreLinks = await tagIdStillPresentInJointTable(tag.id); //not working
-                            console.log("more links ", moreLinks);
-                            // console.log("more links??? ", moreLinks);
-                            // if (!moreLinks) {
-                            //   await destroyTag(newLink.creatorId, tag.title);
-                            // }
+                            const moreLinks = await tagIdStillPresentInJointTable(tag.id); //working
+                            if (!moreLinks) {
+                              await destroyTag(newLink.creatorId, tag.title);	//working
+                            }
                         } catch (error) {
                             throw error;
                         }
-                    });
+                    }));
 
                     newLink = await getAllLinks(newLink.creatorId, newLink.id);
-                    console.log("new link from within oldTags, but no new tags: ", newLink);
+                    
                     return newLink;
-
-                    //add new tags
-                } else if (tags.length > 0 && !oldTags) {
-                    console.log("getting here now");
-                    Promise.all(
-                        tags.forEach(async (tag) => {
+					
+                    //add new tags  NOT WORKING
+                } else if (tags.length > 0 && oldTags.length === 0) {
+                    
+                    await Promise.all(
+                        tags.map(async (tag) => {
                             const newTag = await createTag(newLink.creatorId, tag);
                             await addTagToLink(newLink.id, newTag.id);
                         })
                     );
 
                     newLink = await getAllLinks(newLink.creatorId, newLink.id);
-                    console.log("new link from within no old tags, but some new tags ", newLink);
+                    
                     return newLink;
 
                     //compare tags. Add new ones, drop old ones, do nothing to the ones that were in the old and the new
                 } else {
-                    const removeTagsBin = oldTags.map((tag) => {
+                    const removeTagsBinTemp = oldTags.map((tag) => {
                         let absent = true;
                         tags.forEach((newTagTitle) => {
                             if (tag.title === newTagTitle) {
@@ -152,9 +152,12 @@ async function updateLink(linkId, fields = {}, tags = []) {
                         if (absent) {
                             return tag;
                         }
-                    });
+					});
+					
+					const removeTagsBin = removeTagsBinTemp.filter(item => item);
+					
 
-                    const addTagsBin = tags.map((newTag) => {
+                    const addTagsBinTemp = tags.map((newTag) => {
                         let newTagBoolean = true;
                         oldTags.forEach((oldTag) => {
                             if (oldTag.title === newTag) {
@@ -164,12 +167,38 @@ async function updateLink(linkId, fields = {}, tags = []) {
                         if (newTagBoolean) {
                             return newTag;
                         }
-                    });
+					});
+					
+					const addTagsBin = addTagsBinTemp.filter(item => item);
 
-                    console.log("removeTagsBin ", removeTagsBin);
-                    console.log("addTagsBin ", addTagsBin);
+                    
+					if (removeTagsBin.length > 0) {
+						await Promise.all(removeTagsBin.map(async (tag) => {
+							try {
+								await removeTagFromLink(newLink.creatorId, newLink.id, tag.title); //working
+	
+								const moreLinks = await tagIdStillPresentInJointTable(tag.id); //working
+								if (!moreLinks) {
+								  await destroyTag(newLink.creatorId, tag.title);	//working
+								}
+							} catch (error) {
+								throw error;
+							}
+						}));
+					}
+
+					if (addTagsBin.length > 0) {
+						await Promise.all(
+							addTagsBin.map(async (tag) => {
+								const newTag = await createTag(newLink.creatorId, tag);
+								await addTagToLink(newLink.id, newTag.id);
+							})
+						);
+					}
+
+
                     newLink = await getAllLinks(newLink.creatorId, newLink.id);
-                    console.log("newLink from within both old and new tags ", newLink);
+                    
                     return newLink;
                 }
             } catch (error) {
@@ -212,7 +241,7 @@ async function getAllLinks(userId, linkId = null) {
                 JOIN links_tags ON tags.id = links_tags."tagId"
                 WHERE links_tags."linkId" = ${link.id};
               `);
-                console.log("tags arrays ", tagsArr);
+                
                 const tagTitleArray = tagsArr.map((tags) => {
                     return tags.title;
                 });

@@ -8,7 +8,7 @@ const client = require("./client");
 async function addTagsToLinkObject(link) {
     try {
         const { id: linkId } = link;
-        console.log("link id ", linkId);
+        
         let { rows: tagIds } = await client.query(
             `
         SELECT "tagId"
@@ -22,7 +22,7 @@ async function addTagsToLinkObject(link) {
         tagIds.map((tag) => {
             return tag.id;
         });
-        console.log("tagIds from addTagsToLinkObjects ", tagIds);
+        
         const tags = await Promise.all(
             tagIds.map(async (tagId) => {
                 const {
@@ -35,11 +35,11 @@ async function addTagsToLinkObject(link) {
 		  `,
                     [tagId.tagId]
                 ); //array already???
-                console.log("title from within the map ", title);
+               
                 return title;
             })
         );
-        console.log("tags to attach ", tags);
+       
         link.tags = tags;
         return link;
     } catch (error) {
@@ -99,9 +99,9 @@ async function removeTagFromLink(userId, linkId, tagTitle) {
 
 //not working at all. The query is crashing
 async function tagIdStillPresentInJointTable(tagId) {
-    console.log("getting to tagIdStill present", tagId);
+   
     try {
-        const { rows } = await client.query(
+        const { rowCount } = await client.query(
             `
 			SELECT *
 			FROM links_tags
@@ -110,8 +110,12 @@ async function tagIdStillPresentInJointTable(tagId) {
 		`
         );
 
-        console.log("row count ", rows);
-        return true;
+		
+		if (rowCount > 0) {
+			return true;
+		} else {
+			return false;
+		}
     } catch (error) {
         throw error;
     }
@@ -170,7 +174,12 @@ async function getTagsFromLinkId(linkId) {
 				;
 			`,
             [linkId]
-        );
+		);
+		
+		if (tags.length === 0) {
+			return [];
+		}
+		
         const tagIds = tags.map((tag) => tag.tagId);
 
         const conditionString = tagIds
@@ -178,7 +187,7 @@ async function getTagsFromLinkId(linkId) {
                 return `id=$${index + 1}`;
             })
             .join(" OR ");
-        console.log(conditionString);
+        
         const { rows: tagTitles } = await client.query(
             `
 				SELECT *
@@ -187,7 +196,7 @@ async function getTagsFromLinkId(linkId) {
 			`,
             tagIds
         );
-        console.log("getting here also");
+        
         return tagTitles;
     } catch (error) {
         throw error;

@@ -13,7 +13,7 @@ const { removeTagFromAllLinks } = require("./links_tags.js");
 // output: returns a new tag
 
 async function createTag(userId, title) {
-    console.log("getting here");
+  
     try {
         const {
             rows: [tag],
@@ -24,7 +24,6 @@ async function createTag(userId, title) {
             VALUES($1, $2)
             ON CONFLICT ("creatorId", title) DO NOTHING
             RETURNING *;
-
         `,
             [userId, title]
         );
