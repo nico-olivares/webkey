@@ -1,8 +1,10 @@
-const client = require('./client');
+/** @format */
+
+const client = require("./client");
 
 //const bcrypt = require('bcrypt');
 
-const { removeTagFromAllLinks } = require('./links_tags.js');
+const { removeTagFromAllLinks } = require("./links_tags.js");
 
 // database methods
 
@@ -11,11 +13,12 @@ const { removeTagFromAllLinks } = require('./links_tags.js');
 // output: returns a new tag
 
 async function createTag(userId, title) {
-	try {
-		const {
-			rows: [tag],
-		} = await client.query(
-			`
+    console.log("getting here");
+    try {
+        const {
+            rows: [tag],
+        } = await client.query(
+            `
 
             INSERT INTO tags("creatorId", title)
             VALUES($1, $2)
@@ -23,12 +26,12 @@ async function createTag(userId, title) {
             RETURNING *;
 
         `,
-			[userId, title],
-		);
-		return tag;
-	} catch (error) {
-		throw error;
-	}
+            [userId, title]
+        );
+        return tag;
+    } catch (error) {
+        throw error;
+    }
 }
 
 // goal: to remove a tag-link pair in the joint table
@@ -40,82 +43,84 @@ async function createTag(userId, title) {
 // output: true if success, false otherwise
 
 async function destroyTag(userId, tagName) {
-	try {
-		const tagId = await getTagIdFromTitle(userId.id, tagName);
+    try {
+        const tagId = await getTagIdFromTitle(userId.id, tagName);
 
-		if (tagId) {
-			await removeTagFromAllLinks(tagId);
+        if (tagId) {
+            await removeTagFromAllLinks(tagId);
 
-			const { rowCount } = await client.query(
-				`
+            const { rowCount } = await client.query(
+                `
         DELETE FROM tags
         WHERE "creatorId"=$1
         AND title=$2;
     `,
-				[userId, tagName],
-			);
+                [userId, tagName]
+            );
 
-			if (rowCount > 0) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	} catch (error) {
-		throw error;
-	}
+            if (rowCount > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    } catch (error) {
+        throw error;
+    }
 }
 
 async function getTagIdFromTitle(userId, tagTitle) {
-	try {
-		const {
-			rows: [tagId],
-		} = await client.query(
-			`
+    try {
+        const {
+            rows: [tagId],
+        } = await client.query(
+            `
         SELECT id
         FROM tags
         WHERE title=$1;
     `,
-			[tagTitle],
-		);
+            [tagTitle]
+        );
 
-		if (tagId) {
-			return tagId.id;
-		} else {
-			return false;
-		}
-	} catch (error) {
-		throw error;
-	}
+        if (tagId) {
+            return tagId.id;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        throw error;
+    }
 }
 
 async function getTitleFromTagId(userId, tagId) {
-	try {
-		const {rows: [ title ] } = await client.query(`
+    try {
+        const {
+            rows: [title],
+        } = await client.query(
+            `
 			SELECT title
 			FROM tags
 			WHERE "creatorId"=$1
 			AND id=$2;
-		`, [ userId, tagId ]
-		);
+		`,
+            [userId, tagId]
+        );
 
-		if (title) {
-			return title;
-		} else {
-			return { name: 'no match',
-		message: `Couldn't find a matching user-tag pair`}
-		}
-
-	} catch (error) {
-		throw error;
-	}
+        if (title) {
+            return title;
+        } else {
+            return { name: "no match", message: `Couldn't find a matching user-tag pair` };
+        }
+    } catch (error) {
+        throw error;
+    }
 }
 
 module.exports = {
-	createTag,
-	destroyTag,
-	getTagIdFromTitle,
-	getTitleFromTagId
+    createTag,
+    destroyTag,
+    getTagIdFromTitle,
+    getTitleFromTagId,
 };

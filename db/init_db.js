@@ -5,42 +5,42 @@
 const client = require("./client");
 
 const {
-  getAllUsers,
-  createUser,
-  getUserByUsername,
-  getUserById,
-  getAllLinks,
-  createLink,
-  updateLink,
-  createTag,
-  addTagToLink,
-  getLinksByTagName,
-  removeTagFromLink,
-  destroyTag,
+    getAllUsers,
+    createUser,
+    getUserByUsername,
+    getUserById,
+    getAllLinks,
+    createLink,
+    updateLink,
+    createTag,
+    addTagToLink,
+    getLinksByTagName,
+    removeTagFromLink,
+    destroyTag,
 } = require("./index");
 const { addTagsToLinkObject } = require("./links_tags");
 
 // drop the tables before rebuilding
 
 async function dropTables() {
-  try {
-    await client.query(`
+    try {
+        await client.query(`
 	        DROP TABLE IF EXISTS links_tags; 
             DROP TABLE IF EXISTS tags;
             DROP TABLE IF EXISTS links;
             DROP TABLE IF EXISTS users;
     `);
-  } catch (error) {
-    throw error;
-  }
+    } catch (error) {
+        throw error;
+    }
 }
 
 // create the tables
 
 async function createTables() {
-  console.log("Starting to build tables...");
-  try {
-    await client.query(`
+    console.log("Starting to build tables...");
+    try {
+        await client.query(`
             CREATE TABLE users(
                 id SERIAL PRIMARY KEY,
                 username VARCHAR(50) NOT NULL UNIQUE,
@@ -68,91 +68,91 @@ async function createTables() {
 				UNIQUE("linkId", "tagId")
 			);
         `);
-  } catch (error) {
-    throw error;
-  }
+    } catch (error) {
+        throw error;
+    }
 }
 
 //create the user
 async function createInitialUsers() {
-  try {
-    console.log("creating intital users..");
+    try {
+        console.log("creating intital users..");
 
-    const user1 = await createUser({
-      username: "Marcello",
-      password: "coyotwind1",
-    });
-    console.log("this is user1", user1);
+        const user1 = await createUser({
+            username: "Marcello",
+            password: "coyotwind1",
+        });
+        console.log("this is user1", user1);
 
-    const user2 = await createUser({
-      username: "Kamikaze1",
-      password: "Password1",
-    });
-    console.log("this is user2", user2);
+        const user2 = await createUser({
+            username: "Kamikaze1",
+            password: "Password1",
+        });
+        console.log("this is user2", user2);
 
-    const user3 = await createUser({
-      username: "NicoIsCool",
-      password: "Olivares123",
-    });
-    console.log("this is user3", user3);
+        const user3 = await createUser({
+            username: "NicoIsCool",
+            password: "Olivares123",
+        });
+        console.log("this is user3", user3);
 
-    console.log("finsihed creating intitial users..");
-  } catch (error) {
-    throw error;
-  }
+        console.log("finsihed creating intitial users..");
+    } catch (error) {
+        throw error;
+    }
 }
 
 async function getInitialUser() {
-  try {
-    const getUser1 = await getUserByUsername({ username: "Marcello" });
-    console.log("retrieving first user", getUser1);
+    try {
+        const getUser1 = await getUserByUsername({ username: "Marcello" });
+        console.log("retrieving first user", getUser1);
 
-    const userById1 = await getUserById(1);
-    console.log("Getting user by id=1: ", userById1);
-  } catch (error) {
-    throw error;
-  }
+        const userById1 = await getUserById(1);
+        console.log("Getting user by id=1: ", userById1);
+    } catch (error) {
+        throw error;
+    }
 }
 
 // create the links
 
 async function createInitialLinks() {
-  try {
-    console.log("Starting to create links...");
+    try {
+        console.log("Starting to create links...");
 
-    const [Marcello, Kamikaze1, NicoIsCool] = await getAllUsers();
+        const [Marcello, Kamikaze1, NicoIsCool] = await getAllUsers();
 
-    const link1 = await createLink({
-      creatorId: Marcello.id,
-      url: "https://learn.fullstackacademy.com/workshop",
-      title: "learn fullstack",
-      description: "This is fullstack's Learndot",
-      tags: ["test", "another"],
-    });
-    console.log("link 1: ", link1);
+        const link1 = await createLink({
+            creatorId: Marcello.id,
+            url: "https://learn.fullstackacademy.com/workshop",
+            title: "learn fullstack",
+            description: "This is fullstack's Learndot",
+            tags: ["test", "another"],
+        });
+        console.log("link 1: ", link1);
 
-    const link2 = await createLink({
-      creatorId: Kamikaze1.id,
-      url: "https://github.com",
-      title: "Git Hub",
-      description: "This is where the code lives",
-      tags: [],
-    });
-    console.log("link 2: ", link2);
+        const link2 = await createLink({
+            creatorId: Kamikaze1.id,
+            url: "https://github.com",
+            title: "Git Hub",
+            description: "This is where the code lives",
+            tags: [],
+        });
+        console.log("link 2: ", link2);
 
-    const link3 = await createLink({
-      creatorId: NicoIsCool.id,
-      url: "https://zoom.com",
-      title: "Zoom Room",
-      description: "Use this to talk to teammates",
-      tags: ["test", "more"],
-    });
-    console.log("link 3: ", link3);
+        const link3 = await createLink({
+            creatorId: NicoIsCool.id,
+            url: "https://zoom.com",
+            title: "Zoom Room",
+            description: "Use this to talk to teammates",
+            tags: ["test", "more"],
+        });
+        console.log("link 3: ", link3);
 
-    console.log("finished creating links...");
-  } catch (error) {
-    throw error;
-  }
+        console.log("finished creating links...");
+    } catch (error) {
+        throw error;
+    }
 }
 
 // create the tags
@@ -179,59 +179,68 @@ async function createInitialLinks() {
 // log out all the initial links
 
 async function getInitialLinks() {
-  try {
-    console.log("Getting initial links for user 1: ", await getAllLinks(1));
-    console.log(
-      "Getting only one link (2) for user 2",
-      await getAllLinks(2, 2)
-    );
-  } catch (error) {
-    throw error;
-  }
+    try {
+        console.log("Getting initial links for user 1: ", await getAllLinks(1));
+        console.log("Getting only one link (2) for user 2", await getAllLinks(2, 2));
+    } catch (error) {
+        throw error;
+    }
 }
 
 // update the links
 
 async function updateInitialLinks() {
-  try {
-    console.log("Starting to update links");
-    const updatedLink1 = await updateLink(
-      1,
-      {
-        url: "https://cnn.com/",
-        title: "The news",
-        description: "Good news",
-      },
-      ["newTag"]
-    );
-    console.log("link 2: ", updatedLink2);
+    try {
+        console.log("Starting to update links");
 
-    const updatedLink2 = await updateLink(
-      2,
-      {
-        url: "https://github.com/",
-        title: "Git Hub Repo",
-        description: "The code repos live here",
-      },
-      ["newTag"]
-    );
-    console.log("link 2: ", updatedLink2);
+        //2 tags to no tags
+        // const updatedLink0 = await updateLink(1, {
+        //     url: "https://cnn.com/",
+        //     title: "The news",
+        //     description: "Good news",
+        // });
+        // console.log("link 1: ", updatedLink0);
 
-    const updatedLink3 = await updateLink(
-      3,
-      {
-        url: "https://zoom.com/",
-        title: "Zoom Room",
-        description: "Teleconference software",
-      },
-      ["test", "newTag3"]
-    );
-    console.log("link 3: ", updatedLink3);
+        //no tags to 1 tag (or 2 tags to 1 tag)
+        // const updatedLink1 = await updateLink(
+        //     1,
+        //     {
+        //         url: "https://cnn.com/",
+        //         title: "The news",
+        //         description: "Good news",
+        //     },
+        //     ["newTag"]
+        // );
+        // console.log("link 1: ", updatedLink1);
 
-    console.log("Finished updating links");
-  } catch (error) {
-    throw error;
-  }
+        //no tags to 1 tag
+        const updatedLink2 = await updateLink(
+            2,
+            {
+                url: "https://github.com/",
+                title: "Git Hub Repo",
+                description: "The code repos live here",
+            },
+            ["newTag"]
+        );
+        console.log("link 2: ", updatedLink2);
+
+        //2 tags to one repeated and one new tag
+        // const updatedLink3 = await updateLink(
+        //   3,
+        //   {
+        //     url: "https://zoom.com/",
+        //     title: "Zoom Room",
+        //     description: "Teleconference software",
+        //   },
+        //   ["test", "newTag3"]
+        // );
+        // console.log("link 3: ", updatedLink3);
+
+        console.log("Finished updating links");
+    } catch (error) {
+        throw error;
+    }
 }
 
 // connect some tags to links
@@ -290,22 +299,19 @@ async function updateInitialLinks() {
 // }
 
 async function getLinksFromTags() {
-  try {
-    // get links for user1 with tag name test
-    const links1 = await getLinksByTagName(1, "another");
-    console.log('Links for user 1 with tag name "test": ', links1);
-    // non existing user, existing tag
-    const links2 = await getLinksByTagName(7, "test");
-    console.log(
-      'Getting links for non existing user with existing tag ("test"): ',
-      links2
-    );
-    // existing user, wrong tag
-    const link3 = await getLinksByTagName(1, "front-end");
-    console.log("Getting links from existing user, but wrong tag: ", link3);
-  } catch (error) {
-    throw error;
-  }
+    try {
+        // get links for user1 with tag name test
+        const links1 = await getLinksByTagName(1, "another");
+        console.log('Links for user 1 with tag name "test": ', links1);
+        // non existing user, existing tag
+        const links2 = await getLinksByTagName(7, "test");
+        console.log('Getting links for non existing user with existing tag ("test"): ', links2);
+        // existing user, wrong tag
+        const link3 = await getLinksByTagName(1, "front-end");
+        console.log("Getting links from existing user, but wrong tag: ", link3);
+    } catch (error) {
+        throw error;
+    }
 }
 
 // async function addTagsToLinkObjectTest() {
@@ -327,42 +333,42 @@ async function getLinksFromTags() {
 // }
 
 async function rebuildDb() {
-  try {
-    console.log("rebuilding db..");
+    try {
+        console.log("rebuilding db..");
 
-    client.connect();
-    await dropTables();
-    await createTables();
+        client.connect();
+        await dropTables();
+        await createTables();
 
-    console.log("finished rebuilding db..");
-  } catch (error) {
-    throw error;
-  }
+        console.log("finished rebuilding db..");
+    } catch (error) {
+        throw error;
+    }
 }
 
 // populate the data, runs the tests
 
 async function populateInitialData() {
-  try {
-    await createInitialUsers();
-    await getInitialUser();
-    await createInitialLinks();
-    // await createInitialTags();
-    // await createJointTagLink();
-    // await deleteLinksTagsPair();
-    // await deleteTag();
-    await getInitialLinks();
-    await getLinksFromTags();
-    // await addTagsToLinkObjectTest();
-    await updateInitialLinks();
-  } catch (error) {
-    throw error;
-  }
+    try {
+        await createInitialUsers();
+        await getInitialUser();
+        await createInitialLinks();
+        // await createInitialTags();
+        // await createJointTagLink();
+        // await deleteLinksTagsPair();
+        // await deleteTag();
+        await getInitialLinks();
+        await getLinksFromTags();
+        // await addTagsToLinkObjectTest();
+        await updateInitialLinks();
+    } catch (error) {
+        throw error;
+    }
 }
 
 // initializes the test run
 
 rebuildDb()
-  .then(populateInitialData)
-  .catch(console.error)
-  .finally(() => client.end());
+    .then(populateInitialData)
+    .catch(console.error)
+    .finally(() => client.end());
