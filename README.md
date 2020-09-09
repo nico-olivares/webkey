@@ -1,6 +1,6 @@
 # WEB-KEY A web link bookmark app like no other
 * By Brett Causey, John Marcello, and Nicolas Olivares
-Web-key allows you to keep all your favorite links in one place organized by tag names, by number of visits, or by alphabetical order.
+- Web-key allows you to keep all your favorite links in one place organized by tag names, by number of visits, or by alphabetical order.
 Each link has a title, the actual link, and a description and will store the number of times the link has been accessed from the app and the date the link was last accessed.
 
 # Functionality (1. Front-end, 2. Middleware, 3. Back-end)
