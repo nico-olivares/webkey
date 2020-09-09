@@ -1,6 +1,7 @@
 
 const client = require('./client');
 
+
 //const bcrypt = require('bcrypt');
 //const e = require('express');
 
@@ -19,7 +20,7 @@ async function addTagsToLinkObject(link) {
         FROM links_tags
 		WHERE "linkId"=$1
 		;
-    `, [ linkId ]
+    `, [ linkId ] 
     );
 	
 	tagIds.map((tag) => {
@@ -28,15 +29,16 @@ async function addTagsToLinkObject(link) {
 	console.log('tagIds from addTagsToLinkObjects ', tagIds);
     const tags = await Promise.all(
         tagIds.map(async (tagId) => {
-          const { rows: [ id ] } = client.query(`
+          const { rows: [ title ] } = client.query(`
               SELECT title
               FROM tags
               WHERE id = $1;
-          `, [ tagId ]);
-          return id;
+		  `, [ tagId.tagId ]);   //array already???
+		  console.log('title from within the map ', title);
+          return title;
       })
     );
-
+	console.log('tags to attach ', tags);
     link.tags = tags;
     return link;
 
@@ -143,19 +145,35 @@ async function removeTagFromAllLinks(tagId) {
 	}
 }
 
-async function getTagsForLinkId(linkId) {
-	try {
-		const { rows: tagIds } = await client.query(`
-			SELECT "tagId"
-			FROM links_tags
-			WHERE "linkId"=$1;
-		`, [ linkId ]
-		);
-		console.log('tagIds ', tagIds);
-	} catch (error) {
-		throw error;
+async function getTagsFromLinkId(linkId) {
+	
+		try {
+			const { rows: tags } = await client.query(`
+				SELECT *
+				FROM links_tags
+				WHERE "linkId"=$1;
+			`, [ linkId ]
+			);
+			const tagIds = tags.map(tag => tag.tagId);
+			
+			const conditionString = tagIds.map((tagId, index) => {
+				return `id=$${index + 1}`;
+			}).join(' OR ');
+			console.log(conditionString);
+			const { rows: tagTitles } = await client.query(`
+				SELECT *
+				FROM tags
+				WHERE ${ conditionString };
+			`, tagIds);
+			console.log('getting here also');
+			return tagTitles;
+			
+		} catch (error) {
+			throw error;
+		}
 	}
-}
+	
+	
 
 
 module.exports = {
@@ -163,5 +181,5 @@ module.exports = {
 	removeTagFromLink,
 	removeTagFromAllLinks,
 	addTagsToLinkObject,
-	getTagsForLinkId
+	getTagsFromLinkId
 };

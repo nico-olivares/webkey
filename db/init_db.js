@@ -18,6 +18,7 @@ const {
     destroyTag,
     
 } = require('./index');
+const { addTagsToLinkObject } = require('./links_tags');
 
 // drop the tables before rebuilding
 
@@ -161,24 +162,24 @@ async function createInitialLinks() {
 
 // create the tags
 
-async function createInitialTags() {
-    try {
-        console.log('creating initial tags...')
+// async function createInitialTags() {
+//     try {
+//         console.log('creating initial tags...')
 
-        const tag1 = await createTag(1, 'popular');
-        console.log('tag 1 for user 1: ', tag1);
+//         const tag1 = await createTag(1, 'popular');
+//         console.log('tag 1 for user 1: ', tag1);
 
-        const tag2 = await createTag(1, 'code')
-        console.log('tag 2 for user 1: ', tag2);
+//         const tag2 = await createTag(1, 'code')
+//         console.log('tag 2 for user 1: ', tag2);
 
-        const tag3 = await createTag(2, 'front-end')
-        console.log('tag 1 for user 2: ', tag3);
+//         const tag3 = await createTag(2, 'front-end')
+//         console.log('tag 1 for user 2: ', tag3);
 
-        console.log('finished creating tags...')
-    } catch (error) {
-        throw error
-    }
-}
+//         console.log('finished creating tags...')
+//     } catch (error) {
+//         throw error
+//     }
+// }
 
 // log out all the initial links
 
@@ -201,7 +202,7 @@ async function updateInitialLinks() {
             title: 'Git Hub Repo',
             description: 'The code repos live here',
             date: "2020-09-15"
-        });
+        }, ["newTag"]);
         console.log('link 2: ', updatedLink2);
 
         const updatedLink3 = await updateLink(3, {
@@ -209,7 +210,7 @@ async function updateInitialLinks() {
             title: 'Zoom Room',
             description: 'Teleconference software',
             date: "2020-09-15"
-        });
+        }, ["newTag2", "newTag3"]);
         console.log('link 3: ', updatedLink3);
 
         console.log('Finished updating links');
@@ -220,58 +221,58 @@ async function updateInitialLinks() {
 
 // connect some tags to links
 
-async function createJointTagLink() {
-    try {
-        const joint1 = await addTagToLink(1, 1);
-        const joint2 = await addTagToLink(1, 2);
-        const joint3 = await addTagToLink(2, 1);
-        const joint4 = await addTagToLink(2, 2);
-        const joint5 = await addTagToLink(3, 1);
+// async function createJointTagLink() {
+//     try {
+//         const joint1 = await addTagToLink(1, 1);
+//         const joint2 = await addTagToLink(1, 2);
+//         const joint3 = await addTagToLink(2, 1);
+//         const joint4 = await addTagToLink(2, 2);
+//         const joint5 = await addTagToLink(3, 1);
 
-        console.log('joint links_tags 1 ', joint1);
-        console.log('joint links_tags 2 ', joint2);
-        console.log('joint links_tags 3 ', joint3);
-        console.log('joint links_tags 4 ', joint4);
-        console.log('joint links_tags 5 ', joint5);
-    } catch (error) {
-        throw error;
-    }
-}
+//         console.log('joint links_tags 1 ', joint1);
+//         console.log('joint links_tags 2 ', joint2);
+//         console.log('joint links_tags 3 ', joint3);
+//         console.log('joint links_tags 4 ', joint4);
+//         console.log('joint links_tags 5 ', joint5);
+//     } catch (error) {
+//         throw error;
+//     }
+// }
 
 // Delete a link-tag pair
-async function deleteLinksTagsPair() {
-    try {
-        //correct pairing
-        const deleted = await removeTagFromLink(1, 1, 'test');
-        console.log('Deleted links tag pair. Link 1 to tag 1 (test) from user 1: ', deleted);
-        //correct link, wrong tag
-        const deleted2 = await removeTagFromLink(1, 1, 'whatever');
-        console.log('Deleted correct link wrong tag ', deleted2);
-        //incorrect link, correct tag
-        const deleted3 = await removeTagFromLink(2, 15, 'another');
-        console.log('Deleted incorrect link, correct tag ', deleted3);
-        //incorrect link and tag
-        const deleted4 = await removeTagFromLink(3, 17, 'whatever');
-        console.log('Deleted incorrect link and tag ', deleted4);
-    } catch (error) {
-        throw error;
-    }
-}
+// async function deleteLinksTagsPair() {
+//     try {
+//         //correct pairing
+//         const deleted = await removeTagFromLink(1, 1, 'test');
+//         console.log('Deleted links tag pair. Link 1 to tag 1 (test) from user 1: ', deleted);
+//         //correct link, wrong tag
+//         const deleted2 = await removeTagFromLink(1, 1, 'whatever');
+//         console.log('Deleted correct link wrong tag ', deleted2);
+//         //incorrect link, correct tag
+//         const deleted3 = await removeTagFromLink(2, 15, 'another');
+//         console.log('Deleted incorrect link, correct tag ', deleted3);
+//         //incorrect link and tag
+//         const deleted4 = await removeTagFromLink(3, 17, 'whatever');
+//         console.log('Deleted incorrect link and tag ', deleted4);
+//     } catch (error) {
+//         throw error;
+//     }
+// }
 
 // Delete a tag
-async function deleteTag() {
-    try {
-        //delete existing tag
-        const deleted1 = await destroyTag(3, 'more');
-        console.log('more tag deleted ', deleted1);
-        //delete non existing tag
-        const deleted2 = await destroyTag(1, 'whatever');
-        console.log('non existing tag deletion ', deleted2);
+// async function deleteTag() {
+//     try {
+//         //delete existing tag
+//         const deleted1 = await destroyTag(3, 'more');
+//         console.log('more tag deleted ', deleted1);
+//         //delete non existing tag
+//         const deleted2 = await destroyTag(1, 'whatever');
+//         console.log('non existing tag deletion ', deleted2);
         
-    } catch (error) {
-        throw error;
-    }
-}
+//     } catch (error) {
+//         throw error;
+//     }
+// }
 
 async function getLinksFromTags() {
     try {
@@ -289,6 +290,24 @@ async function getLinksFromTags() {
     }
 }
 
+// async function addTagsToLinkObjectTest() {
+//     try {
+//         const emptyLink1 = await getAllLinks(1, 1);
+//         console.log('emptyLink1 ', emptyLink1);
+        // const link1 = await addTagsToLinkObject(emptyLink1);
+        // console.log('Getting link1 with tags ', link1);
+        // const emptyLink2 = await getAllLinks(2, 2);
+        // const link2 = await addTagsToLinkObject(emptyLink2);
+        // console.log('Getting link3 with tags ', link3);
+        // const emptyLink3 = await getAllLinks(3, 3);
+        // const link3 = await addTagsToLinkObject(emptyLink3);
+        // console.log('Getting link3 with tags ', link3);
+        
+//     } catch (error) {
+//         throw error;
+//     }
+// }
+
 async function rebuildDb() {
     try {
         console.log('rebuilding db..')
@@ -303,6 +322,8 @@ async function rebuildDb() {
     }
 }
 
+
+
 // populate the data, runs the tests
 
 async function populateInitialData() {
@@ -310,12 +331,13 @@ async function populateInitialData() {
         await createInitialUsers();
         await getInitialUser();
         await createInitialLinks();
-        await createInitialTags();
-        await createJointTagLink();
-        await deleteLinksTagsPair();
-        await deleteTag();
+        // await createInitialTags();
+        // await createJointTagLink();
+        // await deleteLinksTagsPair();
+        // await deleteTag();
         await getInitialLinks();
         await getLinksFromTags();
+        // await addTagsToLinkObjectTest();
         await updateInitialLinks();
     } catch (error) {
         throw error;
