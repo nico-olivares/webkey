@@ -1,5 +1,5 @@
 const express = require('express');
-const { getLinksByTagName, getAllLinks, destroyTag } = require('../db');
+const { getLinksByTagName, getAllLinks, destroyTag, getTagsForUser } = require('../db');
 const { requireUser } = require('./utils')
 const tagsRouter = express.Router();
 
@@ -36,6 +36,15 @@ tagsRouter.get('/:tagName/links', requireUser, async (req, res, next) => {
     } catch (error) {
         throw error
 
+    }
+});
+
+tagsRouter.get('/usertags', requireUser, async (req, res, next) => {
+    try {
+        const tagList = await getTagsForUser(1);  //once set up change 1 for req.user.id
+        res.send(tagList);
+    } catch (error) {
+        throw error;
     }
 });
 

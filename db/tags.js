@@ -117,9 +117,24 @@ async function getTitleFromTagId(userId, tagId) {
     }
 }
 
+async function getTagsForUser(userId) {
+	try {
+		const { rows: tags } = await client.query(`
+			SELECT *
+			FROM tags
+			WHERE "creatorId"=$1;
+		`, [userId]
+		);
+		return tags;
+	} catch (error) {
+		throw error;
+	}
+}
+
 module.exports = {
     createTag,
     destroyTag,
     getTagIdFromTitle,
-    getTitleFromTagId,
+	getTitleFromTagId,
+	getTagsForUser
 };
