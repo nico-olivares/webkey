@@ -10,11 +10,12 @@ import Form from 'react-bootstrap/esm/Form'
 import Button from 'react-bootstrap/Button'
 
 
-function Links() {
+function Links(props) {
+    //    { props.history.push('/auth')
+    //    ?
+    //     }
     return (
-       
         <Main />
-        
     )
 }
 

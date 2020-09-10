@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Main from '../components/Main';
 import Footer from '../components/Footer';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, Switch, withRouter } from 'react-router-dom';
 import Auth from '../pages/Auth'
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getSomething } from '../api';
 import Links from '../pages/Links';
+import Login from '../pages/Login';
+import Register from '../pages/Register'
 
 const App = () => {
     const [message, setMessage] = useState('');
@@ -23,19 +26,21 @@ const App = () => {
 
     return (
         <div className='App'>
-            <>
+            <Router>
                 <Header />
-                <Router>
-                    <Link className="nav-link" to="/auth">Create Account or login</Link>
-                    <Link to="/" >This is the links view</Link>
-                    <Route path='/auth' exact render={() => <Auth />} />
-                    <Route path='/' exact render={() => <Links />} />
-                </Router>
+                <Switch>
+                    <Route path='/login' exact render={() => <Login />} />
+
+                    <Route path='/register' exact render={() => <Register />} />
+
+                    <Route path='/home' exact render={() => <Links />} />
+                </Switch>
                 <Footer />
-            </>
+            </Router>
+
         </div>
     );
-    
+
 };
 
 export default App;

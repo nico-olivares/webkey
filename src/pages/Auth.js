@@ -1,34 +1,34 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link, redirect } from 'react-router-dom';
+import { useState, useEffect } from 'react'
+
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/esm/Row'
 import Col from 'react-bootstrap/esm/Col'
 import Form from 'react-bootstrap/esm/Form'
 import Button from 'react-bootstrap/Button'
 
+import Register from './Register';
+import Login from './Login';
 
 
-function Auth() {
+
+
+function Auth(props) {
+
+    const [message, setMessage] = useState();
+
+    console.log('this is the props...', props)
     return (
-        <Container>
-            <Form>
-                <Form.Group>
-                    <Form.Label htmlFor="username">Username</Form.Label>
-                    <Form.Control id="username" name="username" type="text" value="" />
-                </Form.Group>
+        <Router>
+            <>
+                <Link className="nav-link" to="/auth/register">Create Account</Link>
+                <Route path='/auth' exact render={() => <Register />} />
 
-
-                <Form.Group>
-                    <Form.Label htmlFor="password">Password</Form.Label>
-                    <Form.Control id="password" name="Password" type="text" value="" />
-                </Form.Group>
-
-
-                <Button className="d-inline-block" variant="primary" type="submit" >
-                    Send
-                        </Button>
-            </Form>
-        </Container>
+                <Link className="nav-link" to="/auth/login">Login</Link>
+                <Route path='/login' exact render={() => <Login />} />
+            </>
+        </Router>
     )
 
 }
