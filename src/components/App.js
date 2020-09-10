@@ -33,7 +33,7 @@ const App = () => {
 
                     <Route path='/register' exact render={() => <Register />} />
 
-                    <Route path='/home' exact render={() => <Links />} />
+                    <Route path='/' exact render={() => <Links />} />
                 </Switch>
                 <Footer />
             </Router>
