@@ -17,7 +17,8 @@ const {
     getLinksByTagName,
     removeTagFromLink,
     destroyTag,
-    linkClick
+    linkClick,
+    getTagsForUser
 } = require("./index");
 const { addTagsToLinkObject } = require("./links_tags");
 
@@ -327,6 +328,15 @@ async function clickClick() {
     }
 }
 
+async function getTags() {
+    try {
+        //All tags for user 1
+        console.log('All tags for user 1: ', await getTagsForUser(1));
+    } catch (error) {
+        throw error;
+    }
+}
+
 // async function addTagsToLinkObjectTest() {
 //     try {
 //         const emptyLink1 = await getAllLinks(1, 1);
@@ -375,6 +385,7 @@ async function populateInitialData() {
         // await addTagsToLinkObjectTest();
         await updateInitialLinks();
         await clickClick();
+        await getTags();
     } catch (error) {
         throw error;
     }

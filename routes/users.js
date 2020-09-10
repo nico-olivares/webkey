@@ -26,9 +26,7 @@ usersRouter.post('/register', async (req, res, next) => {
             bcrypt.hash(password, SALT_COUNT, async (err, hashedPassword) => {
                 securedPassword = hashedPassword;
                 const user = await createUser({ username, password: securedPassword });
-                console.log('user id: ', user.id);
-                console.log('username: ', username);
-                console.log('user: ', user);
+                
                 const token = jwt.sign({ id: user.id, username }, process.env.JWT_SECRET, { expiresIn: '1w' });
                 res.send({ message: 'The user was successfully created', token });
             });
