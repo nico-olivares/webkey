@@ -31,7 +31,7 @@ const App = () => {
             const localStorageUser = JSON.parse(localStorage.getItem("user"));
             const { id } = jwt.verify(localStorageUser.token, process.env.JWT_SECRET);
             if (id) {
-                return JSON.parse(localStorage.getItem("user"));
+                return localStorageUser;
             } else {
                 return {};
             }
