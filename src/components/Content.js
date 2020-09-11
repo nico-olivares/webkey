@@ -5,14 +5,22 @@ import './Content.css';
 
 import ContentHead from './ContentHead';
 import ContentBody from './ContentBody';
-
 import Col from 'react-bootstrap/Col';
 
-function Content() {
+function Content({ links }) {
+
     return (
+
+
         <Col id="content">
             <ContentHead />
-            <ContentBody />
+            <ContentBody>
+          <p>this is showing </p>
+            {links.map((link, index) => {
+                return <div key={index}>{link.title}{link.url} {link.tags} </div>
+            })
+            }
+          </ContentBody>
         </Col>
     )
 }

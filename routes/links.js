@@ -1,9 +1,9 @@
 const express = require('express');
 const linksRouter = express.Router();
-const { 
-    getAllLinks, 
-    createLink, 
-    updateLink 
+const {
+    getAllLinks,
+    createLink,
+    updateLink
 } = require('../db');
 
 const { requireUser } = require('./utils');
@@ -17,7 +17,7 @@ linksRouter.use((req, res, next) => {
 
 // get all links
 
-linksRouter.get('/', requireUser, async (req, res, next) => {
+linksRouter.get('/', async (req, res, next) => {
     const links = await getAllLinks(req.user.id);
     res.send({
         links
@@ -25,13 +25,13 @@ linksRouter.get('/', requireUser, async (req, res, next) => {
 })
 
 // add new link
-linksRouter.post('/', requireUser, async (req,res, next) => {
+linksRouter.post('/', requireUser, async (req, res, next) => {
     const { url, title, description, tags } = req.body;
-   
+
     const creatorId = req.user.id;
     link = await createLink({ creatorId, url, title, description, tags });
-    
-    res.send (
+
+    res.send(
         link
     );
 });
@@ -39,15 +39,15 @@ linksRouter.post('/', requireUser, async (req,res, next) => {
 // update link
 
 linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
-    
+
     const [link] = await getAllLinks(req.user.id, req.params.linkId);
-    
-    const { url, title, description, tags  } = req.body;
+
+    const { url, title, description, tags } = req.body;
     const updateFields = {};
-    
-    if(url) { updateFields.url = url }
-    if(title) { updateFields.title = title }
-    if(description) { updateFields.description = description }
+
+    if (url) { updateFields.url = url }
+    if (title) { updateFields.title = title }
+    if (description) { updateFields.description = description }
 
     // const addTagArr = tags.map(tag => {
     //     let match = true;
@@ -66,11 +66,11 @@ linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
     //         }
     //     })
     // })
-    
+
     try {
-        if(link && link.creatorId === req.user.id) {
-            
-            const updatedLink = await updateLink( link.id, updateFields, tags );
+        if (link && link.creatorId === req.user.id) {
+
+            const updatedLink = await updateLink(link.id, updateFields, tags);
             // const updatedTags = await updateTags( link.id );
 
             res.send({
