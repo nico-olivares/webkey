@@ -1,24 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import Header from '../components/Header';
-import Main from '../components/Main';
-import Footer from '../components/Footer';
-import { BrowserRouter as Router, Route, Link, Switch, withRouter } from 'react-router-dom';
+/** @format */
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState, useEffect } from "react";
+import Header from "../components/Header";
+import Main from "../components/Main";
+import Footer from "../components/Footer";
+import {
+    BrowserRouter as Router,
+    Route,
+    Link,
+    Switch,
+    withRouter,
+    Redirect,
+} from "react-router-dom";
+import jwt from "jsonwebtoken";
 
-import { getLinks } from '../api';
+import "bootstrap/dist/css/bootstrap.min.css";
 
-import Login from '../pages/Login';
-import Register from '../pages/Register'
+import { getLinks } from "../api";
+
+import Login from "../pages/Login";
+import Register from "../pages/Register";
 
 const App = () => {
     const [links, setLinks] = useState([]);
-    const [newUser, setNewUser] = useState({})
+    const [newUser, setNewUser] = useState({});
+
+    //user verification
+    function localStorageUser() {
+        if (localStorage.getItem("user")) {
+            const localStorageUser = JSON.parse(localStorage.getItem("user"));
+            const { id } = jwt.verify(localStorageUser.token, process.env.JWT_SECRET);
+            if (id) {
+                return JSON.parse(localStorage.getItem("user"));
+            } else {
+                return {};
+            }
+        } else {
+            return {};
+        }
+    }
 
     useEffect(() => {
         getLinks()
             .then((response) => {
-                console.log('response..', response)
+                console.log("response..", response);
                 setLinks(response.links);
             })
             .catch((error) => {
@@ -26,22 +51,30 @@ const App = () => {
             });
     }, []);
 
-    console.log('this is the links', links)
+    console.log("this is the links", links);
     return (
-        <div className='App'>
+        <div className="App">
             <Router>
                 <Header />
-                <Switch>
-                    <Route path='/' exact render={() => < Main links={links} />} />
-                    <Route path='/login' exact render={() => <Login />} />
-                    <Route path='/register' exact render={() => <Register newUser={newUser} setNewUser={setNewUser} />} />
-                </Switch>
+
+                {localStorageUser().token ? (
+                    <Route path="/" exact render={() => <Main links={links} />} />
+                ) : (
+                    <Switch>
+                        <Route path="/login" exact render={() => <Login />} />
+                        <Route
+                            path="/register"
+                            exact
+                            render={() => <Register newUser={newUser} setNewUser={setNewUser} />}
+                        />
+                        <Redirect to="/login" />
+                    </Switch>
+                )}
+
                 <Footer />
             </Router>
-
         </div>
     );
-
 };
 
 export default App;
