@@ -23,7 +23,7 @@ import Register from "../pages/Register";
 
 const App = () => {
     const [links, setLinks] = useState([]);
-    const [newUser, setNewUser] = useState({});
+    const [user, setUser] = useState({});
 
     //user verification
     function localStorageUser() {
@@ -61,11 +61,15 @@ const App = () => {
                     <Route path="/" exact render={() => <Main links={links} />} />
                 ) : (
                     <Switch>
-                        <Route path="/login" exact render={() => <Login />} />
+                        <Route
+                            path="/login"
+                            exact
+                            render={() => <Login user={user} setUser={setUser} />}
+                        />
                         <Route
                             path="/register"
                             exact
-                            render={() => <Register newUser={newUser} setNewUser={setNewUser} />}
+                            render={() => <Register user={user} setUser={setUser} />}
                         />
                         <Redirect to="/login" />
                     </Switch>
