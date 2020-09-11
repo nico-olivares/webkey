@@ -13,11 +13,19 @@
     justify-content: flex-start;
 }
 
-/* left col component */
+/* right col component */
 #info {
     align-items: center;
     display: flex;
     height: 70px;
     justify-content: flex-end;
     text-align: right;
+}
+
+.nav-link { 
+    color: #DDDDDD;
+}
+
+.nav-link:hover { 
+    color: #FFFFFF;
 }

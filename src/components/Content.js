@@ -3,12 +3,16 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import './Content.css';
 
+import ContentHead from './ContentHead';
+import ContentBody from './ContentBody';
+
 import Col from 'react-bootstrap/Col';
 
 function Content() {
     return (
-        <Col>
-            <div>This is the content component</div>
+        <Col id="content">
+            <ContentHead />
+            <ContentBody />
         </Col>
     )
 }
