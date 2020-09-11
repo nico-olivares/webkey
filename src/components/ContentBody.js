@@ -7,13 +7,18 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-function ContentBody() {
+function ContentBody({ links }) {
     return (
         <Container id="content-body" fluid={true}>
             <Row>
                 <Col>
                     <div class="content-links">
-                        some content here / list of links accordion
+                        <p>this is showing</p>
+                        {
+                            links.map((link, index) => {
+                                return <div key={index}>{link.title}{link.url} {link.tags} </div>
+                            })
+                        }
                     </div>
                 </Col>
             </Row>
