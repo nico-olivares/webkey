@@ -14,22 +14,29 @@ import {
 } from "react-router-dom";
 import jwt from "jsonwebtoken";
 
+
 import "bootstrap/dist/css/bootstrap.min.css";
+
+
 
 import { getLinks } from "../api";
 
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 
+const { JWT_SECRET } = process.env;
+
 const App = () => {
     const [links, setLinks] = useState([]);
     const [user, setUser] = useState({});
+
+    console.log('jwt secret ', JWT_SECRET);
 
     //user verification
     function localStorageUser() {
         if (localStorage.getItem("user")) {
             const localStorageUser = JSON.parse(localStorage.getItem("user"));
-            const { id } = jwt.verify(localStorageUser.token, process.env.JWT_SECRET);
+            const { id } = jwt.verify(localStorageUser.token, JWT_SECRET);
             if (id) {
                 return localStorageUser;
             } else {
