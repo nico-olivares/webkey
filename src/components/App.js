@@ -6,24 +6,30 @@ import { BrowserRouter as Router, Route, Link, Switch, withRouter } from 'react-
 import Auth from '../pages/Auth'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getSomething } from '../api';
+import { getLinks } from '../api';
 import Links from '../pages/Links';
+import Content from './Content'
 import Login from '../pages/Login';
 import Register from '../pages/Register'
 
 const App = () => {
-    const [message, setMessage] = useState('');
+    const [links, setLinks] = useState([]);
+    const [newUser, setNewUser] = useState({})
 
     useEffect(() => {
-        getSomething()
+        getLinks()
             .then((response) => {
-                setMessage(response.message);
+                console.log('response..', response)
+                setLinks(response.links);
             })
             .catch((error) => {
-                setMessage(error.message);
+                setLinks(error);
             });
-    });
+    }, []);
 
+
+
+    console.log('this is the links', links)
     return (
         <div className='App'>
             <Router>
@@ -31,9 +37,9 @@ const App = () => {
                 <Switch>
                     <Route path='/login' exact render={() => <Login />} />
 
-                    <Route path='/register' exact render={() => <Register />} />
+                    <Route path='/register' exact render={() => <Register newUser={newUser} setNewUser={setNewUser} />} />
 
-                    <Route path='/home' exact render={() => <Links />} />
+                    <Route path='/home' exact render={() => < Main links={links} />} />
                 </Switch>
                 <Footer />
             </Router>
