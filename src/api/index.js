@@ -13,15 +13,16 @@ export async function getLinks() {
 export async function register({ username, password }) {
     console.log("getting to the register function");
     try {
-        const axiosInstance = axios.create({ baseURL: "http://localhost:5000" });
-        const response = await axiosInstance.post("/api/users/register", {
+        // const axiosInstance = axios.create({ baseURL: "http://localhost:5000" });
+        const { data: { user: newUser } } = await axios.post("/api/users/register", {
             username: username,
             password: password,
+            
         });
         // const { data } = await response.json();   not sure we need this with axios
-        console.log("is this working", response);
+        console.log("is this working", newUser);
         //const user = data.user;
-        let user = false; // fix to = response.user or something like that
+        let user = newUser; // fix to = response.user or something like that
 
         if (user) {
             localStorage.setItem("user", JSON.stringify(user));

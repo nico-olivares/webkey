@@ -25,10 +25,8 @@ function Register({ user, setUser }) {
         console.log("this is the password2...", password2);
 
         if (password1 === password2) {
-            register({ username, password1 }).then((newUser) => {
-                setUser(newUser).catch((error) => {
-                    throw error;
-                });
+            register({ username, password: password1 }).then((newUser) => {
+                setUser(newUser)
             });
         }
     };
