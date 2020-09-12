@@ -35,9 +35,10 @@ import Register from "../pages/Register";
 import jwt from "jsonwebtoken";
 const { JWT_SECRET } = process.env;
 
-// set up top level App component
+// set up top level app component
 // 
 const App = () => {
+    
     const [links, setLinks] = useState([]);
     const [tags, setTags] = useState([]);
     const [user, setUser] = useState({});
@@ -53,8 +54,6 @@ const App = () => {
             return {};
         }
     }
-
-    
 
     useEffect(() => {
         getLinks()
@@ -94,6 +93,7 @@ const App = () => {
             </Router>
         </div>
     );
+
 };
 
 export default App;
