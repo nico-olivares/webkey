@@ -22,15 +22,33 @@ export async function register({ username, password }) {
         // const { data } = await response.json();   not sure we need this with axios
         console.log("is this working", newUser);
         //const user = data.user;
-        let user = newUser; // fix to = response.user or something like that
+        let user = newUser; 
 
-        if (user) {
-            localStorage.setItem("user", JSON.stringify(user));
-            return user;
+        if (newUser) {
+            localStorage.setItem("user", JSON.stringify(newUser));
+            return newUser;
         } else {
             alert("you have not created an account. Please login to access features.");
         }
     } catch (error) {
         throw console.error;
+    }
+}
+
+
+export async function login({ username, password }) {
+    console.log('getting username and password: ', username, password);
+    try {
+        const { data: { user }} = await axios.post('api/users/login', {
+            username,
+            password
+        });
+        console.log('getting user back ', user);
+        if (user) {
+            localStorage.setItem('user', JSON.stringify(user));
+            return user;
+        }
+    } catch (error) {
+        throw error;
     }
 }

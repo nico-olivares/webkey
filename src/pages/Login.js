@@ -9,28 +9,47 @@ import Col from 'react-bootstrap/esm/Col'
 import Form from 'react-bootstrap/esm/Form'
 import Button from 'react-bootstrap/Button'
 
+import { login } from '../api/index'
 
 
+function Login({ user, setUser }) {
+    let username;
+    let password;
 
+    const submitHandler = (event) => {
+        event.preventDefault();
+        console.log("this is the username...", username);
+        console.log("this is the password1...", password);
+        login({username, password}).then((user) => {
+            localStorage.setItem('user', JSON.stringify(user));
+            setUser(user);
+        })
+    }
 
+    const usernameHandler = (event) => {
+        username = event.target.value;
+    }
 
-function Login() {
+    const passwordHandler = (event) => {
+        password = event.target.value;
+    }
 
+    
     return (
         <Container>
-            <Form>
+            <Form onSubmit={submitHandler}>
                 <Form.Group>
                     <Form.Label htmlFor="username">Username</Form.Label>
-                    <Form.Control id="username" name="username" type="text" value="" />
+                    <Form.Control id="username" name="username" type="text" onChange={usernameHandler} />
                 </Form.Group>
 
 
                 <Form.Group>
                     <Form.Label htmlFor="password">Password</Form.Label>
-                    <Form.Control id="password" name="Password" type="text" value="" />
+                    <Form.Control id="password" name="Password" type="password" onChange={passwordHandler} />
                 </Form.Group>
 
-                <Button className="d-inline-block" variant="primary" type="submit" >
+                <Button className="d-inline-block" variant="primary" type="submit"  >
                     Login
             </Button>
             </Form>

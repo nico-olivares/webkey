@@ -29,6 +29,7 @@ const { JWT_SECRET } = process.env;
 const App = () => {
     const [links, setLinks] = useState([]);
     const [user, setUser] = useState({});
+    
 
     console.log('jwt secret ', JWT_SECRET);
 
@@ -36,12 +37,8 @@ const App = () => {
     function localStorageUser() {
         if (localStorage.getItem("user")) {
             const localStorageUser = JSON.parse(localStorage.getItem("user"));
-            const { id } = jwt.verify(localStorageUser.token, JWT_SECRET);
-            if (id) {
-                return localStorageUser;
-            } else {
-                return {};
-            }
+            
+            return localStorageUser;
         } else {
             return {};
         }
@@ -52,20 +49,31 @@ const App = () => {
             .then((response) => {
                 console.log("response..", response);
                 setLinks(response.links);
+                setUser(localStorageUser());
+                    
             })
             .catch((error) => {
                 setLinks(error);
             });
     }, []);
 
+    // useEffect(() => {
+    //     return <Redirect to="/" />
+    // }, [user]);
+
+    console.log('user ', user);
+    console.log('user.token ', user.token);
     console.log("this is the links", links);
     return (
         <div className="App">
             <Router>
                 <Header />
 
-                {localStorageUser().token ? (
+                {user.token ? (
+                    <div>
                     <Route path="/" exact render={() => <Main links={links} />} />
+                    <Redirect to='/' exact component={() => <Main links={links} />} />
+                    </div>
                 ) : (
                     <Switch>
                         <Route
@@ -78,8 +86,9 @@ const App = () => {
                             exact
                             render={() => <Register user={user} setUser={setUser} />}
                         />
-                        <Redirect to="/login" />
+                       <Redirect to="/login" />
                     </Switch>
+
                 )}
 
                 <Footer />
