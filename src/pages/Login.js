@@ -21,7 +21,6 @@ function Login({ user, setUser }) {
         login({username, password}).then((user) => {
             localStorage.setItem('user', JSON.stringify(user));
             setUser(user);
-            //go to a different route
         })
     }
 
@@ -33,16 +32,13 @@ function Login({ user, setUser }) {
         password = event.target.value;
     }
 
-    
     return (
         <Container id="login">
-            <Form id="login-form"  onSubmit={submitHandler}>
+            <Form id="login-form" onSubmit={submitHandler}>
                 <Form.Group>
                     <Form.Label htmlFor="username">Username</Form.Label>
                     <Form.Control id="username" name="username" type="text" onChange={usernameHandler} />
                 </Form.Group>
-
-
                 <Form.Group>
                     <Form.Label htmlFor="password">Password</Form.Label>
                     <Form.Control id="password" name="Password" type="password" onChange={passwordHandler} />
@@ -52,5 +48,6 @@ function Login({ user, setUser }) {
             </Form>
         </Container>
     )
+
 }
 export default Login
