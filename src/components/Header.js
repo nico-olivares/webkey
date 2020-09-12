@@ -14,7 +14,7 @@ import Register from '../pages/Register';
 import Login from "../pages/Login";
 
 
-function Header() {
+function Header({user}) {
     return (
         <Container id="header" fluid={true}>
             <Row>
@@ -23,9 +23,14 @@ function Header() {
                 </Col>
                 <Col id="info" md={6} sm={12}>
                     <Navbar>
-                        <Link className="nav-link" to="/">Home</Link>
-                        <Link className="nav-link" to="/register">Register</Link>
-                        <Link className="nav-link" to="/login">Login</Link>
+                        { user.token ? <Link className="nav-link" to="/">Home</Link> :
+                        <>
+                            <Link className="nav-link" to="/register">Register</Link>
+                            <Link className="nav-link" to="/login">Login</Link>
+                        </>
+                        }
+                        
+                        
                     </Navbar>
                 </Col>
             </Row>

@@ -43,7 +43,6 @@ export async function login({ username, password }) {
             username,
             password
         });
-        console.log('getting user back ', user);
         if (user) {
             localStorage.setItem('user', JSON.stringify(user));
             return user;

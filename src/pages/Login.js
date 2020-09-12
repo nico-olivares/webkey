@@ -18,8 +18,6 @@ function Login({ user, setUser }) {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        console.log("this is the username...", username);
-        console.log("this is the password1...", password);
         login({username, password}).then((user) => {
             localStorage.setItem('user', JSON.stringify(user));
             setUser(user);

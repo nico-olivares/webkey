@@ -13,7 +13,7 @@ function Footer() {
         <Container id="footer" fluid={true}>
             <Row>
                 <Col className="col">
-                    <div>Web Key &copy; 2000 - Olivares Causey Marcello</div>
+                    <div>Web Key &copy; 2020 - Causey Marcello Olivares</div>
                 </Col>
             </Row>
 

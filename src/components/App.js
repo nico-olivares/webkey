@@ -57,17 +57,11 @@ const App = () => {
             });
     }, []);
 
-    // useEffect(() => {
-    //     return <Redirect to="/" />
-    // }, [user]);
-
-    console.log('user ', user);
-    console.log('user.token ', user.token);
-    console.log("this is the links", links);
+    
     return (
         <div className="App">
             <Router>
-                <Header />
+                <Header user={user} />
 
                 {user.token ? (
                     <div>
