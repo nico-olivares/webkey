@@ -21,6 +21,7 @@ function Login({ user, setUser }) {
         login({username, password}).then((user) => {
             localStorage.setItem('user', JSON.stringify(user));
             setUser(user);
+            //go to a different route
         })
     }
 
