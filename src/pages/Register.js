@@ -54,7 +54,7 @@ function Register({ user, setUser }) {
                     <Form.Control
                         id="password"
                         name="Password"
-                        type="text"
+                        type="password"
                         onChange={handlePassword}
                     />
                 </Form.Group>
@@ -64,7 +64,7 @@ function Register({ user, setUser }) {
                     <Form.Control
                         id="password"
                         name="Password"
-                        type="text"
+                        type="password"
                         onChange={handlePassword2}
                     />
                 </Form.Group>
