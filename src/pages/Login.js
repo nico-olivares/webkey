@@ -18,7 +18,7 @@ function Login({ user, setUser }) {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        login({username, password}).then((user) => {
+        login({ username, password }).then((user) => {
             localStorage.setItem('user', JSON.stringify(user));
             setUser(user);
         })
@@ -32,10 +32,10 @@ function Login({ user, setUser }) {
         password = event.target.value;
     }
 
-    
+
     return (
         <Container id="login">
-            <Form id="login-form"  onSubmit={submitHandler}>
+            <Form id="login-form" onSubmit={submitHandler}>
                 <Form.Group>
                     <Form.Label htmlFor="username">Username</Form.Label>
                     <Form.Control id="username" name="username" type="text" onChange={usernameHandler} />

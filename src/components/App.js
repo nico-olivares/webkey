@@ -39,6 +39,7 @@ const App = () => {
     const [links, setLinks] = useState([]);
     const [user, setUser] = useState({});
 
+
     console.log('jwt secret ', JWT_SECRET);
 
     //user verification
@@ -57,33 +58,33 @@ const App = () => {
                 console.log("response..", response);
                 setLinks(response.links);
                 setUser(localStorageUser());
-                    
+
             })
             .catch((error) => {
                 setLinks(error);
             });
     }, []);
-  
+
     return (
         <div className="App">
             <Router>
                 <Header user={user} />
                 <main id="main">
-                    {user.token 
-                    ? (
-                        <div id="page" class="page-main">
-                            <Route path="/" exact render={() => <Main links={links} />} />
-                            <Redirect to='/' exact component={() => <Main links={links} />} />
-                        </div>
-                    ) : (
-                        <Switch>
-                            <div id="page" class="page-entry">
-                                <Route path="/login" exact render={() => <Login user={user} setUser={setUser} />} />
-                                <Route path="/register" exact render={() => <Register user={user} setUser={setUser} />} />
-                                <Redirect to="/login" />
+                    {user.token
+                        ? (
+                            <div id="page" class="page-main">
+                                <Route path="/" exact render={() => <Main links={links} />} />
+                                <Redirect to='/' exact component={() => <Main links={links} />} />
                             </div>
-                        </Switch>
-                    )}
+                        ) : (
+                            <Switch>
+                                <div id="page" class="page-entry">
+                                    <Route path="/login" exact render={() => <Login user={user} setUser={setUser} />} />
+                                    <Route path="/register" exact render={() => <Register user={user} setUser={setUser} />} />
+                                    <Redirect to="/login" />
+                                </div>
+                            </Switch>
+                        )}
                 </main>
                 <Footer />
             </Router>

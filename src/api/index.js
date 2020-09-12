@@ -17,12 +17,12 @@ export async function register({ username, password }) {
         const { data: { user: newUser } } = await axios.post("/api/users/register", {
             username: username,
             password: password,
-            
+
         });
         // const { data } = await response.json();   not sure we need this with axios
         console.log("is this working", newUser);
         //const user = data.user;
-        let user = newUser; 
+        let user = newUser;
 
         if (newUser) {
             localStorage.setItem("user", JSON.stringify(newUser));
@@ -39,7 +39,7 @@ export async function register({ username, password }) {
 export async function login({ username, password }) {
     console.log('getting username and password: ', username, password);
     try {
-        const { data: { user }} = await axios.post('api/users/login', {
+        const { data: { user } } = await axios.post('api/users/login', {
             username,
             password
         });
@@ -50,4 +50,20 @@ export async function login({ username, password }) {
     } catch (error) {
         throw error;
     }
+}
+
+export async function createLink({ creatorId, url, title, description, tags = [] }) {
+    console.log('getting a newLink', url, title, description, tags = [])
+    try {
+        const { data: { link } } = await axios.post('api/links', {
+            url, title, description, tags =[]
+        })
+        if (link) {
+            console.log('adding a new link', link)
+            return link
+        }
+    } catch (error) {
+        throw erroe
+    }
+
 }
