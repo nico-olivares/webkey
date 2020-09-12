@@ -34,8 +34,8 @@ function Login({ user, setUser }) {
 
     
     return (
-        <Container>
-            <Form onSubmit={submitHandler}>
+        <Container id="login">
+            <Form id="login-form"  onSubmit={submitHandler}>
                 <Form.Group>
                     <Form.Label htmlFor="username">Username</Form.Label>
                     <Form.Control id="username" name="username" type="text" onChange={usernameHandler} />
@@ -47,9 +47,7 @@ function Login({ user, setUser }) {
                     <Form.Control id="password" name="Password" type="password" onChange={passwordHandler} />
                 </Form.Group>
 
-                <Button className="d-inline-block" variant="primary" type="submit"  >
-                    Login
-            </Button>
+                <Button className="d-inline-block" variant="primary" type="submit">Log In</Button>
             </Form>
         </Container>
     )

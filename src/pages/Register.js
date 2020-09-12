@@ -42,38 +42,42 @@ function Register({ user, setUser }) {
     };
 
     return (
-        <div>
-            <Form onSubmit={handleSubmit}>
-                <Form.Group>
-                    <Form.Label htmlFor="username">Username</Form.Label>
-                    <Form.Control id="username" name="username" type="text" onChange={handleUser} />
-                </Form.Group>
+        <Container id="register">
+            <Row>
+                <Col>
+                    <div>
+                        <Form id="register-form" onSubmit={handleSubmit}>
+                            <Form.Group>
+                                <Form.Label htmlFor="username">Username</Form.Label>
+                                <Form.Control id="username" name="username" type="text" onChange={handleUser} />
+                            </Form.Group>
 
-                <Form.Group>
-                    <Form.Label htmlFor="password">Password</Form.Label>
-                    <Form.Control
-                        id="password"
-                        name="Password"
-                        type="password"
-                        onChange={handlePassword}
-                    />
-                </Form.Group>
+                            <Form.Group>
+                                <Form.Label htmlFor="password">Password</Form.Label>
+                                <Form.Control
+                                    id="password"
+                                    name="Password"
+                                    type="password"
+                                    onChange={handlePassword}
+                                />
+                            </Form.Group>
 
-                <Form.Group>
-                    <Form.Label htmlFor="confirm-password">Confirm Password</Form.Label>
-                    <Form.Control
-                        id="password"
-                        name="Password"
-                        type="password"
-                        onChange={handlePassword2}
-                    />
-                </Form.Group>
+                            <Form.Group>
+                                <Form.Label htmlFor="confirm-password">Confirm Password</Form.Label>
+                                <Form.Control
+                                    id="password"
+                                    name="Password"
+                                    type="password"
+                                    onChange={handlePassword2}
+                                />
+                            </Form.Group>
 
-                <Button className="d-inline-block" variant="primary" type="submit">
-                    Send
-                </Button>
-            </Form>
-        </div>
+                            <Button className="d-inline-block" variant="primary" type="submit">Register</Button>
+                        </Form>
+                    </div>
+                </Col>
+            </Row>
+        </Container>
     );
 }
 export default Register;

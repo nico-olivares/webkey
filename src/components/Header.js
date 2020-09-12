@@ -23,14 +23,16 @@ function Header({user}) {
                 </Col>
                 <Col id="info" md={6} sm={12}>
                     <Navbar>
-                        { user.token ? <Link className="nav-link" to="/">Home</Link> :
-                        <>
-                            <Link className="nav-link" to="/register">Register</Link>
-                            <Link className="nav-link" to="/login">Login</Link>
-                        </>
+                        { user.token 
+                            ? <>
+                                <div>Welcome, User Name</div>
+                                <Link className="nav-link" to="/">Sign Out</Link>
+                              </>
+                            : <>
+                                <Link className="nav-link" to="/register">Register</Link>
+                                <Link className="nav-link" to="/login">Login</Link>
+                              </>
                         }
-                        
-                        
                     </Navbar>
                 </Col>
             </Row>

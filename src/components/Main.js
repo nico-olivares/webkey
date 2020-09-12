@@ -10,17 +10,12 @@ import Content from './Content';
 
 function Main({ links }) {
     return (
-        <Container id="main" fluid={true}>
-
-            <Row className="justify-content-center ">
-                <Sidebar />
-                <Content links={links}>
-
-
-                </Content>
-
-            </Row>
-        </Container>
+            <Container id="container" fluid={true}>
+                <Row className="justify-content-center">
+                    <Sidebar />
+                    <Content links={links}/>
+                </Row>
+            </Container>
     )
 }
 

@@ -16,7 +16,7 @@ function ContentBody({ links }) {
                         <p>this is showing</p>
                         {
                             links.map((link, index) => {
-                                return <div key={index}>{link.title}{link.url} {link.tags} </div>
+                                return <div key={index}>{link.title} {link.url} {link.tags}</div>
                             })
                         }
                     </div>
