@@ -12,7 +12,7 @@ function ContentBody({ links }) {
         <Container id="content-body" fluid={true}>
             <Row>
                 <Col>
-                    <div class="content-links">
+                    <div className="content-links">
                         <p>this is showing</p>
                         {
                             links.map((link, index) => {

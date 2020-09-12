@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import './Sidebar.css';
+import { getTags } from '../api/index';
 
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
 
-function Sidebar({ tagList, setTagList }) {
+function Sidebar({ user, tags, setTags }) {
     return (
         <Col id='sidebar' className='col-pixel-width-400'>
             <SideFilter />
-            <TagList />
+            <TagList user={user} tags={tags} setTags={setTags} />
         </Col>
     );
 }
@@ -26,23 +28,25 @@ function SideFilter({ setTagList }) {
     );
 }
 
-function TagList({ tagList = [], setTagList }) {
-
+function TagList({ user = {}, tags = [], setTags }) {
+    if (user.id) {
+        getTags(user.id).then((tagArray) => {
+            setTags(tagArray);
+        }).catch((error) => {
+            throw error;
+        })
+    }
     return (
         <>
-            {tagList.map((tag, i) => {
-                return <Button id={'"' + 'tag' + i + '"'} className='tagButton' variant="primary">{tag}</Button>
+        <ListGroupItem>
+            {tags.map((tag, i) => {
+                return <ListGroup id={'"' + 'tag' + i + '"'} className='tagButton' variant="primary">{tag.title}</ListGroup>
             })}
+            </ListGroupItem>
         </>
     );
 }
 
-async function fetch(url) {
-    try {
-        return await fetch(url);
-    } catch (error) {
-        throw error;
-    }
-}
+
 
 export default Sidebar;
