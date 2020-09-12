@@ -12,6 +12,8 @@ import {
     Redirect,
 } from "react-router-dom";
 
+import { getTags } from '../api/index';
+
 // set up boostrap css
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -37,6 +39,7 @@ const { JWT_SECRET } = process.env;
 // 
 const App = () => {
     const [links, setLinks] = useState([]);
+    const [tags, setTags] = useState([]);
     const [user, setUser] = useState({});
 
     console.log('jwt secret ', JWT_SECRET);
@@ -50,6 +53,8 @@ const App = () => {
             return {};
         }
     }
+
+    
 
     useEffect(() => {
         getLinks()
@@ -71,13 +76,13 @@ const App = () => {
                 <main id="main">
                     {user.token 
                     ? (
-                        <div id="page" class="page-main">
-                            <Route path="/" exact render={() => <Main links={links} />} />
-                            <Redirect to='/' exact component={() => <Main links={links} />} />
+                        <div id="page" className="page-main">
+                            <Route path="/" exact render={() => <Main links={links} tags={tags} setTags={setTags} user={user} />} />
+                            <Redirect to='/' exact component={() => <Main links={links} tags={tags} setTags={setTags} user={user} />} />
                         </div>
                     ) : (
                         <Switch>
-                            <div id="page" class="page-entry">
+                            <div id="page" className="page-entry">
                                 <Route path="/login" exact render={() => <Login user={user} setUser={setUser} />} />
                                 <Route path="/register" exact render={() => <Register user={user} setUser={setUser} />} />
                                 <Redirect to="/login" />

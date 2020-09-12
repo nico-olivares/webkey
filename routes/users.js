@@ -70,7 +70,7 @@ usersRouter.post("/login", async (req, res, next) => {
                     expiresIn: "1w",
                 }
             );
-            delete user.id;
+            
             delete user.password;
             user.token = token;
             res.send({ message: "you're logged in!", user });

@@ -37,7 +37,7 @@ export async function register({ username, password }) {
 
 
 export async function login({ username, password }) {
-    console.log('getting username and password: ', username, password);
+    
     try {
         const { data: { user }} = await axios.post('api/users/login', {
             username,
@@ -46,6 +46,22 @@ export async function login({ username, password }) {
         if (user) {
             localStorage.setItem('user', JSON.stringify(user));
             return user;
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function getTags(userId) {
+   
+    try {
+        const { data: tags } = await axios.post('/api/tags/usertags', { userId: userId });
+        console.log('tags ', tags);
+        if (tags) {
+            console.log('the tags from the front ', tags);
+            return tags;
+        } else {
+            return [];
         }
     } catch (error) {
         throw error;
