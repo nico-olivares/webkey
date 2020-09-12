@@ -14,7 +14,7 @@ import Content from '../components/Content';
 function Links({ links }) {
     console.log(links)
     return (
-        <Main />
+        <Main id="links" />
     )
 
 }
