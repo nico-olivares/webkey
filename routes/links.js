@@ -49,23 +49,7 @@ linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
     if (title) { updateFields.title = title }
     if (description) { updateFields.description = description }
 
-    // const addTagArr = tags.map(tag => {
-    //     let match = true;
-    //     link.tags.forEach(linkTag => {
-    //         if(tag === linkTag) {
-    //             match = false;
-    //         }
-    //     })
-    //     return match;
-    // })
 
-    // const removeTagArr = tags.map(tag => {
-    //     link.tags.forEach(linkTag => {
-    //         if(tag === linkTag) {
-    //             return true;
-    //         }
-    //     })
-    // })
 
     try {
         if (link && link.creatorId === req.user.id) {
