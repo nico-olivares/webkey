@@ -33,10 +33,8 @@ function SideFilter({ tags, setTags }) {
         console.log('new tags ', filteredTags);
         setTags(filteredTags);
     }
-
-
     return (
-        <Form>
+        <Form className="mt-1">
             <Form.Group controlId='formSearchBar'>
                 <Form.Control type='text' placeholder='Search tags...' onChange={filterHandler}/>
             </Form.Group>
@@ -45,9 +43,6 @@ function SideFilter({ tags, setTags }) {
 }
 
 function TagList({ user = {}, tags = [], setTags }) {
-    
-    
-
     useEffect(() => {
         if (user.id) {
             getTags(user.id).then((tagArray) => {
@@ -58,15 +53,16 @@ function TagList({ user = {}, tags = [], setTags }) {
         }
     }, [user]);
 
-
-
     return (
         <>
+        <div id="title">
+            <h6>Available Tags</h6>
+        </div>
         <ListGroupItem>
             {tags.map((tag, i) => {
                 return <ListGroup key={'"' + 'tag' + i + '"'} className='tagButton' variant="primary">{tag.title}</ListGroup>
             })}
-            </ListGroupItem>
+        </ListGroupItem>
         </>
     );
 }
