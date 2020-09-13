@@ -4,6 +4,11 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+
+import './ContentLink.css';
+
 import { updatedLink } from '../api/index'
 
 function ContentLink({ link }) {
@@ -15,12 +20,7 @@ function ContentLink({ link }) {
 
     const submitHandler = function (event) {
         event.preventDefault();
-
-        // brett let's discuss getting the updatedLink function into here
-        // i'd like to do this ^ instead of calling it with onClick below
-        // i can get the url, title and description to update but not tags
-        // also not I can only get one link to update so I hard coded the link id in the axios call
-
+        updatedLink({ url, title, description, tags });
     }
 
     const onChange = (update) => (event) => {
@@ -31,9 +31,9 @@ function ContentLink({ link }) {
     return (
         <Card key={link.id}>
             <Card.Header>
-                <div className="title">{link.title}</div>
-                <Accordion.Toggle className="btn-toggle" as={Button} variant="link" eventKey={link.id}>
-                    <span>Toggle</span>
+                <Card.Link className="title" href={link.url} target="_blank">{link.title}</Card.Link>
+                <Accordion.Toggle className="btn-toggle" variant="link" eventKey={link.id}>
+                    <FontAwesomeIcon icon={ faChevronDown } />
                 </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey={link.id}>
@@ -58,7 +58,7 @@ function ContentLink({ link }) {
                         </Form.Group>
                         <Button 
                             className="d-inline-block" variant="primary" type="submit"
-                            onClick={ () => { updatedLink({ url, title, description, tags }); }}
+                            // onClick={ () => { updatedLink({ url, title, description, tags }); }}
                         >Save Link</Button>
                     </Form>
 
