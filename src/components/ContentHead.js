@@ -9,7 +9,13 @@ import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
-function ContentHead() {
+function ContentHead({links = [], setLinks}) {
+    const linkHandler = (event) => {
+        links.unshift({id: 0, title: 'New Link', url: '', description: '', tags: []});
+        
+        setLinks(links);
+    };
+
     return (
         <Container id="content-head" fluid={true}>
             <Row>
@@ -20,7 +26,7 @@ function ContentHead() {
                 </Col>
                 <Col md={9} sm={12}>
                     <div id="add-new"class="ml-2">
-                        <Button className="ml-1" variant="outline-dark"><FontAwesomeIcon icon={ faPlus } />New</Button>
+                        <Button className="ml-1" variant="outline-dark"><FontAwesomeIcon icon={ faPlus } onClick={linkHandler} />New</Button>
                     </div>
                     
                 </Col>

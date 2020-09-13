@@ -7,10 +7,10 @@ import ContentHead from './ContentHead';
 import ContentBody from './ContentBody';
 import Col from 'react-bootstrap/Col';
 
-function Content({ links }) {
+function Content({ links, setLinks }) {
     return (
         <Col id="content">
-            <ContentHead />
+            <ContentHead links={links} setLinks={setLinks} />
             <ContentBody links={links} />
         </Col>
     )
