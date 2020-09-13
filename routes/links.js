@@ -18,10 +18,16 @@ linksRouter.use((req, res, next) => {
 // get all links
 
 linksRouter.get('/', async (req, res, next) => {
-    const links = await getAllLinks(req.user.id);
-    res.send({
-        links
-    });
+    try {
+        
+        const links = await getAllLinks(req.user.id);
+        return res.send({
+            links
+        });
+
+    } catch (err) {
+        next(err)
+    }
 })
 
 // add new link

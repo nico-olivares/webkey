@@ -1,10 +1,19 @@
 /** @format */
+import userUtil from '../utils/user'
 
 import axios from "axios";
 //let TOKEN_KEY = localStorage.getItem("TOKEN_KEY");
-export async function getLinks() {
+export async function getLinks(userId) {
     try {
-        const { data } = await axios.get("/api/links");
+        const user = userUtil.getUserFromStorage()
+        debugger
+        console.log('Traavis is there a user token ???"', user.token)
+        const { data } = await axios.get("/api/links", {
+            headers: {
+                authorization: 'Bearer ' + user.token
+            }
+        });
+        console.log('what links are we getting ', data);
         return data;
     } catch (error) {
         throw error;
@@ -56,20 +65,20 @@ export async function getTags(userId) {
 
     try {
         const { data: tags } = await axios.post('/api/tags/usertags', { userId: userId });
-        
+        console.log('tags from api/index ', tags);
         if (tags) {
-            tags.sort((a, b) => {
-                if (a.title[0] - b.title[0] === 0) {
-                    if (a.title[1] - b.title[1] === 0 ) {
-                        return a.title[2] - b.title[2];
-                    } else {
-                        return a.title[1] - b.title[1];
-                    }
-                } else {
-                    return a.title[0] - b.title[0];
-                }
-            });
-            return tags;
+            // tags.sort((a, b) => {
+            //     if (a.title[0] - b.title[0] === 0) {
+            //         if (a.title[1] - b.title[1] === 0 ) {
+            //             return a.title[2] - b.title[2];
+            //         } else {
+            //             return a.title[1] - b.title[1];
+            //         }
+            //     } else {
+            //         return a.title[0] - b.title[0];
+            //     }
+            // });
+            return [];      //need to fix this later
         } else {
             return [];
         }

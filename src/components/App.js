@@ -51,17 +51,18 @@ const App = () => {
     }
 
     useEffect(() => {
-        getLinks()
+    
+        getLinks(user.id)
             .then((response) => {
+                
                 console.log("response..", response);
                 setLinks(response.links);
-                setUser(localStorageUser());
                     
             })
             .catch((error) => {
                 setLinks(error);
             });
-    }, []);
+    }, [user]);
   
     return (
         <div className="App">
