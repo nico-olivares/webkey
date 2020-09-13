@@ -71,6 +71,7 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 // output: returns an updated link
 
 async function updateLink(linkId, fields = {}, tags = []) {
+	
 	let newLink;
 	try {
 		async function updateLinkFields(linkId, fields) {

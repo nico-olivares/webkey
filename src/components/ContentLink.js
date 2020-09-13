@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
@@ -17,19 +17,23 @@ function ContentLink({ link }) {
     const [url, setUrl] = useState(link.url);
     const [description, setDescription] = useState(link.description);
     const [title, setTitle] = useState(link.title)
-    const [tags, setTags] = useState(link.tags);
+    const [tags, setTags] = useState(link.tags.join(' '));
+
+    
 
     const submitHandler = function (event) {
         event.preventDefault();
-        console.log('link', id);
-        updatedLink({ id, url, title, description, tags });
+        
+        const newTags = tags.split(' ');
+        
+        updatedLink({ id, url, title, description, tags: newTags });
     }
 
     const onChange = (update) => (event) => {
         event.preventDefault();
         update(event.target.value)
     }
-
+   
     return (
         <Card key={link.id}>
             <Card.Header>

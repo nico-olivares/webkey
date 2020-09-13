@@ -20,17 +20,19 @@ function Sidebar({ user, tags, setTags }) {
 
 function SideFilter({ tags, setTags }) {
 
+    let filter;
+    let filteredTags;
     const filterHandler = (event) => {
-        const filter = event.target.value;
+        filter = event.target.value;
         
-        const filteredTags = tags.filter((tag) => {
+        filteredTags = tags.filter((tag) => {
             if (tag.title.startsWith(filter)) {
                 return true;
             } else {
                 return false;
             }
         })
-        console.log('new tags ', filteredTags);
+        
         setTags(filteredTags);
     }
 
@@ -45,20 +47,6 @@ function SideFilter({ tags, setTags }) {
 }
 
 function TagList({ user = {}, tags = [], setTags }) {
-    
-    
-
-    useEffect(() => {
-        if (user.id) {
-            getTags(user.id).then((tagArray) => {
-                setTags(tagArray);
-            }).catch((error) => {
-                throw error;
-            })
-        }
-    }, [user]);
-
-
 
     return (
         <>
