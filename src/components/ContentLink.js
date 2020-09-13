@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 
 import { updatedLink } from '../api/index'
 
-export default function ContentLink({ link }) {
+function ContentLink({ link }) {
 
     const [url, setUrl] = useState(link.url);
     const [description, setDescription] = useState(link.description);
