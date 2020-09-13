@@ -26,7 +26,7 @@ function Register({ user, setUser }) {
 
         if (password1 === password2) {
             register({ username, password: password1 }).then((newUser) => {
-                setUser(newUser)
+                setUser(newUser);
             });
         }
     };
