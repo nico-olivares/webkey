@@ -11,15 +11,16 @@ function ContentHead() {
     return (
         <Container id="content-head" fluid={true}>
             <Row>
-                <Col>
+                <Col md={6} sm={12}>
                     <div id="title">
-                        <h1>My Links</h1>
+                        <h2>My Links</h2>
                     </div>
                 </Col>
-                <Col>
-                    <div id="search">
-                    form goes here
-                    </div>
+                <Col md={6} sm={12}>
+                    <div id="search">Search</div>
+                </Col>
+                <Col md={12} sm={12}>
+                    <div class="divider"></div>
                 </Col>
             </Row>
         </Container>

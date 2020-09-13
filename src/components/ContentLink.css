@@ -1,0 +1,17 @@
+.card-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    text-transform: capitalize;
+}
+
+.card-link { 
+    font-weight: 600;
+}
+
+.btn-toggle {
+    background: transparent;
+    font-size: 0.8rem;
+    outline: none !important;
+}

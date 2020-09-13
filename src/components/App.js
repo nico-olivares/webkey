@@ -6,13 +6,9 @@ import React, { useState, useEffect } from "react";
 import {
     BrowserRouter as Router,
     Route,
-    Link,
     Switch,
-    withRouter,
     Redirect,
 } from "react-router-dom";
-
-import { getTags } from '../api/index';
 
 // set up boostrap css
 
@@ -32,7 +28,6 @@ import Register from "../pages/Register";
 
 // set up JWT
 
-import jwt from "jsonwebtoken";
 const { JWT_SECRET } = process.env;
 
 // set up top level app component
