@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Accordion from 'react-bootstrap/Accordion';
-import LinkContent from './LinkContent';
+import ContentLink from './ContentLink';
 function ContentBody({ links }) {
 
     return (
@@ -19,7 +19,7 @@ function ContentBody({ links }) {
                             {
                                 links.map((link) => {
                                     return (
-                                        <LinkContent link={link}></LinkContent>
+                                        <ContentLink link={link} />
                                     )
                                 })
                             }

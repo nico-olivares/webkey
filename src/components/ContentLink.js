@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 
 import { updatedLink } from '../api/index'
 
-export default function LinkContent({ link }) {
+export default function ContentLink({ link }) {
 
     const [url, setUrl] = useState(link.url);
     const [description, setDescription] = useState(link.description);
@@ -19,7 +19,7 @@ export default function LinkContent({ link }) {
         // brett let's discuss getting the updatedLink function into here
         // i'd like to do this ^ instead of calling it with onClick below
         // i can get the url, title and description to update but not tags
-        // also not I can onlt get one link to update because I hard coded the link id in the axios call
+        // also not I can only get one link to update so I hard coded the link id in the axios call
 
     }
 
@@ -67,3 +67,5 @@ export default function LinkContent({ link }) {
         </Card>
     )
 }
+
+export default ContentLink;
