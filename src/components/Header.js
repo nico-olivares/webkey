@@ -14,7 +14,11 @@ import Register from '../pages/Register';
 import Login from "../pages/Login";
 
 
-function Header({user}) {
+function Header({user, setUser}) {
+    const signOutHandler = (event) => {
+        localStorage.setItem('user', '');
+        setUser({});
+    }
     return (
         <Container id="header" fluid={true}>
             <Row>
@@ -27,7 +31,7 @@ function Header({user}) {
                             ? <>
                                 <div className="nav-welcome">Welcome, { user.username }</div>
                                 <span>|</span>
-                                <Link className="nav-link" to="/">Sign Out</Link>
+                                <Link className="nav-link" to="/login" onClick={signOutHandler}>Sign Out</Link>
                               </>
                             : <>
                                 <Link className="nav-link" to="/register">Register</Link>
