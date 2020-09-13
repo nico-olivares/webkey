@@ -56,9 +56,19 @@ export async function getTags(userId) {
 
     try {
         const { data: tags } = await axios.post('/api/tags/usertags', { userId: userId });
-        console.log('tags ', tags);
+        
         if (tags) {
-            console.log('the tags from the front ', tags);
+            tags.sort((a, b) => {
+                if (a.title[0] - b.title[0] === 0) {
+                    if (a.title[1] - b.title[1] === 0 ) {
+                        return a.title[2] - b.title[2];
+                    } else {
+                        return a.title[1] - b.title[1];
+                    }
+                } else {
+                    return a.title[0] - b.title[0];
+                }
+            });
             return tags;
         } else {
             return [];

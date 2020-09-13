@@ -12,17 +12,33 @@ import { ListGroup, ListGroupItem } from 'react-bootstrap';
 function Sidebar({ user, tags, setTags }) {
     return (
         <Col id='sidebar' className='col-pixel-width-400'>
-            <SideFilter />
+            <SideFilter tags={tags} setTags={setTags} />
             <TagList user={user} tags={tags} setTags={setTags} />
         </Col>
     );
 }
 
-function SideFilter({ setTagList }) {
+function SideFilter({ tags, setTags }) {
+
+    const filterHandler = (event) => {
+        const filter = event.target.value;
+        
+        const filteredTags = tags.filter((tag) => {
+            if (tag.title.startsWith(filter)) {
+                return true;
+            } else {
+                return false;
+            }
+        })
+        console.log('new tags ', filteredTags);
+        setTags(filteredTags);
+    }
+
+
     return (
         <Form>
             <Form.Group controlId='formSearchBar'>
-                <Form.Control type='text' placeholder='Search tags...' />
+                <Form.Control type='text' placeholder='Search tags...' onChange={filterHandler}/>
             </Form.Group>
         </Form>
     );
