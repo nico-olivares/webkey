@@ -49,19 +49,31 @@ const App = () => {
             return {};
         }
     }
+    useEffect(() => {
+        setUser(localStorageUser());
+    }, []);
+
 
     useEffect(() => {
-    
+        
         getLinks(user.id)
             .then((response) => {
                 
                 console.log("response..", response);
-                setLinks(response.links);
+                
+                setLinks(response);
                     
             })
             .catch((error) => {
                 setLinks(error);
             });
+    }, []);
+
+    useEffect(() => {
+        getLinks(user.id).then((response) => {
+            console.log('new response ', response);
+            setLinks(response);
+        }).catch((error) => { throw error });
     }, [user]);
   
     return (

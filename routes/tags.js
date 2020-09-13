@@ -41,11 +41,11 @@ tagsRouter.get('/:tagName/links', requireUser, async (req, res, next) => {
 
 tagsRouter.post('/usertags', requireUser, async (req, res, next) => {
     console.log('getting to the route');
-    console.log('req.userId ', req.body.userId);
+    console.log('req.userId ', req.user.id);
     try {
-        const tagList = await getTagsForUser(req.body.userId);  //once set up change 1 for req.user.id
+        const tagList = await getTagsForUser(req.user.id); 
         console.log('the tagList ', tagList);
-        res.send(tagList);
+        return (res.send(tagList));
     } catch (error) {
         throw error;
     }
