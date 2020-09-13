@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
 
 import './Sidebar.css';
 import { getTags } from '../api/index';
 
 import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { ListGroup, ListGroupItem } from 'react-bootstrap';
 
@@ -18,11 +16,9 @@ function Sidebar({ user, tags, setTags }) {
     );
 }
 
-function SideFilter({ tags, setTags }) {
-
+function SideFilter({ tags, setTags }) {    
     const filterHandler = (event) => {
         const filter = event.target.value;
-        
         const filteredTags = tags.filter((tag) => {
             if (tag.title.startsWith(filter)) {
                 return true;
@@ -34,7 +30,7 @@ function SideFilter({ tags, setTags }) {
         setTags(filteredTags);
     }
     return (
-        <Form className="mt-1">
+        <Form className="mt-2 mb-2">
             <Form.Group controlId='formSearchBar'>
                 <Form.Control type='text' placeholder='Search tags...' onChange={filterHandler}/>
             </Form.Group>
@@ -55,6 +51,7 @@ function TagList({ user = {}, tags = [], setTags }) {
 
     return (
         <>
+        <div class="divider"></div>
         <div id="title">
             <h6>Available Tags</h6>
         </div>
