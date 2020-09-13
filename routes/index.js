@@ -26,7 +26,7 @@ apiRouter.use(async (req, res, next) => {
 
 	if (!auth) {
 		// nothing to see here
-		req.user = await getUserById()
+		req.user = await getUserById(1)
 		next();
 	} else if (auth.startsWith(prefix)) {
 		const token = auth.slice(prefix.length);
