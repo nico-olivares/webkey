@@ -20,9 +20,6 @@ function Register({ user, setUser }) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("this is the username...", username);
-        console.log("this is the password1...", password1);
-        console.log("this is the password2...", password2);
 
         if (password1 === password2) {
             register({ username, password: password1 }).then((newUser) => {

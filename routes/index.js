@@ -3,14 +3,6 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 
 
-// Import the library:
-// const cors = require('cors');
-
-// const app = apiRouter();
-
-// Then use it before your routes are set up:
-
-
 const { getUserById } = require('../db/index.js');
 
 const linksRouter = require('./links');
@@ -19,12 +11,12 @@ const tagsRouter = require('./tags');
 const linksTagsRouter = require('./links_tags');
 
 apiRouter.use(async (req, res, next) => {
-	console.log('Getting to the back end');
-	// app.use(cors());
+	
+	
 	const prefix = 'Bearer ';
 	const auth = req.header('Authorization');
 
-	console.log('authorization???', req.header('Authorization'))
+	
 
 	if (!auth) {
 		// nothing to see here

@@ -12,15 +12,13 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 function ContentHead({user, links = [], setLinks}) {
 
-    const [ newTitle, setNewTitle ] = useState('Link name');
-    const [ newUrl, setNewUrl ] = useState('https://');
-    const [ newDescription, setNewDescription ] = useState('');
-    const [ newTags, setNewTags ] = useState([]);
-
+    
     const linkHandler = (event) => {
-        
+        console.log('getting to button handler');
         addNewLink({title: 'Link name',  url: 'https://', description: '', tags: []}).then((response) => {
-            
+            console.log('the new link is ', response);
+        }).catch((error) => {
+            throw error;
         })
         
         

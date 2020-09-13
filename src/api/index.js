@@ -10,7 +10,7 @@ export async function getLinks(userId) {
                 authorization: 'Bearer ' + user.token
             }
         });
-        console.log('what links are we getting ', links);
+        
         return links;
     } catch (error) {
         throw error;
@@ -18,13 +18,15 @@ export async function getLinks(userId) {
 }
 
 export async function register({ username, password }) {
-    console.log("getting to the register function");
+    
     try {
+
         const { data: { user: newUser } } = await axios.post("/api/users/register", {
             username: username,
             password: password,
 
         });
+
         let user = newUser;
 
         if (newUser) {
@@ -34,7 +36,7 @@ export async function register({ username, password }) {
             alert("you have not created an account. Please login to access features.");
         }
     } catch (error) {
-        throw console.error;
+        throw error;
     }
 }
 
@@ -53,28 +55,31 @@ export async function login({ username, password }) {
     }
 }
 
-export async function getTags(userId) {
+
+export async function getTags() {
+    
+
     try {
         const user = userUtil.getUserFromStorage();
-        const { data: tags } = await axios.post('/api/tags/usertags', {
+        const { data: tags } = await axios.get('/api/tags/usertags', {
             headers: {
                 authorization: 'Bearer ' + user.token
             }
         });
-        console.log('tags from api/index ', tags);
+        
         if (tags) {
-            // tags.sort((a, b) => {
-            //     if (a.title[0] - b.title[0] === 0) {
-            //         if (a.title[1] - b.title[1] === 0 ) {
-            //             return a.title[2] - b.title[2];
-            //         } else {
-            //             return a.title[1] - b.title[1];
-            //         }
-            //     } else {
-            //         return a.title[0] - b.title[0];
-            //     }
-            // });
-            return [];      //need to fix this later
+            tags.sort((a, b) => {
+                if (a.title[0] - b.title[0] === 0) {
+                    if (a.title[1] - b.title[1] === 0 ) {
+                        return a.title[2] - b.title[2];
+                    } else {
+                        return a.title[1] - b.title[1];
+                    }
+                } else {
+                    return a.title[0] - b.title[0];
+                }
+            });
+            return tags;     
         } else {
             return [];
         }
@@ -98,7 +103,7 @@ export async function addNewLink({ title, description, url, tags = [] }) {
             title, description, url, tags
         }})
         if (link) {
-            console.log('getting tags to the front', link)
+            
             return link
         } else {
             return {}
@@ -109,16 +114,23 @@ export async function addNewLink({ title, description, url, tags = [] }) {
 }
 
 export async function updatedLink({ id, title, date, clicks, description, url, tags = [] }) {
-    console.log('link id', id)
-    try {
-        const { data: link } = await axios.patch(`api/links/${id}`, {
-            id, title, date, clicks, description, url, tags
-        })
-        if (link) {
-            console.log('getting tags to the front', link)
-            return link
-        } else {
-            return {}
+
+    
+    try { // this is working because 4 is hard coded.
+            const { data: link } = await axios.patch(`api/links/${id}`, {
+                id, title, date, clicks, description, url, tags
+            })
+            if (link) {
+                
+                return link
+            } else {
+                return {}
+            }
+    
+        } catch (error) {
+            throw error
+            
+
         }
     } catch (error) {
         throw error

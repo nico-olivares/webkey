@@ -7,7 +7,7 @@ const usersRouter = express.Router();
 const { createUser, getUserByUsername, getUser } = require("../db");
 
 usersRouter.post("/register", async (req, res, next) => {
-    console.log("getting from the front: ", req.body);
+    
     try {
         const { username, password } = req.body;
         const SALT_COUNT = 11;
@@ -75,7 +75,7 @@ usersRouter.post("/login", async (req, res, next) => {
             user.token = token;
             res.send({ message: "you're logged in!", user });
         }
-        // console.log('my user', user)
+        
     } catch (error) {
         console.log(error);
         next(error);

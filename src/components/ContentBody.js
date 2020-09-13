@@ -12,7 +12,7 @@ import ContentLink from './ContentLink';
 
 function ContentBody({ links = [] }) {
 
-    console.log('contentBody ', links);
+    
     const [ link, setLink ] = useState({});
 
     return (
@@ -35,7 +35,7 @@ function ContentBody({ links = [] }) {
                         <Accordion defaultActiveKey="1">
                             { 
                                 links.map((link) => {
-                                    return (<ContentLink link={link} />)
+                                    return (<ContentLink key={link.id} link={link} />)
                                 })
                             }
                         </Accordion>
