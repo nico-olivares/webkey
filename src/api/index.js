@@ -97,11 +97,11 @@ export async function addNewLink({ title, date, clicks, description, url, tags =
     }
 }
 
-    export async function updatedLink({ title, date, clicks, description, url, tags = [] }) {
-
-        try { // this is working because 4 is hard coded.
-            const { data: link } = await axios.patch('api/links/4', {
-                title, date, clicks, description, url, tags
+export async function updatedLink({ id, title, date, clicks, description, url, tags = [] }) {
+    console.log('link id', id)
+    try { // this is working because 4 is hard coded.
+            const { data: link } = await axios.patch(`api/links/${id}`, {
+                id, title, date, clicks, description, url, tags
             })
             if (link) {
                 console.log('getting tags to the front', link)
@@ -114,5 +114,4 @@ export async function addNewLink({ title, date, clicks, description, url, tags =
             throw error
             
         }
-
 }
