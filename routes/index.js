@@ -24,9 +24,10 @@ apiRouter.use(async (req, res, next) => {
 	const prefix = 'Bearer ';
 	const auth = req.header('Authorization');
 
+	console.log('authorization???', req.header('Authorization'))
+
 	if (!auth) {
 		// nothing to see here
-		req.user = await getUserById(1)
 		next();
 	} else if (auth.startsWith(prefix)) {
 		const token = auth.slice(prefix.length);
@@ -63,8 +64,8 @@ apiRouter.use('/tags', tagsRouter);
 apiRouter.use('/linkstags', linksTagsRouter);
 
 
-apiRouter.use('/', (error, req, res, next) => {
-	res.send(error);
+apiRouter.use((error, req, res, next) => {
+	res.status(500).send(error);
 })
 
 module.exports = apiRouter;
