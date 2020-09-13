@@ -1,0 +1,17 @@
+#link-search {
+    float: right;
+    max-width: 320px;
+    width: 100%;
+}
+
+.btn {
+    outline: none;
+}
+.fa-plus {
+    background: transparent;
+    font-size: 0.8rem;
+    outline: none !important;
+    position: relative;
+    top: -1px;
+    margin-right: 0.3rem;
+}
