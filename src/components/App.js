@@ -66,7 +66,7 @@ const App = () => {
     return (
         <div className="App">
             <Router>
-                <Header user={user} />
+                <Header user={user} setUser={setUser} />
                 <main id="main">
                     {user.token 
                     ? (
