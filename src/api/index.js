@@ -1,7 +1,7 @@
 /** @format */
 
 import axios from "axios";
-//let TOKEN_KEY = localStorage.getItem("TOKEN_KEY");
+
 export async function getLinks() {
     try {
         const { data } = await axios.get("/api/links");
@@ -13,7 +13,6 @@ export async function getLinks() {
 export async function register({ username, password }) {
     console.log("getting to the register function");
     try {
-        // const axiosInstance = axios.create({ baseURL: "http://localhost:5000" });
         const { data: { user: newUser } } = await axios.post("/api/users/register", {
             username: username,
             password: password,
@@ -56,7 +55,7 @@ export async function getTags(userId) {
 
     try {
         const { data: tags } = await axios.post('/api/tags/usertags', { userId: userId });
-        
+        console.log ('tags', tags);
         if (tags) {
             tags.sort((a, b) => {
                 if (a.title[0] - b.title[0] === 0) {
@@ -70,7 +69,8 @@ export async function getTags(userId) {
                 }
             });
             return tags;
-        } else {
+        } 
+        else {
             return [];
         }
     } catch (error) {

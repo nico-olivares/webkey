@@ -1,7 +1,6 @@
 // set up depedent react and dom components
 // set up useState and useEffect
 
-
 import React, { useState, useEffect } from "react";
 import {
     BrowserRouter as Router,
@@ -53,7 +52,7 @@ const App = () => {
     useEffect(() => {
         getLinks()
             .then((response) => {
-                console.log("response..", response);
+                console.log("response...", response);
                 setLinks(response.links);
                 setUser(localStorageUser());
                     

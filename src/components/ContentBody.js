@@ -30,9 +30,11 @@ function ContentBody({ links }) {
                 <Col>
                     <div className="content-links">
                         <Accordion defaultActiveKey="1">
-                            { 
+                            {
                                 links.map((link) => {
-                                    return (<ContentLink link={link} />)
+                                    return (
+                                        <ContentLink link={link} />
+                                    )
                                 })
                             }
                         </Accordion>
