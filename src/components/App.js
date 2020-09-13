@@ -75,6 +75,10 @@ const App = () => {
             setLinks(response);
         }).catch((error) => { throw error });
     }, [user]);
+
+    // useEffect(() => {
+
+    // }, [links]);
   
     return (
         <div className="App">
@@ -84,8 +88,8 @@ const App = () => {
                     {user.token 
                     ? (
                         <div id="page" className="page-main">
-                            <Route path="/" exact render={() => <Main links={links} setLinks={setLinks} tags={tags} setTags={setTags} user={user} />} />
-                            <Redirect to='/' exact component={() => <Main links={links} setLinks={setLinks} tags={tags} setTags={setTags} user={user} />} />
+                            <Route path="/" exact render={() => <Main user={user} links={links} setLinks={setLinks} tags={tags} setTags={setTags} user={user} />} />
+                            <Redirect to='/' exact component={() => <Main user={user} links={links} setLinks={setLinks} tags={tags} setTags={setTags} user={user} />} />
                         </div>
                     ) : (
                         <Switch>

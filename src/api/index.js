@@ -84,11 +84,19 @@ export async function getTags(userId) {
 }
 
 
-export async function addNewLink({ title, date, clicks, description, url, tags = [] }) {
+
+export async function addNewLink({ title, description, url, tags = [] }) {
+
+
     try {
+        const user = userUtil.getUserFromStorage();
         const { data: link } = await axios.post('api/links', {
-            title, date, clicks, description, url, tags
-        })
+            headers: {
+                authorization: 'Bearer ' + user.token
+            },
+            body: {
+            title, description, url, tags
+        }})
         if (link) {
             console.log('getting tags to the front', link)
             return link

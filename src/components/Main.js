@@ -8,12 +8,12 @@ import Row from 'react-bootstrap/Row';
 import Sidebar from './Sidebar';
 import Content from './Content';
 
-function Main({ links, setLinks, tags, setTags, user }) {
+function Main({ user, links, setLinks, tags, setTags }) {
     return (
             <Container id="container" fluid={true}>
                 <Row className="justify-content-center">
                     <Sidebar tags={tags} setTags={setTags} user={user} />
-                    <Content links={links} setLinks={setLinks} />
+                    <Content user={user} links={links} setLinks={setLinks} />
                 </Row>
             </Container>
     )

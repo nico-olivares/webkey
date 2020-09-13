@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { addNewLink } from '../api/index';
 
 import './ContentHead.css';
 
@@ -9,11 +10,20 @@ import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
-function ContentHead({links = [], setLinks}) {
+function ContentHead({user, links = [], setLinks}) {
+
+    const [ newTitle, setNewTitle ] = useState('Link name');
+    const [ newUrl, setNewUrl ] = useState('https://');
+    const [ newDescription, setNewDescription ] = useState('');
+    const [ newTags, setNewTags ] = useState([]);
+
     const linkHandler = (event) => {
-        links.unshift({id: 0, title: 'New Link', url: '', description: '', tags: []});
         
-        setLinks(links);
+        addNewLink({title: 'Link name',  url: 'https://', description: '', tags: []}).then((response) => {
+            
+        })
+        
+        
     };
 
     return (
