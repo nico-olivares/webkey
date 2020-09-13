@@ -1,8 +1,7 @@
-/** @format */
-import userUtil from '../utils/user'
 
+import userUtil from '../utils/user'
 import axios from "axios";
-//let TOKEN_KEY = localStorage.getItem("TOKEN_KEY");
+
 export async function getLinks(userId) {
     try {
         const user = userUtil.getUserFromStorage();
@@ -17,16 +16,17 @@ export async function getLinks(userId) {
         throw error;
     }
 }
+
 export async function register({ username, password }) {
     
     try {
-        
+
         const { data: { user: newUser } } = await axios.post("/api/users/register", {
             username: username,
             password: password,
 
         });
-        
+
         let user = newUser;
 
         if (newUser) {
@@ -40,9 +40,7 @@ export async function register({ username, password }) {
     }
 }
 
-
 export async function login({ username, password }) {
-
     try {
         const { data: { user } } = await axios.post('api/users/login', {
             username,
@@ -57,8 +55,10 @@ export async function login({ username, password }) {
     }
 }
 
+
 export async function getTags() {
     
+
     try {
         const user = userUtil.getUserFromStorage();
         const { data: tags } = await axios.get('/api/tags/usertags', {
@@ -89,7 +89,9 @@ export async function getTags() {
 }
 
 
+
 export async function addNewLink({ title, description, url, tags = [] }) {
+
 
     try {
         const user = userUtil.getUserFromStorage();
@@ -106,13 +108,13 @@ export async function addNewLink({ title, description, url, tags = [] }) {
         } else {
             return {}
         }
-
     } catch (error) {
         throw error
     }
 }
 
 export async function updatedLink({ id, title, date, clicks, description, url, tags = [] }) {
+
     
     try { // this is working because 4 is hard coded.
             const { data: link } = await axios.patch(`api/links/${id}`, {
@@ -128,5 +130,10 @@ export async function updatedLink({ id, title, date, clicks, description, url, t
         } catch (error) {
             throw error
             
+
         }
+    } catch (error) {
+        throw error
+        
+    }
 }

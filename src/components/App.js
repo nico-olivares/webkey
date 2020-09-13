@@ -31,7 +31,7 @@ import Register from "../pages/Register";
 const { JWT_SECRET } = process.env;
 
 // set up top level app component
-// 
+ 
 const App = () => {
     
     const [links, setLinks] = useState([]);
@@ -53,12 +53,11 @@ const App = () => {
         setUser(localStorageUser());
     }, []);
 
-
-    useEffect(() => {
-        
+    useEffect(() => { 
         getLinks(user.id)
-            .then((response) => {
-                setLinks(response);
+            .then((response) => {         
+                setLinks(response);    
+
             })
             .catch((error) => {
                 setLinks(error);

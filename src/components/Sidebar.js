@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
 
 import './Sidebar.css';
 import { getTags } from '../api/index';
 
 import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { ListGroup, ListGroupItem } from 'react-bootstrap';
 
@@ -18,6 +16,7 @@ function Sidebar({ user, tags, setTags }) {
     );
 }
 
+<
 function SideFilter({ tags, setTags }) {
 
     let filter;
@@ -26,6 +25,7 @@ function SideFilter({ tags, setTags }) {
         filter = event.target.value;
         
         filteredTags = tags.filter((tag) => {
+
             if (tag.title.startsWith(filter)) {
                 return true;
             } else {
@@ -35,10 +35,8 @@ function SideFilter({ tags, setTags }) {
         
         setTags(filteredTags);
     }
-
-
     return (
-        <Form>
+        <Form className="mt-2 mb-2">
             <Form.Group controlId='formSearchBar'>
                 <Form.Control type='text' placeholder='Search tags...' onChange={filterHandler}/>
             </Form.Group>
@@ -48,13 +46,28 @@ function SideFilter({ tags, setTags }) {
 
 function TagList({ user = {}, tags = [], setTags }) {
 
+    useEffect(() => {
+        if (user.id) {
+            getTags(user.id).then((tagArray) => {
+                setTags(tagArray);
+            }).catch((error) => {
+                throw error;
+            })
+        }
+    }, [user]);
+
+
     return (
         <>
+        <div class="divider"></div>
+        <div id="title">
+            <h6>Available Tags</h6>
+        </div>
         <ListGroupItem>
             {tags.map((tag, i) => {
                 return <ListGroup key={'"' + 'tag' + i + '"'} className='tagButton' variant="primary">{tag.title}</ListGroup>
             })}
-            </ListGroupItem>
+        </ListGroupItem>
         </>
     );
 }
