@@ -13,6 +13,7 @@ import { updatedLink } from '../api/index'
 
 function ContentLink({ link }) {
 
+    const [id, setId] = useState(link.id);
     const [url, setUrl] = useState(link.url);
     const [description, setDescription] = useState(link.description);
     const [title, setTitle] = useState(link.title)
@@ -20,7 +21,8 @@ function ContentLink({ link }) {
 
     const submitHandler = function (event) {
         event.preventDefault();
-        updatedLink({ url, title, description, tags });
+        console.log('link', id);
+        updatedLink({ id, url, title, description, tags });
     }
 
     const onChange = (update) => (event) => {
@@ -40,11 +42,11 @@ function ContentLink({ link }) {
                 <Card.Body>
 
                     <Form id="edit-link" onSubmit={submitHandler}>
-                        <Form.Group className="col-md-6 col-sm-12 float-left">
+                        <Form.Group className="col-md-12 col-sm-12">
                             <Form.Label htmlFor="link-url">URL</Form.Label>
                             <Form.Control value={url} id="link-url" name="link-url" type="text" onChange={onChange(setUrl)} />
                         </Form.Group>
-                        <Form.Group className="col-md-6 col-sm-12 float-left">
+                        <Form.Group className="col-md-12 col-sm-12">
                             <Form.Label htmlFor="link-title">Title</Form.Label>
                             <Form.Control value={title} id="link-title" name="link-title" type="text" onChange={onChange(setTitle)} />
                         </Form.Group>
