@@ -29,18 +29,26 @@ function SideFilter({ setTagList }) {
 }
 
 function TagList({ user = {}, tags = [], setTags }) {
-    if (user.id) {
-        getTags(user.id).then((tagArray) => {
-            setTags(tagArray);
-        }).catch((error) => {
-            throw error;
-        })
-    }
+    
+    
+
+    useEffect(() => {
+        if (user.id) {
+            getTags(user.id).then((tagArray) => {
+                setTags(tagArray);
+            }).catch((error) => {
+                throw error;
+            })
+        }
+    }, [user]);
+
+
+
     return (
         <>
         <ListGroupItem>
             {tags.map((tag, i) => {
-                return <ListGroup id={'"' + 'tag' + i + '"'} className='tagButton' variant="primary">{tag.title}</ListGroup>
+                return <ListGroup key={'"' + 'tag' + i + '"'} className='tagButton' variant="primary">{tag.title}</ListGroup>
             })}
             </ListGroupItem>
         </>
