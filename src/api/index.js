@@ -112,6 +112,7 @@ export async function addNewLink({ title, date, clicks, description, url, tags =
     
         } catch (error) {
             throw error
+            
         }
 
 }
