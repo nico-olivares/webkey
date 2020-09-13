@@ -18,8 +18,10 @@ function Login({ user, setUser }) {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        login({username, password}).then((user) => {
+        login({ username, password }).then((user) => {
+
             localStorage.setItem('user', JSON.stringify(user));
+            console.log('getting the token', user)
             setUser(user);
         })
     }

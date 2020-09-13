@@ -14,9 +14,9 @@ import Register from '../pages/Register';
 import Login from "../pages/Login";
 
 
-function Header({user, setUser}) {
+function Header({ user, setUser }) {
     const signOutHandler = (event) => {
-        localStorage.setItem('user', '');
+        localStorage.removeItem('user');
         setUser({});
     }
     return (
@@ -27,16 +27,16 @@ function Header({user, setUser}) {
                 </Col>
                 <Col id="info" md={6} sm={12}>
                     <Navbar>
-                        { user.token 
+                        {user.token
                             ? <>
-                                <div className="nav-welcome">Welcome, { user.username }</div>
+                                <div className="nav-welcome">Welcome, {user.username}</div>
                                 <span>|</span>
                                 <Link className="nav-link" to="/login" onClick={signOutHandler}>Sign Out</Link>
-                              </>
+                            </>
                             : <>
                                 <Link className="nav-link" to="/register">Register</Link>
                                 <Link className="nav-link" to="/login">Login</Link>
-                              </>
+                            </>
                         }
                     </Navbar>
                 </Col>

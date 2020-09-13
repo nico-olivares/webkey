@@ -43,6 +43,7 @@ export async function login({ username, password }) {
             username,
             password
         });
+        console.log('user inside api...;', user)
         if (user) {
             localStorage.setItem('user', JSON.stringify(user));
             return user;
@@ -56,11 +57,11 @@ export async function getTags(userId) {
 
     try {
         const { data: tags } = await axios.post('/api/tags/usertags', { userId: userId });
-        
+
         if (tags) {
             tags.sort((a, b) => {
                 if (a.title[0] - b.title[0] === 0) {
-                    if (a.title[1] - b.title[1] === 0 ) {
+                    if (a.title[1] - b.title[1] === 0) {
                         return a.title[2] - b.title[2];
                     } else {
                         return a.title[1] - b.title[1];
@@ -97,21 +98,21 @@ export async function addNewLink({ title, date, clicks, description, url, tags =
     }
 }
 
-    export async function updatedLink({ title, date, clicks, description, url, tags = [] }) {
+export async function updatedLink({ title, date, clicks, description, url, tags = [] }) {
 
-        try { // this is working because 4 is hard coded.
-            const { data: link } = await axios.patch('api/links/4', {
-                title, date, clicks, description, url, tags
-            })
-            if (link) {
-                console.log('getting tags to the front', link)
-                return link
-            } else {
-                return {}
-            }
-    
-        } catch (error) {
-            throw error
+    try { // this is working because 4 is hard coded.
+        const { data: link } = await axios.patch('api/links/4', {
+            title, date, clicks, description, url, tags
+        })
+        if (link) {
+            console.log('getting tags to the front', link)
+            return link
+        } else {
+            return {}
         }
+
+    } catch (error) {
+        throw error
+    }
 
 }

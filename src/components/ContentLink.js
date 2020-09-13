@@ -33,7 +33,7 @@ function ContentLink({ link }) {
             <Card.Header>
                 <Card.Link className="title" href={link.url} target="_blank">{link.title}</Card.Link>
                 <Accordion.Toggle className="btn-toggle" variant="link" eventKey={link.id}>
-                    <FontAwesomeIcon icon={ faChevronDown } />
+                    <FontAwesomeIcon icon={faChevronDown} />
                 </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey={link.id}>
@@ -56,7 +56,7 @@ function ContentLink({ link }) {
                             <Form.Label htmlFor="link-tags">Tags</Form.Label>
                             <Form.Control value={tags} id="link-tags" name="link-tags" type="text" onChange={onChange(setTags)} />
                         </Form.Group>
-                        <Button 
+                        <Button
                             className="d-inline-block mt-2 mb-4 mx-3" variant="primary" type="submit"
                         >Save Link</Button>
                     </Form>

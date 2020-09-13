@@ -54,9 +54,9 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 
         // newLink = await addTagsToLinkObject(newLink);
         // Why is it not working?
-		// Office hours?
-		
-		newLink = await getAllLinks(newLink.creatorId, newLink.id);
+        // Office hours?
+
+        newLink = await getAllLinks(newLink.creatorId, newLink.id);
 
         //newLink.tags = tags;
 
@@ -96,7 +96,7 @@ async function updateLink(linkId, fields = {}, tags = []) {
                     );
                     newLink = link; //without tags
                 }
-                
+
                 return newLink;
             } catch (error) {
                 throw error;
@@ -104,11 +104,11 @@ async function updateLink(linkId, fields = {}, tags = []) {
         }
 
         async function addOrRemoveTags(newLink, tags) {		//variables passing in correctly
-			
+
             try {
-				const oldTags = await getTagsFromLinkId(linkId);		//working
-				
-				
+                const oldTags = await getTagsFromLinkId(linkId);		//working
+
+
                 //drop all old tags WORKING
                 if (oldTags.length > 0 && tags.length === 0) {
                     await Promise.all(oldTags.map(async (tag) => {
@@ -117,7 +117,7 @@ async function updateLink(linkId, fields = {}, tags = []) {
 
                             const moreLinks = await tagIdStillPresentInJointTable(tag.id); //working
                             if (!moreLinks) {
-                              await destroyTag(newLink.creatorId, tag.title);	//working
+                                await destroyTag(newLink.creatorId, tag.title);	//working
                             }
                         } catch (error) {
                             throw error;
@@ -125,12 +125,12 @@ async function updateLink(linkId, fields = {}, tags = []) {
                     }));
 
                     newLink = await getAllLinks(newLink.creatorId, newLink.id);
-                    
+
                     return newLink;
-					
+
                     //add new tags  NOT WORKING
                 } else if (tags.length > 0 && oldTags.length === 0) {
-                    
+
                     await Promise.all(
                         tags.map(async (tag) => {
                             const newTag = await createTag(newLink.creatorId, tag);
@@ -139,7 +139,7 @@ async function updateLink(linkId, fields = {}, tags = []) {
                     );
 
                     newLink = await getAllLinks(newLink.creatorId, newLink.id);
-                    
+
                     return newLink;
 
                     //compare tags. Add new ones, drop old ones, do nothing to the ones that were in the old and the new
@@ -154,10 +154,10 @@ async function updateLink(linkId, fields = {}, tags = []) {
                         if (absent) {
                             return tag;
                         }
-					});
-					
-					const removeTagsBin = removeTagsBinTemp.filter(item => item);
-					
+                    });
+
+                    const removeTagsBin = removeTagsBinTemp.filter(item => item);
+
 
                     const addTagsBinTemp = tags.map((newTag) => {
                         let newTagBoolean = true;
@@ -169,38 +169,38 @@ async function updateLink(linkId, fields = {}, tags = []) {
                         if (newTagBoolean) {
                             return newTag;
                         }
-					});
-					
-					const addTagsBin = addTagsBinTemp.filter(item => item);
+                    });
 
-                    
-					if (removeTagsBin.length > 0) {
-						await Promise.all(removeTagsBin.map(async (tag) => {
-							try {
-								await removeTagFromLink(newLink.creatorId, newLink.id, tag.title); //working
-	
-								const moreLinks = await tagIdStillPresentInJointTable(tag.id); //working
-								if (!moreLinks) {
-								  await destroyTag(newLink.creatorId, tag.title);	//working
-								}
-							} catch (error) {
-								throw error;
-							}
-						}));
-					}
+                    const addTagsBin = addTagsBinTemp.filter(item => item);
 
-					if (addTagsBin.length > 0) {
-						await Promise.all(
-							addTagsBin.map(async (tag) => {
-								const newTag = await createTag(newLink.creatorId, tag);
-								await addTagToLink(newLink.id, newTag.id);
-							})
-						);
-					}
+
+                    if (removeTagsBin.length > 0) {
+                        await Promise.all(removeTagsBin.map(async (tag) => {
+                            try {
+                                await removeTagFromLink(newLink.creatorId, newLink.id, tag.title); //working
+
+                                const moreLinks = await tagIdStillPresentInJointTable(tag.id); //working
+                                if (!moreLinks) {
+                                    await destroyTag(newLink.creatorId, tag.title);	//working
+                                }
+                            } catch (error) {
+                                throw error;
+                            }
+                        }));
+                    }
+
+                    if (addTagsBin.length > 0) {
+                        await Promise.all(
+                            addTagsBin.map(async (tag) => {
+                                const newTag = await createTag(newLink.creatorId, tag);
+                                await addTagToLink(newLink.id, newTag.id);
+                            })
+                        );
+                    }
 
 
                     newLink = await getAllLinks(newLink.creatorId, newLink.id);
-                    
+
                     return newLink;
                 }
             } catch (error) {
@@ -243,14 +243,20 @@ async function getAllLinks(userId, linkId = null) {
                 JOIN links_tags ON tags.id = links_tags."tagId"
                 WHERE links_tags."linkId" = ${link.id};
               `);
-                
+
                 const tagTitleArray = tagsArr.map((tags) => {
                     return tags.title;
                 });
                 link.tags = tagTitleArray;
             })
         );
-        return links;
+        if (links) {
+            return links
+        }
+        else {
+            return []
+        }
+
     } catch (error) {
         throw error;
     }
@@ -347,31 +353,31 @@ async function getLinksByTagName(userId, tagName) {
 }
 
 async function linkClick(linkId) {
-	try {
-		const { rows: [ link ]} = await client.query(`
+    try {
+        const { rows: [link] } = await client.query(`
 			SELECT *
 			FROM links
 			WHERE id=$1;
-		`, [ linkId ]
-		);
-		const clicks = link.clicks + 1;
-		const {rows: [ newLink ]} = await client.query(`
+		`, [linkId]
+        );
+        const clicks = link.clicks + 1;
+        const { rows: [newLink] } = await client.query(`
 			UPDATE links
 			SET clicks=${clicks}
 			WHERE id=$1
 			RETURNING *
-		`, [ linkId ]
-		);
-		return await getAllLinks(newLink.creatorId, linkId);
-	} catch (error) {
-		throw error;
-	}
+		`, [linkId]
+        );
+        return await getAllLinks(newLink.creatorId, linkId);
+    } catch (error) {
+        throw error;
+    }
 }
 
 module.exports = {
     getAllLinks,
     createLink,
     updateLink,
-	getLinksByTagName,
-	linkClick
+    getLinksByTagName,
+    linkClick
 };
