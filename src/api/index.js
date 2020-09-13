@@ -4,14 +4,14 @@ import axios from "axios";
 
 export async function getLinks(userId) {
     try {
-        const user = userUtil.getUserFromStorage()
-        const { data } = await axios.get("/api/links", {
+        const user = userUtil.getUserFromStorage();
+        const { data: { links } } = await axios.get("/api/links", {
             headers: {
                 authorization: 'Bearer ' + user.token
             }
         });
-        console.log('what links are we getting ', data);
-        return data;
+        console.log('what links are we getting ', links);
+        return links;
     } catch (error) {
         throw error;
     }
@@ -55,7 +55,12 @@ export async function login({ username, password }) {
 
 export async function getTags(userId) {
     try {
-        const { data: tags } = await axios.post('/api/tags/usertags', { userId: userId });
+        const user = userUtil.getUserFromStorage();
+        const { data: tags } = await axios.post('/api/tags/usertags', {
+            headers: {
+                authorization: 'Bearer ' + user.token
+            }
+        });
         console.log('tags from api/index ', tags);
         if (tags) {
             // tags.sort((a, b) => {

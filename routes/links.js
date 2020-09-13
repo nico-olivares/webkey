@@ -21,9 +21,13 @@ linksRouter.get('/', async (req, res, next) => {
     try {
         
         const links = await getAllLinks(req.user.id);
+        if (links) {
         return res.send({
             links
         });
+    } else {
+        return res.send([]);
+    }
 
     } catch (err) {
         next(err)
