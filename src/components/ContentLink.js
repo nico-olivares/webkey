@@ -39,25 +39,25 @@ function ContentLink({ link }) {
             <Accordion.Collapse eventKey={link.id}>
                 <Card.Body>
 
-                    <Form id="add-link" onSubmit={submitHandler}>
-                        <Form.Group>
+                    <Form id="edit-link" onSubmit={submitHandler}>
+                        <Form.Group className="col-md-6 col-sm-12 float-left">
                             <Form.Label htmlFor="link-url">URL</Form.Label>
                             <Form.Control value={url} id="link-url" name="link-url" type="text" onChange={onChange(setUrl)} />
                         </Form.Group>
-                        <Form.Group>
+                        <Form.Group className="col-md-6 col-sm-12 float-left">
                             <Form.Label htmlFor="link-title">Title</Form.Label>
                             <Form.Control value={title} id="link-title" name="link-title" type="text" onChange={onChange(setTitle)} />
                         </Form.Group>
-                        <Form.Group>
+                        <Form.Group className="col-md-12">
                             <Form.Label>Enter Description</Form.Label>
                             <Form.Control value={description} id="link-desc" name="link-desc" as="textarea" rows="4" onChange={onChange(setDescription)} />
                         </Form.Group>
-                        <Form.Group>
+                        <Form.Group className="col-md-12">
                             <Form.Label htmlFor="link-tags">Tags</Form.Label>
                             <Form.Control value={tags} id="link-tags" name="link-tags" type="text" onChange={onChange(setTags)} />
                         </Form.Group>
                         <Button 
-                            className="d-inline-block" variant="primary" type="submit"
+                            className="d-inline-block mt-2 mb-4 mx-3" variant="primary" type="submit"
                         >Save Link</Button>
                     </Form>
 

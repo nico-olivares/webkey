@@ -15,3 +15,7 @@
     font-size: 0.8rem;
     outline: none !important;
 }
+
+.float-left {
+    float: left;
+}
