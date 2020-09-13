@@ -16,7 +16,7 @@ import Login from "../pages/Login";
 
 function Header({user, setUser}) {
     const signOutHandler = (event) => {
-        localStorage.setItem('user', '');
+        localStorage.removeItem('user');
         setUser({});
     }
     return (
