@@ -25,7 +25,8 @@ function Header({user}) {
                     <Navbar>
                         { user.token 
                             ? <>
-                                <div>Welcome, User Name</div>
+                                <div className="nav-welcome">Welcome, { user.username }</div>
+                                <span>|</span>
                                 <Link className="nav-link" to="/">Sign Out</Link>
                               </>
                             : <>

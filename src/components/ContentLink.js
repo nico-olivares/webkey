@@ -58,7 +58,6 @@ function ContentLink({ link }) {
                         </Form.Group>
                         <Button 
                             className="d-inline-block" variant="primary" type="submit"
-                            // onClick={ () => { updatedLink({ url, title, description, tags }); }}
                         >Save Link</Button>
                     </Form>
 

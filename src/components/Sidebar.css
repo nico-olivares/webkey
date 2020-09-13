@@ -1,7 +1,7 @@
 #sidebar {
     background: #F7F7F7;
     height: calc(100vh - 140px);
-    padding: 30px;
+    padding: 40px 30px;
 }
 
 .col-pixel-width-400 {

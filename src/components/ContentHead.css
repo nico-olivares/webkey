@@ -1,3 +1,9 @@
+#link-search {
+    float: right;
+    max-width: 320px;
+    width: 100%;
+}
+
 .divider {
     border-bottom: 1px solid #CECECE;
     margin-bottom: 30px;

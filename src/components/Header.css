@@ -22,10 +22,18 @@
     text-align: right;
 }
 
+.nav-welcome {
+    padding: 0.5rem 1rem;
+}
+
 .nav-link { 
     color: #DDDDDD;
 }
 
 .nav-link:hover { 
     color: #FFFFFF;
+}
+
+.nav-link:last-child { 
+    padding-right: 0;;
 }
