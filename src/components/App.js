@@ -21,7 +21,7 @@ import Footer from "../components/Footer";
 
 // set up page/view level containers
 
-import { getLinks } from "../api";
+import { getLinks, getTags } from "../api";
 import Main from "../components/Main";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
@@ -38,7 +38,7 @@ const App = () => {
     const [tags, setTags] = useState([]);
     const [user, setUser] = useState({});
 
-    console.log('jwt secret ', JWT_SECRET);
+   
 
     //user verification
     function localStorageUser() {
@@ -57,18 +57,26 @@ const App = () => {
         getLinks(user.id)
             .then((response) => {         
                 setLinks(response);    
+
             })
             .catch((error) => {
                 setLinks(error);
             });
+            getTags().then((result) => {
+                setTags(result);
+            }).catch((error) => { setTags(error)});
     }, []);
 
     useEffect(() => {
         getLinks(user.id).then((response) => {
-            console.log('new response ', response);
+            
             setLinks(response);
-        }).catch((error) => { throw error });
+        }).catch((error) => { setLinks(error) });
+        getTags().then((result) => {
+            setTags(result);
+        }).catch((error) => { setTags(error)});
     }, [user]);
+
   
     return (
         <div className="App">

@@ -31,7 +31,7 @@ function ContentBody({ links = [] }) {
                         <Accordion defaultActiveKey="1">
                             { 
                                 links.map((link) => {
-                                    return (<ContentLink link={link} />)
+                                    return (<ContentLink key={link.id} link={link} />)
                                 })
                             }
                         </Accordion>

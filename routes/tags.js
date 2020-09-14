@@ -4,9 +4,9 @@ const { requireUser } = require('./utils')
 const tagsRouter = express.Router();
 
 tagsRouter.delete('/:tagName', requireUser, async (req, res, next) => {
-    console.log('I was here');
+    
     const tagName = req.params.tagName;
-    console.log('tag: ', tagName);
+ 
     try {
         
         const result = await destroyTag(tagName);
@@ -39,12 +39,12 @@ tagsRouter.get('/:tagName/links', requireUser, async (req, res, next) => {
     }
 });
 
-tagsRouter.post('/usertags', requireUser, async (req, res, next) => {
-    console.log('getting to the route');
-    console.log('req.userId ', req.user.id);
+tagsRouter.get('/usertags', requireUser, async (req, res, next) => {
+  
+    
     try {
         const tagList = await getTagsForUser(req.user.id); 
-        console.log('the tagList ', tagList);
+       
         return (res.send(tagList));
     } catch (error) {
         throw error;

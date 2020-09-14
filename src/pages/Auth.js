@@ -13,7 +13,7 @@ import Login from './Login';
 
 function Auth(props) {
     const [message, setMessage] = useState();
-    console.log('this is the props...', props)
+   
     return (
         <Router>
             <>

@@ -1,18 +1,15 @@
 const express = require('express');
 const linksRouter = express.Router();
-const {
-    getAllLinks,
-    createLink,
-    updateLink
-} = require('../db');
+const { getAllLinks, createLink, updateLink } = require('../db');
 
 const { requireUser } = require('./utils');
 
-//linksRouter 
+//linksRouter
 
 linksRouter.use((req, res, next) => {
-    next();
-})
+	next();
+});
+
 
 // get all links
 
@@ -46,7 +43,6 @@ linksRouter.post('/', requireUser, async (req, res, next) => {
 // update link
 
 linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
-
     const [link] = await getAllLinks(req.user.id, req.params.linkId);
     const { url, title, description, tags } = req.body;
     const updateFields = {};
@@ -67,4 +63,4 @@ linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
     }
 });
 
-module.exports = linksRouter
+module.exports = linksRouter;

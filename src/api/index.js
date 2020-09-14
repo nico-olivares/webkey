@@ -17,6 +17,7 @@ export async function getLinks(userId) {
 
 export async function register({ username, password }) {
     try {
+
         const { data: { user: newUser } } = await axios.post("/api/users/register", {
             username: username,
             password: password,
@@ -31,7 +32,7 @@ export async function register({ username, password }) {
             alert("Please login to access these features.");
         }
     } catch (error) {
-        throw console.error;
+        throw error;
     }
 }
 
@@ -50,27 +51,30 @@ export async function login({ username, password }) {
     }
 }
 
-export async function getTags(userId) {
+
+export async function getTags() {
+    
+
     try {
         const user = userUtil.getUserFromStorage();
-        const { data: tags } = await axios.post('/api/tags/usertags', {
+        const { data: tags } = await axios.get('/api/tags/usertags', {
             headers: {
                 authorization: 'Bearer ' + user.token
             }
         });
         if (tags) {
-            // tags.sort((a, b) => {
-            //     if (a.title[0] - b.title[0] === 0) {
-            //         if (a.title[1] - b.title[1] === 0 ) {
-            //             return a.title[2] - b.title[2];
-            //         } else {
-            //             return a.title[1] - b.title[1];
-            //         }
-            //     } else {
-            //         return a.title[0] - b.title[0];
-            //     }
-            // });
-            return [];      //need to fix this later
+            tags.sort((a, b) => {
+                if (a.title[0] - b.title[0] === 0) {
+                    if (a.title[1] - b.title[1] === 0 ) {
+                        return a.title[2] - b.title[2];
+                    } else {
+                        return a.title[1] - b.title[1];
+                    }
+                } else {
+                    return a.title[0] - b.title[0];
+                }
+            });
+            return tags;     
         } else {
             return [];
         }
@@ -109,6 +113,7 @@ export async function updatedLink({ id, title, date, clicks, description, url, t
             return link
         } else {
             return {}
+
         }
     } catch (error) {
         throw error
