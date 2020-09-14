@@ -16,7 +16,6 @@ function Sidebar({ user, tags, setTags }) {
     );
 }
 
-<
 function SideFilter({ tags, setTags }) {
 
     let filter;
