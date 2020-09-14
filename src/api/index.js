@@ -1,7 +1,7 @@
 import userUtil from '../utils/user'
 import axios from "axios";
 
-export async function getLinks(userId) {
+export async function getLinks() {
     try {
         const user = userUtil.getUserFromStorage();
         const { data: { links } } = await axios.get("/api/links", {
@@ -22,8 +22,6 @@ export async function register({ username, password }) {
             username: username,
             password: password,
         });
-
-        let user = newUser;
 
         if (newUser) {
             localStorage.setItem("user", JSON.stringify(newUser));
@@ -110,13 +108,12 @@ export async function updatedLink({ id, title, date, clicks, description, url, t
         })
         if (link) {
 
+
             return link
         } else {
             return {}
 
+
         }
-    } catch (error) {
-        throw error
-        
-    }
+    
 }

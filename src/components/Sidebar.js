@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import './Sidebar.css';
 import { getTags } from '../api/index';
@@ -16,14 +16,36 @@ function Sidebar({ user, tags, setTags }) {
     );
 }
 
+
+let firstTime = true;
+
 function SideFilter({ tags, setTags }) {
 
+
+    
+    
     let filter;
     let filteredTags;
+    let allTags = [];
+
+//As the filter works the tags array gets smaller and smaller and when I undo the typing
+//it has no effect because the array doesn't have the prior elements any more.
+//Because this file seems to run completely every time I make a change anything I do gets reset.
+//Tried storing the array in a separate array, but it gets updated every time as well.
     const filterHandler = (event) => {
+        // console.log('all Tags ', allTags);
+        console.log('tags ', tags);
+        if (firstTime) {
+            tags.forEach((tag) => {
+                allTags.push(tag);
+            })
+            
+            firstTime = false;
+        }
+        console.log('all tags ', allTags);
         filter = event.target.value;
         
-        filteredTags = tags.filter((tag) => {
+        filteredTags = allTags.filter((tag) => {
 
             if (tag.title.startsWith(filter)) {
                 return true;
@@ -43,29 +65,19 @@ function SideFilter({ tags, setTags }) {
     );
 }
 
-function TagList({ user = {}, tags = [], setTags }) {
+function TagList({ user, tags, setTags }) {
 
-    useEffect(() => {
-        if (user.id) {
-            getTags(user.id).then((tagArray) => {
-                setTags(tagArray);
-            }).catch((error) => {
-                throw error;
-            })
-        }
-    }, [user]);
-
-
+    
     return (
         <>
-        <div class="divider"></div>
+        <div className="divider"></div>
         <div id="title">
             <h6>Available Tags</h6>
         </div>
         <ListGroupItem>
-            {tags.map((tag, i) => {
-                return <ListGroup key={'"' + 'tag' + i + '"'} className='tagButton' variant="primary">{tag.title}</ListGroup>
-            })}
+            {tags.length ? tags.map((tag, i) => {
+                return <ListGroup key={i} className='tagButton' variant="primary">{tag.title}</ListGroup>
+            }) : ''}
         </ListGroupItem>
         </>
     );

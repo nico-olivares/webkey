@@ -221,11 +221,6 @@ async function updateLink(linkId, fields = {}, tags = []) {
 	}
 }
 
-//check if tag exists for user. If it does, add to link
-//if tag doesn't exist, create and add to link
-//check to see if there's a tag that was in the link and isn't there anymore
-//then check to see if once removed this is going to be belong to no link
-//no link destroy. Other links then remove from link only
 
 // goal: get a list of all links
 // input: linkId as null

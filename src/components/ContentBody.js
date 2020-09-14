@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+// import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import './ContentBody.css';
 
@@ -10,7 +10,9 @@ import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
 import ContentLink from './ContentLink';
 
-function ContentBody({ links = [] }) {
+
+function ContentBody({ links }) {
+
     const [ link, setLink ] = useState({});
     return (
         <Container id="content-body" fluid={true}>
@@ -30,9 +32,9 @@ function ContentBody({ links = [] }) {
                     <div className="content-links">
                         <Accordion defaultActiveKey="1">
                             { 
-                                links.map((link) => {
+                               links.length ? links.map((link) => {
                                     return (<ContentLink key={link.id} link={link} />)
-                                })
+                                }) : ''
                             }
                         </Accordion>
                     </div>

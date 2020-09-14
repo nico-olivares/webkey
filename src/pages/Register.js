@@ -1,7 +1,7 @@
 /** @format */
 
-import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Link, redirect } from "react-router-dom";
+import React from "react";
+// import { BrowserRouter as Router, Route, Link, redirect } from "react-router-dom";
 
 import { register } from "../api/index";
 
@@ -46,13 +46,13 @@ function Register({ user, setUser }) {
                         <Form id="register-form" onSubmit={handleSubmit}>
                             <Form.Group>
                                 <Form.Label htmlFor="username">Username</Form.Label>
-                                <Form.Control id="username" name="username" type="text" onChange={handleUser} />
+                                <Form.Control id="usernameReg" name="username" type="text" onChange={handleUser} />
                             </Form.Group>
 
                             <Form.Group>
                                 <Form.Label htmlFor="password">Password</Form.Label>
                                 <Form.Control
-                                    id="password"
+                                    id="passwordReg"
                                     name="Password"
                                     type="password"
                                     onChange={handlePassword}
@@ -62,7 +62,7 @@ function Register({ user, setUser }) {
                             <Form.Group>
                                 <Form.Label htmlFor="confirm-password">Confirm Password</Form.Label>
                                 <Form.Control
-                                    id="password"
+                                    id="passwordReg2"
                                     name="Password"
                                     type="password"
                                     onChange={handlePassword2}
