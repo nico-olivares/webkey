@@ -1,4 +1,3 @@
-
 import userUtil from '../utils/user'
 import axios from "axios";
 
@@ -10,7 +9,6 @@ export async function getLinks(userId) {
                 authorization: 'Bearer ' + user.token
             }
         });
-        
         return links;
     } catch (error) {
         throw error;
@@ -18,13 +16,11 @@ export async function getLinks(userId) {
 }
 
 export async function register({ username, password }) {
-    
     try {
 
         const { data: { user: newUser } } = await axios.post("/api/users/register", {
             username: username,
             password: password,
-
         });
 
         let user = newUser;
@@ -33,7 +29,7 @@ export async function register({ username, password }) {
             localStorage.setItem("user", JSON.stringify(newUser));
             return newUser;
         } else {
-            alert("you have not created an account. Please login to access features.");
+            alert("Please login to access these features.");
         }
     } catch (error) {
         throw error;
@@ -66,7 +62,6 @@ export async function getTags() {
                 authorization: 'Bearer ' + user.token
             }
         });
-        
         if (tags) {
             tags.sort((a, b) => {
                 if (a.title[0] - b.title[0] === 0) {
@@ -88,11 +83,7 @@ export async function getTags() {
     }
 }
 
-
-
 export async function addNewLink({ title, description, url, tags = [] }) {
-
-
     try {
         const user = userUtil.getUserFromStorage();
         const { data: link } = await axios.post('api/links', {
@@ -101,9 +92,8 @@ export async function addNewLink({ title, description, url, tags = [] }) {
             },
             body: {
             title, description, url, tags
-        }})
+        }});
         if (link) {
-            
             return link
         } else {
             return {}
@@ -114,22 +104,15 @@ export async function addNewLink({ title, description, url, tags = [] }) {
 }
 
 export async function updatedLink({ id, title, date, clicks, description, url, tags = [] }) {
+    try {
+        const { data: link } = await axios.patch(`api/links/${id}`, {
+            id, title, date, clicks, description, url, tags
+        })
+        if (link) {
 
-    
-    try { // this is working because 4 is hard coded.
-            const { data: link } = await axios.patch(`api/links/${id}`, {
-                id, title, date, clicks, description, url, tags
-            })
-            if (link) {
-                
-                return link
-            } else {
-                return {}
-            }
-    
-        } catch (error) {
-            throw error
-            
+            return link
+        } else {
+            return {}
 
         }
     } catch (error) {
