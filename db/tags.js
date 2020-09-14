@@ -33,9 +33,7 @@ async function createTag(userId, title) {
     }
 }
 
-// goal: to remove a tag-link pair in the joint table
-// input: link id, and tag title
-// output: true if success, false otherwise
+
 
 // goal: permanently delete a tag from the tags table
 // input: tag name
