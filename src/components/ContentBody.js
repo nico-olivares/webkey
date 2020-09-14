@@ -11,13 +11,9 @@ import Accordion from 'react-bootstrap/Accordion';
 import ContentLink from './ContentLink';
 
 function ContentBody({ links = [] }) {
-
-    console.log('contentBody ', links);
     const [ link, setLink ] = useState({});
-
     return (
         <Container id="content-body" fluid={true}>
-            
             <Row>
                 <Col>
                     <div id="search">

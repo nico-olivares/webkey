@@ -11,7 +11,6 @@ const { requireUser } = require('./utils');
 //linksRouter 
 
 linksRouter.use((req, res, next) => {
-    console.log("Making a request to /links");
     next();
 })
 
@@ -19,16 +18,14 @@ linksRouter.use((req, res, next) => {
 
 linksRouter.get('/', async (req, res, next) => {
     try {
-        
         const links = await getAllLinks(req.user.id);
         if (links) {
         return res.send({
             links
         });
-    } else {
-        return res.send([]);
-    }
-
+        } else {
+            return res.send([]);
+        }
     } catch (err) {
         next(err)
     }
@@ -37,10 +34,10 @@ linksRouter.get('/', async (req, res, next) => {
 // add new link
 linksRouter.post('/', requireUser, async (req, res, next) => {
     const { url, title, description, tags } = req.body;
-
     const creatorId = req.user.id;
+    
     link = await createLink({ creatorId, url, title, description, tags });
-
+    
     res.send(
         link
     );
@@ -51,7 +48,6 @@ linksRouter.post('/', requireUser, async (req, res, next) => {
 linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
 
     const [link] = await getAllLinks(req.user.id, req.params.linkId);
-
     const { url, title, description, tags } = req.body;
     const updateFields = {};
 
@@ -59,17 +55,11 @@ linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
     if (title) { updateFields.title = title }
     if (description) { updateFields.description = description }
 
-
-
     try {
         if (link && link.creatorId === req.user.id) {
-
             const updatedLink = await updateLink(link.id, updateFields, tags);
-            // const updatedTags = await updateTags( link.id );
-
             res.send({
                 link: updatedLink
-                // tags: updatedTags
             })
         }
     } catch ({ name, message }) {

@@ -21,7 +21,6 @@ function ContentLink({ link }) {
 
     const submitHandler = function (event) {
         event.preventDefault();
-        console.log('link', id);
         updatedLink({ id, url, title, description, tags });
     }
 
