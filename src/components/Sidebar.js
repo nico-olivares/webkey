@@ -16,8 +16,11 @@ function Sidebar({ user, tags, setTags }) {
     );
 }
 
+
 let firstTime = true;
-function SideFilter({ tags = [], setTags }) {
+
+function SideFilter({ tags, setTags }) {
+
 
     
     

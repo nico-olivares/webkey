@@ -19,14 +19,9 @@ function ContentLink({ link }) {
     const [title, setTitle] = useState(link.title)
     const [tags, setTags] = useState(link.tags.join(' '));
 
-    
-
     const submitHandler = function (event) {
         event.preventDefault();
-        
-        const newTags = tags.split(' ');
-        
-        updatedLink({ id, url, title, description, tags: newTags });
+        updatedLink({ id, url, title, description, tags });
     }
 
     const onChange = (update) => (event) => {
