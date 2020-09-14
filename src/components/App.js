@@ -26,9 +26,7 @@ import Main from "../components/Main";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 
-// set up JWT
 
-const { JWT_SECRET } = process.env;
 
 // set up top level app component
  
@@ -54,7 +52,7 @@ const App = () => {
     }, []);
 
     useEffect(() => { 
-        getLinks(user.id)
+        getLinks()
             .then((response) => {         
                 setLinks(response);    
 
@@ -68,8 +66,7 @@ const App = () => {
     }, []);
 
     useEffect(() => {
-        getLinks(user.id).then((response) => {
-            
+        getLinks().then((response) => {
             setLinks(response);
         }).catch((error) => { setLinks(error) });
         getTags().then((result) => {
@@ -86,8 +83,8 @@ const App = () => {
                     {user.token 
                     ? (
                         <div id="page" className="page-main">
-                            <Route path="/" exact render={() => <Main user={user} links={links} setLinks={setLinks} tags={tags} setTags={setTags} user={user} />} />
-                            <Redirect to='/' exact component={() => <Main user={user} links={links} setLinks={setLinks} tags={tags} setTags={setTags} user={user} />} />
+                            <Route path="/" exact render={() => <Main user={user} links={links} setLinks={setLinks} tags={tags} setTags={setTags} />} />
+                            <Redirect to='/' exact component={() => <Main user={user} links={links} setLinks={setLinks} tags={tags} setTags={setTags} />} />
                         </div>
                     ) : (
                         <Switch>

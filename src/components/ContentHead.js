@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { addNewLink } from '../api/index';
 
 import './ContentHead.css';
@@ -33,13 +33,13 @@ function ContentHead({user, links = [], setLinks}) {
                     </div>
                 </Col>
                 <Col md={9} sm={12}>
-                    <div id="add-new"class="ml-2">
+                    <div id="add-new"className="ml-2">
                         <Button className="ml-1" variant="outline-dark"><FontAwesomeIcon icon={ faPlus } onClick={linkHandler} />New</Button>
                     </div>
                     
                 </Col>
                 <Col md={12} sm={12}>
-                    <div class="divider"></div>
+                    <div className="divider"></div>
                 </Col>
             </Row>
         </Container>
