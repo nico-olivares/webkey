@@ -9,6 +9,8 @@ import Sidebar from './Sidebar';
 import Content from './Content';
 
 function Main({ user, links, setLinks, tags, setTags }) {
+    // Main is the only component that cares about links
+    // Main should fetch links
     return (
             <Container id="container" fluid={true}>
                 <Row className="justify-content-center">

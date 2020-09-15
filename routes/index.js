@@ -1,6 +1,6 @@
 const apiRouter = require('express').Router();
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET } = require('../config')
 
 
 const { getUserById } = require('../db/index.js');
@@ -10,13 +10,10 @@ const usersRouter = require('./users');
 const tagsRouter = require('./tags');
 const linksTagsRouter = require('./links_tags');
 
+// TODO This is called a thunk, move this to a file called thunks.js or /thunks/auth.js
 apiRouter.use(async (req, res, next) => {
-	
-	
 	const prefix = 'Bearer ';
 	const auth = req.header('Authorization');
-
-	
 
 	if (!auth) {
 		// nothing to see here
@@ -42,13 +39,12 @@ apiRouter.use(async (req, res, next) => {
 	}
 });
 
+
 apiRouter.get('/', (req, res, next) => {
 	res.send({
 		message: 'API is under construction!',
 	});
 });
-
-
 
 apiRouter.use('/links', linksRouter);
 apiRouter.use('/users', usersRouter);

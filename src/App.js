@@ -22,8 +22,8 @@ import Footer from "../components/Footer";
 // set up page/view level containers
 
 import { getLinks, getTags } from "../api";
-import Main from "../components/Main";
-import Login from "../pages/Login";
+import Main from "./components/Main";
+import Login from "./pages/Login";
 import Register from "../pages/Register";
 
 
@@ -51,20 +51,7 @@ const App = () => {
         setUser(localStorageUser());
     }, []);
 
-    useEffect(() => { 
-        getLinks()
-            .then((response) => {         
-                setLinks(response);    
-
-            })
-            .catch((error) => {
-                setLinks(error);
-            });
-            getTags().then((result) => {
-                setTags(result);
-            }).catch((error) => { setTags(error)});
-    }, []);
-
+    // TWO getLinks
     useEffect(() => {
         getLinks().then((response) => {
             setLinks(response);

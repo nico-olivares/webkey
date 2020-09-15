@@ -12,8 +12,6 @@ import ContentLink from './ContentLink';
 
 
 function ContentBody({ links }) {
-
-    const [ link, setLink ] = useState({});
     return (
         <Container id="content-body" fluid={true}>
             <Row>

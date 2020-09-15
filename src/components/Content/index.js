@@ -3,8 +3,8 @@ import React from 'react';
 
 import './Content.css';
 
-import ContentHead from './ContentHead';
-import ContentBody from './ContentBody';
+import ContentHead from '../ContentHead';
+import ContentBody from '../ContentBody';
 import Col from 'react-bootstrap/Col';
 
 function Content({ user, links, setLinks }) {
