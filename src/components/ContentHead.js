@@ -24,15 +24,13 @@ function ContentHead({ user, links = [], setLinks }) {
 	const submitHandler = function (event) {
 		event.preventDefault();
 		addNewLink({ url, title, description, tags }).then(() => {
-			getLinks();
-			}).then((allLinks) => {
-                setLinks(allLinks);
-                hideModal();
-            });	
-            
-		};
-		
-	
+			getLinks().then((allLinks) => {
+				console.log('all the links showing at the front ', allLinks);
+				setLinks(allLinks);
+				hideModal();
+			});
+		});
+	};
 
 	const [isOpen, setIsOpen] = useState(false);
 	const showModal = () => {
@@ -90,7 +88,7 @@ function ContentHead({ user, links = [], setLinks }) {
 						<Form.Group className='col-md-12 col-sm-12'>
 							<Form.Label htmlFor='link-url'>URL</Form.Label>
 							<Form.Control
-                                placeholder='https://'
+								placeholder='https://'
 								id='link-url'
 								name='link-url'
 								type='text'
@@ -128,15 +126,16 @@ function ContentHead({ user, links = [], setLinks }) {
 								onChange={handleTagsChange}
 							/>
 						</Form.Group>
-
-						<Button
-							className='d-inline-block mt-2 mb-4 mx-3'
-							variant='primary'
-							type='submit'
-						>
-							Create Link
-						</Button>
-						<Button onClick={hideModal}>Cancel</Button>
+						
+							<Button
+								className='d-inline-block mt-2 mb-4 mx-3'
+								variant='primary'
+								type='submit'
+							>
+								Create Link
+							</Button>
+							<Button onClick={hideModal} className='d-inline-block mt-2 mb-4 mx-3' >Cancel</Button>
+						
 					</Form>
 				</Modal.Body>
 				<Modal.Footer></Modal.Footer>
