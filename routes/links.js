@@ -10,57 +10,65 @@ linksRouter.use((req, res, next) => {
 	next();
 });
 
-
 // get all links
 
 linksRouter.get('/', async (req, res, next) => {
-    try {
-        const links = await getAllLinks(req.user.id);
-        if (links) {
-        return res.send({
-            links
-        });
-        } else {
-            return res.send([]);
-        }
-    } catch (err) {
-        next(err)
-    }
-})
+	try {
+		const links = await getAllLinks(req.user.id);
+		if (links) {
+			return res.send({
+				links,
+			});
+		} else {
+			return res.send([]);
+		}
+	} catch (err) {
+		next(err);
+	}
+});
 
 // add new link
 linksRouter.post('/', requireUser, async (req, res, next) => {
-    const { url, title, description, tags } = req.body;
-    const creatorId = req.user.id;
-    
-    link = await createLink({ creatorId, url, title, description, tags });
-    
-    res.send(
-        link
-    );
+    console.log('getting to the back end link post', req.body);
+	try {
+		const { url, title, description, tags } = req.body;
+		const creatorId = req.user.id;
+
+		link = await createLink({ creatorId, url, title, description, tags });
+        console.log('returned link from the route', link);
+		res.send(link);
+	} catch (error) {
+		throw error;
+	}
 });
 
 // update link
 
 linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
-    const [link] = await getAllLinks(req.user.id, req.params.linkId);
-    const { url, title, description, tags } = req.body;
-    const updateFields = {};
+	const [link] = await getAllLinks(req.user.id, req.params.linkId);
+	const { url, title, description, tags } = req.body;
+	const updateFields = {};
 
-    if (url) { updateFields.url = url }
-    if (title) { updateFields.title = title }
-    if (description) { updateFields.description = description }
+	if (url) {
+		updateFields.url = url;
+	}
+	if (title) {
+		updateFields.title = title;
+	}
+	if (description) {
+		updateFields.description = description;
+	}
 
-    try {
-        if (link && link.creatorId === req.user.id) {
-            const updatedLink = await updateLink(link.id, updateFields, tags);
-            res.send({
-                link: updatedLink
-            })
-        }
-    } catch ({ name, message }) {
-        next({ name, message });
-    }
+	try {
+		if (link && link.creatorId === req.user.id) {
+			const updatedLink = await updateLink(link.id, updateFields, tags);
+			res.send({
+				link: updatedLink,
+			});
+		}
+	} catch ({ name, message }) {
+		next({ name, message });
+	}
 });
 
 module.exports = linksRouter;

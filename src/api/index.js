@@ -3,12 +3,12 @@ import axios from 'axios';
 
 export async function getLinks() {
 	try {
-		const user = userUtil.getUserFromStorage();
+		const { token } = userUtil.getUserFromStorage();
 		const {
 			data: { links },
 		} = await axios.get('/api/links', {
 			headers: {
-				authorization: 'Bearer ' + user.token,
+				authorization: 'Bearer ' + token,
 			},
 		});
 		return links;
@@ -30,7 +30,7 @@ export async function register({ username, password }) {
 			localStorage.setItem('user', JSON.stringify(newUser));
 			return newUser;
 		} else {
-			alert('Please login to access these features.');
+			return {message: 'Please login to access these features.'};
 		}
 	} catch (error) {
 		throw error;
@@ -84,18 +84,15 @@ export async function getTags() {
 }
 
 export async function addNewLink({ title, description, url, tags = [] }) {
+	
 	try {
 		const user = userUtil.getUserFromStorage();
-		const { data: link } = await axios.post('api/links', {
-			headers: {
+		const { data: link } = await axios.post('api/links', { title,
+			description,
+			url,
+			tags} , {headers: {
 				authorization: 'Bearer ' + user.token,
-			},
-			body: {
-				title,
-				description,
-				url,
-				tags,
-			},
+			} 
 		});
 		if (link) {
 			return link;
