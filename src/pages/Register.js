@@ -12,6 +12,7 @@ import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
 import Form from "react-bootstrap/esm/Form";
 import Button from "react-bootstrap/Button";
+import './Register.css';
 
 function Register({ user, setUser }) {
     let username;

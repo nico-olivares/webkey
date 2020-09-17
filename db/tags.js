@@ -76,9 +76,10 @@ async function getTagIdFromTitle(userId, tagTitle) {
             `
         SELECT id
         FROM tags
-        WHERE title=$1;
+        WHERE title=$1
+        AND "creatorId"=$2;
     `,
-            [tagTitle]
+            [tagTitle, userId]
         );
 
         if (tagId) {

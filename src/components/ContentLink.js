@@ -16,7 +16,7 @@ function ContentLink({ link }) {
 	const [url, setUrl] = useState(link.url);
 	const [description, setDescription] = useState(link.description);
 	const [title, setTitle] = useState(link.title);
-	const [tags, setTags] = useState(link.tags.join(' '));
+	const [tags, setTags] = useState(link.tags);
 
 	const submitHandler = function (event) {
 		event.preventDefault();
@@ -79,7 +79,7 @@ function ContentLink({ link }) {
 						<Form.Group className='col-md-12'>
 							<Form.Label htmlFor='link-tags'>Tags</Form.Label>
 							<Form.Control
-								value={tags}
+								value={tags.length > 0 ? tags.join(' ') : ''}
 								id='link-tags'
 								name='link-tags'
 								type='text'

@@ -10,6 +10,7 @@ import Form from 'react-bootstrap/esm/Form'
 import Button from 'react-bootstrap/Button'
 
 import { login } from '../api/index'
+import './Login.css';
 
 
 function Login({ user, setUser }) {
