@@ -8,7 +8,6 @@
 // const client = new Client(DB_URL);
 
 const client = require('./client');
-
 const bcrypt = require('bcrypt');
 
 // database methods

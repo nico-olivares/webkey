@@ -41,6 +41,7 @@ const App = () => {
    
 
     //user verification
+
     function localStorageUser() {
         if (localStorage.getItem("user")) {
             const localStorageUser = JSON.parse(localStorage.getItem("user"));
@@ -49,6 +50,7 @@ const App = () => {
             return {};
         }
     }
+    
     useEffect(() => {
         setUser(localStorageUser());
     }, []);
