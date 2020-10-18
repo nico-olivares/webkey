@@ -12,7 +12,7 @@ function Main({ user, links, setLinks, tags, setTags, filteredTags, setFilteredT
     return (
             <Container id="container" fluid={true}>
                 <Row className="justify-content-center">
-                    <Sidebar tags={tags} setTags={setTags} user={user} filteredTags={filteredTags} setFilteredTags={setFilteredTags} />
+                    <Sidebar links={links} tags={tags} setTags={setTags} user={user} filteredTags={filteredTags} setFilteredTags={setFilteredTags} />
                     <Content user={user} links={links} setLinks={setLinks} />
                 </Row>
             </Container>
