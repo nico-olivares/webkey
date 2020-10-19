@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import { ListGroup, ListGroupItem } from 'react-bootstrap';
 
 function Sidebar({ user, links, tags, setTags, filteredTags, setFilteredTags }) {
-	// const [ filteredTags, setFilteredTags ] = useState([]);
+	const [ searchStringValue, setSearchStringValue ] = useState('');
 
 	return (
 		<Col id='sidebar' className='col-pixel-width-400'>
@@ -16,14 +16,16 @@ function Sidebar({ user, links, tags, setTags, filteredTags, setFilteredTags }) 
 				tags={tags}
 				setTags={setTags}
 				filteredTags={filteredTags}
-				setFilteredTags={setFilteredTags}
+                setFilteredTags={setFilteredTags}
+                searchStringValue={searchStringValue}
+                setSearchStringValue={setSearchStringValue}
 			/>
-			<TagList user={user} links={links} tags={tags} setTags={setTags} filteredTags={filteredTags} setFilteredTags={setFilteredTags} />
+			<TagList user={user} links={links} tags={tags} setTags={setTags} filteredTags={filteredTags} setFilteredTags={setFilteredTags} setSearchStringValue={setSearchStringValue} />
 		</Col>
 	);
 }
 
-function SideFilter({ tags, links, setTags, filteredTags, setFilteredTags }) {
+function SideFilter({ tags, links, setTags, filteredTags, setFilteredTags, searchStringValue, setSearchStringValue }) {
 	//As the filter works the tags array gets smaller and smaller and when I undo the typing
 	//it has no effect because the array doesn't have the prior elements any more.
 	//Because this file seems to run completely every time I make a change anything I do gets reset.
@@ -32,10 +34,10 @@ function SideFilter({ tags, links, setTags, filteredTags, setFilteredTags }) {
 	
 
 	const filterHandler = (event) => {
-		const filter = event.target.value;
+		setSearchStringValue(event.target.value);
 
 		const filteredTagsArray = tags.filter((tag) => {
-			if (tag.title.startsWith(filter)) {
+			if (tag.title.startsWith(event.target.value)) {
 				return true;
 			} else {
 				return false;
@@ -47,33 +49,49 @@ function SideFilter({ tags, links, setTags, filteredTags, setFilteredTags }) {
 	return (
 		<Form className='mt-2 mb-2'>
 			<Form.Group controlId='formSearchBar'>
-				<Form.Control type='text' placeholder='Search tags...' onChange={filterHandler} />
+				<Form.Control type='text' value={searchStringValue}  placeholder='Search tags...' onChange={filterHandler} />
 			</Form.Group>
 		</Form>
 	);
 }
 
-function TagList({ user, links, tags, setTags, filteredTags, setFilteredTags }) {
+function TagList({ user, links, tags, setTags, filteredTags, setFilteredTags, setSearchStringValue }) {
 
     useEffect(() => {
 		getTags().then((result) => {
+            
             setTags(result);
             setFilteredTags(result);
 		});
-	}, [links]);
+    }, [links]);
+    
+    const tagClickHandler = (tag) => {
+        setFilteredTags([tag]);
+        setSearchStringValue('');
+    }
+
+    const resetHandler = () => {
+            setFilteredTags(tags);
+            setSearchStringValue('');
+    }
 
 	return (
 		<>
 			<div className='divider'></div>
 			<div id='title'>
 				<h6>Available Tags</h6>
+                <segment className='resetSearch' onClick={resetHandler} ><a href='#'>X</a></segment>
 			</div>
 			<ListGroupItem>
 				{filteredTags.length
 					? filteredTags.map((tag, i) => {
 							return (
-								<ListGroup key={i} className='tagButton' variant='primary'>
+								<ListGroup key={i} className='tagButton' variant='primary' onClick={() => {
+                                    tagClickHandler(tag);
+                                }} >
+                                    <a href='#'>
 									{tag.title}
+                                    </a>
 								</ListGroup>
 							);
 					  })

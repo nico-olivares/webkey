@@ -7,3 +7,8 @@
 .col-pixel-width-400 {
     flex: 0 0 400px !important;
 }
+
+#title {
+    display: flex;
+    justify-content: space-between;
+}
