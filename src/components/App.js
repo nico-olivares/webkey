@@ -24,6 +24,7 @@ import Register from '../pages/Register';
 
 const App = () => {
 	const [links, setLinks] = useState([]);
+	const [ filteredLinks, setFilteredLinks ] = useState([]);
 	const [tags, setTags] = useState([]);
 	const [filteredTags, setFilteredTags] = useState([]);
 	const [user, setUser] = useState({});
@@ -47,6 +48,8 @@ const App = () => {
 		getLinks()
 			.then((response) => {
 				setLinks(response);
+				setFilteredLinks(response);
+				console.log('the links ', response);
 			})
 			.catch((error) => {
 				setLinks(error);
@@ -80,6 +83,8 @@ const App = () => {
 										setTags={setTags}
 										filteredTags={filteredTags}
 										setFilteredTags={setFilteredTags}
+										filteredLinks={filteredLinks}
+										setFilteredLinks={setFilteredLinks}
 									/>
 								)}
 							/>
@@ -88,13 +93,15 @@ const App = () => {
 								exact
 								render={() => (
 									<Main
-										user={user}
-										links={links}
-										setLinks={setLinks}
-										tags={tags}
-                                        setTags={setTags}
-                                        filteredTags={filteredTags}
-										setFilteredTags={setFilteredTags}
+									user={user}
+									links={links}
+									setLinks={setLinks}
+									tags={tags}
+									setTags={setTags}
+									filteredTags={filteredTags}
+									setFilteredTags={setFilteredTags}
+									filteredLinks={filteredLinks}
+									setFilteredLinks={setFilteredLinks}
 									/>
 								)}
 							/>
