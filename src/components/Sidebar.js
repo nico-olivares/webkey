@@ -18,7 +18,8 @@ function Sidebar({ user, links, tags, setTags, filteredTags, setFilteredTags, se
 				filteredTags={filteredTags}
 				setFilteredTags={setFilteredTags}
 				searchStringValue={searchStringValue}
-				setSearchStringValue={setSearchStringValue}
+                setSearchStringValue={setSearchStringValue}
+                setFilteredLinks={setFilteredLinks}
 			/>
 			<TagList
 				user={user}
@@ -41,7 +42,8 @@ function SideFilter({
 	filteredTags,
 	setFilteredTags,
 	searchStringValue,
-	setSearchStringValue,
+    setSearchStringValue,
+    setFilteredLinks
 }) {
 	//As the filter works the tags array gets smaller and smaller and when I undo the typing
 	//it has no effect because the array doesn't have the prior elements any more.
@@ -65,7 +67,7 @@ function SideFilter({
         setFilteredLinks(links.filter(link => {
             let isAMatch = false;
             link.tags.forEach(tag => {
-                if tag.startsWith(event.target.value) {
+                if (tag.startsWith(event.target.value)) {
                     isAMatch = true;
                 }
             })
