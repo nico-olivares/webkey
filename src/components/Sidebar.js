@@ -64,7 +64,6 @@ function SideFilter({
 
         setFilteredTags(filteredTagsArray);
 
-        //early stages. Probably needs a lot of work still.
         const filteredLinksArray = links.filter(link => {
             let isAMatch = false;
             link.tags.forEach(tag => {

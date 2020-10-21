@@ -11,7 +11,24 @@ import Accordion from 'react-bootstrap/Accordion';
 import ContentLink from './ContentLink';
 
 
-function ContentBody({ links, filteredLinks }) {
+function ContentBody({ links, filteredLinks, setFilteredLinks }) {
+    const [linkSearchString, setLinkSearchString] = useState('');
+
+    const searchHandler = (event) => {
+        event.preventDefault();
+        setLinkSearchString(event.target.value);
+
+		const filteredLinksArray = links.filter((link) => {
+			if (link.title.startsWith(event.target.value)) {
+				return true;
+			} else {
+				return false;
+			}
+		});
+
+        setFilteredLinks(filteredLinksArray);
+		
+    }
 
     // const [ link, setLink ] = useState({});
     return (
@@ -21,7 +38,11 @@ function ContentBody({ links, filteredLinks }) {
                     <div id="search">
                         <Form>
                             <Form.Group id="link-search">
-                                <Form.Control type='text' placeholder='Search links...' />
+                                <Form.Control type='text'
+                                    value={linkSearchString}
+                                    placeholder='Search links...' 
+                                    onChange={searchHandler}
+                                    />
                             </Form.Group>
                         </Form>
                     </div>

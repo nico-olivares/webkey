@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { getLinks } from '../api';
 
-function ContentHead({ user, links = [], setLinks }) {
+function ContentHead({ user, links = [], setLinks, setFilteredLinks }) {
 	const [url, setUrl] = useState('');
 	const [description, setDescription] = useState('');
 	const [title, setTitle] = useState('');
@@ -27,6 +27,7 @@ function ContentHead({ user, links = [], setLinks }) {
 			getLinks().then((allLinks) => {
 				
 				setLinks(allLinks);
+				setFilteredLinks(allLinks);
 				hideModal();
 			});
 		});

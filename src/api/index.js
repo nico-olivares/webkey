@@ -18,6 +18,7 @@ export async function getLinks() {
 }
 
 export async function register({ username, password }) {
+	console.log('im getting to the api');
 	try {
 		const {
 			data: { user: newUser },
@@ -25,7 +26,7 @@ export async function register({ username, password }) {
 			username: username,
 			password: password,
 		});
-
+		console.log('new user in api ', newUser);
 		if (newUser) {
 			localStorage.setItem('user', JSON.stringify(newUser));
 			return newUser;

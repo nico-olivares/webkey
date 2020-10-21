@@ -25,8 +25,9 @@ usersRouter.post("/register", async (req, res, next) => {
                 message: "The password must be a minimum of at least 8 characters.",
             });
         } else {
-            bcrypt.hash(password, SALT_COUNT, async (err, hashedPassword) => {
-                securedPassword = hashedPassword;
+            securedPassword = await bcrypt.hash(password, SALT_COUNT);
+
+                
                 const user = await createUser({ username, password: securedPassword });
 
                 const token = jwt.sign({ id: user.id, username }, process.env.JWT_SECRET, {
@@ -36,7 +37,7 @@ usersRouter.post("/register", async (req, res, next) => {
                 delete user.id;
                 user.token = token;
                 res.send({ message: "The user was successfully created", user });
-            });
+            
         }
     } catch ({ name, message }) {
         next({ name, message });
