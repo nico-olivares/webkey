@@ -19,7 +19,7 @@ const { createTag, getTagIdFromTitle, getTitleFromTagId, destroyTag } = require(
 // output: returns a new link
 
 async function createLink({ creatorId, url, title, description, tags = [] }) {
-	console.log('getting to the database ', creatorId, url, title, description, tags);
+	
 	let today = new Date();
 	let date = today.getFullYear() + '/' + today.getDate() + '/' + (today.getMonth() + 1);
 
@@ -59,7 +59,7 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 
 		newLink = await getAllLinks(newLink.creatorId, newLink.id);
 
-		console.log('returned link at the backend ', newLink);
+		
 
 		return newLink;
 	} catch (error) {
@@ -228,7 +228,7 @@ async function updateLink(linkId, fields = {}, tags = []) {
 // output: returns an array of objects (links with their tags)
 
 async function getAllLinks(userId, linkId = null) {
-	console.log('getting to getAllLins ', userId, linkId);
+	
 	try {
 		const { rows: links } = await client.query(`
             SELECT * 
@@ -245,7 +245,7 @@ async function getAllLinks(userId, linkId = null) {
                 JOIN links_tags ON tags.id = links_tags."tagId"
                 WHERE links_tags."linkId" = ${link.id};
               `);
-				console.log('the tagsArr coming from the front end ', tagsArr);
+				
 				const tagTitleArray = tagsArr.map((tags) => {
 					return tags.title;
 				});

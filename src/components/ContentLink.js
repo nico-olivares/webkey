@@ -11,7 +11,7 @@ import './ContentLink.css';
 
 import { updatedLink } from '../api/index';
 
-function ContentLink({ link }) {
+function ContentLink({ key, link }) {
 	const [id, setId] = useState(link.id);
 	const [url, setUrl] = useState(link.url);
 	const [description, setDescription] = useState(link.description);
@@ -33,7 +33,7 @@ function ContentLink({ link }) {
 	};
 
 	return (
-		<Card key={link.id}>
+		<Card key={key}>
 			<Card.Header>
 				<Card.Link className='title' href={link.url} target='_blank'>
 					{link.title}

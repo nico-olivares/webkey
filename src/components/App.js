@@ -49,7 +49,7 @@ const App = () => {
 			.then((response) => {
 				setLinks(response);
 				setFilteredLinks(response);
-				console.log('the links ', response);
+				
 			})
 			.catch((error) => {
 				setLinks(error);

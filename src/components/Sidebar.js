@@ -5,7 +5,7 @@ import { getTags } from '../api/index';
 
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import { ListGroup, ListGroupItem } from 'react-bootstrap';
+import { ListGroup, ListGroupItem, Toast } from 'react-bootstrap';
 
 function Sidebar({ user, links, tags, setTags, filteredTags, setFilteredTags, setFilteredLinks }) {
 	const [searchStringValue, setSearchStringValue] = useState('');
@@ -18,7 +18,8 @@ function Sidebar({ user, links, tags, setTags, filteredTags, setFilteredTags, se
 				filteredTags={filteredTags}
 				setFilteredTags={setFilteredTags}
 				searchStringValue={searchStringValue}
-                setSearchStringValue={setSearchStringValue}
+				setSearchStringValue={setSearchStringValue}
+				links={links}
                 setFilteredLinks={setFilteredLinks}
 			/>
 			<TagList
@@ -64,15 +65,17 @@ function SideFilter({
         setFilteredTags(filteredTagsArray);
 
         //early stages. Probably needs a lot of work still.
-        setFilteredLinks(links.filter(link => {
+        const filteredLinksArray = links.filter(link => {
             let isAMatch = false;
             link.tags.forEach(tag => {
                 if (tag.startsWith(event.target.value)) {
                     isAMatch = true;
-                }
+                } 
             })
             return isAMatch;
-        }))
+		});
+		setFilteredLinks(filteredLinksArray);
+		
 	};
 	return (
 		<Form className='mt-2 mb-2'>
@@ -108,6 +111,17 @@ function TagList({
 	const tagClickHandler = (tag) => {
 		setFilteredTags([tag]);
 		setSearchStringValue('');
+		const linksArray = links.filter(link => {
+			let isMatch = false;
+			link.tags.forEach(linkTag => {
+				
+				if (tag.title === linkTag) {
+					isMatch = true;
+				} 
+			})
+			return isMatch;
+		})
+		setFilteredLinks(linksArray);
 	};
 
 	const resetHandler = () => {
@@ -119,30 +133,31 @@ function TagList({
 	return (
 		<>
 			<div className='divider'></div>
-			<div id='title'>
-				<h6>Available Tags</h6>
-				<segment className='resetSearch' onClick={resetHandler}>
-					<a href='#'>X</a>
-				</segment>
-			</div>
-			<ListGroupItem>
-				{filteredTags.length
-					? filteredTags.map((tag, i) => {
-							return (
-								<ListGroup
-									key={i}
-									className='tagButton'
-									variant='primary'
-									onClick={() => {
-										tagClickHandler(tag);
-									}}
-								>
-									<a href='#'>{tag.title}</a>
-								</ListGroup>
-							);
-					  })
-					: ''}
-			</ListGroupItem>
+			<Toast onClose={resetHandler} >
+				<Toast.Header id='title'>
+					<strong>Available Tags</strong>
+				</Toast.Header>
+				<Toast.Body>
+					<ListGroup>
+						{filteredTags.length
+							? filteredTags.map((tag, i) => {
+									return (
+										<ListGroup.Item
+											key={i}
+											className='tagButton'
+											action
+											onClick={() => {
+												tagClickHandler(tag);
+											}}
+										>
+											{tag.title}
+										</ListGroup.Item>
+									);
+							  })
+							: ''}
+					</ListGroup>
+				</Toast.Body>
+			</Toast>
 		</>
 	);
 }

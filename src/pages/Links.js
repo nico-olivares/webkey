@@ -12,7 +12,7 @@ import Main from '../components/Main';
 
 
 function Links({ links }) {
-    console.log(links)
+    
     return (
         <Main id="links" />
     )

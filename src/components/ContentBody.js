@@ -11,9 +11,9 @@ import Accordion from 'react-bootstrap/Accordion';
 import ContentLink from './ContentLink';
 
 
-function ContentBody({ links }) {
+function ContentBody({ links, filteredLinks }) {
 
-    const [ link, setLink ] = useState({});
+    // const [ link, setLink ] = useState({});
     return (
         <Container id="content-body" fluid={true}>
             <Row>
@@ -32,7 +32,7 @@ function ContentBody({ links }) {
                     <div className="content-links">
                         <Accordion defaultActiveKey="1">
                             { 
-                               links.length ? links.map((link) => {
+                               filteredLinks.length ? filteredLinks.map((link) => {
                                     return (<ContentLink key={link.id} link={link} />)
                                 }) : ''
                             }

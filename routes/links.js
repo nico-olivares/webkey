@@ -29,13 +29,13 @@ linksRouter.get('/', async (req, res, next) => {
 
 // add new link
 linksRouter.post('/', requireUser, async (req, res, next) => {
-    console.log('getting to the back end link post', req.body);
+    
 	try {
 		const { url, title, description, tags } = req.body;
 		const creatorId = req.user.id;
 
 		[ link ] = await createLink({ creatorId, url, title, description, tags });
-        console.log('returned link from the route', link);
+        
 		res.send(link);
 	} catch (error) {
 		throw error;

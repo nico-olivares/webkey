@@ -25,7 +25,7 @@ function ContentHead({ user, links = [], setLinks }) {
 		event.preventDefault();
 		addNewLink({ url, title, description, tags }).then(() => {
 			getLinks().then((allLinks) => {
-				console.log('all the links showing at the front ', allLinks);
+				
 				setLinks(allLinks);
 				hideModal();
 			});
