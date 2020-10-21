@@ -5,7 +5,7 @@ import { getTags } from '../api/index';
 
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import { ListGroup, ListGroupItem, Toast } from 'react-bootstrap';
+import { InputGroup, ListGroup, ListGroupItem, Toast, FormControl } from 'react-bootstrap';
 
 function Sidebar({ user, links, tags, setTags, filteredTags, setFilteredTags, setFilteredLinks }) {
 	const [searchStringValue, setSearchStringValue] = useState('');
@@ -76,17 +76,28 @@ function SideFilter({
 		setFilteredLinks(filteredLinksArray);
 		
 	};
+
+	const resetHandler = () => {
+		setFilteredTags(tags);
+		setSearchStringValue('');
+		setFilteredLinks(links);
+	};
+
 	return (
-		<Form className='mt-2 mb-2'>
-			<Form.Group controlId='formSearchBar'>
-				<Form.Control
+		<InputGroup className='mt-2 mb-2'>
+			
+				<FormControl
 					type='text'
 					value={searchStringValue}
 					placeholder='Search tags...'
 					onChange={filterHandler}
 				/>
-			</Form.Group>
-		</Form>
+				<InputGroup.Append>
+					<InputGroup.Text onClick={resetHandler} >x</InputGroup.Text>
+				</InputGroup.Append>
+			
+			
+		</InputGroup>
 	);
 }
 
