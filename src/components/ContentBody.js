@@ -19,7 +19,7 @@ function ContentBody({ links, filteredLinks, setFilteredLinks }) {
 		setLinkSearchString(event.target.value);
 
 		const filteredLinksArray = links.filter((link) => {
-			if (link.title.startsWith(event.target.value)) {
+			if ((link.title).toLowerCase().startsWith(event.target.value.toLowerCase())) {
 				return true;
 			} else {
 				return false;

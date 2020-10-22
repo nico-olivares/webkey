@@ -67,7 +67,7 @@ function SideFilter({
         const filteredLinksArray = links.filter(link => {
             let isAMatch = false;
             link.tags.forEach(tag => {
-                if (tag.startsWith(event.target.value)) {
+                if (tag.toLowerCase().startsWith(event.target.value.toLowerCase())) {
                     isAMatch = true;
                 } 
             })
