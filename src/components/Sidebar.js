@@ -93,7 +93,7 @@ function SideFilter({
 					onChange={filterHandler}
 				/>
 				<InputGroup.Append>
-					<InputGroup.Text onClick={resetHandler} >x</InputGroup.Text>
+					<a href='#'><InputGroup.Text onClick={resetHandler} >x</InputGroup.Text></a>
 				</InputGroup.Append>
 			
 			

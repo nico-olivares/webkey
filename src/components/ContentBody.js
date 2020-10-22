@@ -9,14 +9,14 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
 import ContentLink from './ContentLink';
-
+import { InputGroup, FormControl } from 'react-bootstrap';
 
 function ContentBody({ links, filteredLinks, setFilteredLinks }) {
-    const [linkSearchString, setLinkSearchString] = useState('');
+	const [linkSearchString, setLinkSearchString] = useState('');
 
-    const searchHandler = (event) => {
-        event.preventDefault();
-        setLinkSearchString(event.target.value);
+	const searchHandler = (event) => {
+		// event.preventDefault();
+		setLinkSearchString(event.target.value);
 
 		const filteredLinksArray = links.filter((link) => {
 			if (link.title.startsWith(event.target.value)) {
@@ -26,43 +26,52 @@ function ContentBody({ links, filteredLinks, setFilteredLinks }) {
 			}
 		});
 
-        setFilteredLinks(filteredLinksArray);
+		setFilteredLinks(filteredLinksArray);
+    };
+    
+    const resetHandler = () => {
 		
-    }
+		setLinkSearchString('');
+		setFilteredLinks(links);
+	};
 
-    // const [ link, setLink ] = useState({});
-    return (
-        <Container id="content-body" fluid={true}>
-            <Row>
-                <Col>
-                    <div id="search">
-                        <Form>
-                            <Form.Group id="link-search">
-                                <Form.Control type='text'
-                                    value={linkSearchString}
-                                    placeholder='Search links...' 
-                                    onChange={searchHandler}
-                                    />
-                            </Form.Group>
-                        </Form>
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <div className="content-links">
-                        <Accordion defaultActiveKey="1">
-                            { 
-                               filteredLinks.length ? filteredLinks.map((link) => {
-                                    return (<ContentLink key={link.id} link={link} />)
-                                }) : ''
-                            }
-                        </Accordion>
-                    </div>
-                </Col>
-            </Row>
-        </Container>
-    )
+	// const [ link, setLink ] = useState({});
+	return (
+		<Container id='content-body' fluid={true}>
+			<Row>
+				<Col>
+					<div id='search'>
+						<InputGroup id='link-search'>
+							<FormControl
+								type='text'
+								value={linkSearchString}
+								placeholder='Search links...'
+								onChange={searchHandler}
+							/>
+							<InputGroup.Append>
+								<a href='#'>
+									<InputGroup.Text onClick={resetHandler}>x</InputGroup.Text>
+								</a>
+							</InputGroup.Append>
+						</InputGroup>
+					</div>
+				</Col>
+			</Row>
+			<Row>
+				<Col>
+					<div className='content-links'>
+						<Accordion defaultActiveKey='1'>
+							{filteredLinks.length
+								? filteredLinks.map((link) => {
+										return <ContentLink key={link.id} link={link} />;
+								  })
+								: ''}
+						</Accordion>
+					</div>
+				</Col>
+			</Row>
+		</Container>
+	);
 }
 
 export default ContentBody;
