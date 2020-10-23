@@ -9,7 +9,7 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 import './ContentLink.css';
 
-import { updatedLink } from '../api/index';
+import { updatedLink, updateClicks } from '../api/index';
 
 function ContentLink({ key, link }) {
 	const [id, setId] = useState(link.id);
@@ -17,6 +17,7 @@ function ContentLink({ key, link }) {
 	const [description, setDescription] = useState(link.description);
 	const [title, setTitle] = useState(link.title);
 	const [tags, setTags] = useState(link.tags);
+	const [ clicks, setClicks ] = useState(link.clicks);
 
 	const submitHandler = function (event) {
 		event.preventDefault();
@@ -29,14 +30,25 @@ function ContentLink({ key, link }) {
 
 	const onChange = (update) => (event) => {
 		event.preventDefault();
+		if (update === setTags) {
+			const tagsArray = event.target.value.split(' ');
+			update(tagsArray);
+		} else {
 		update(event.target.value);
+		}
 	};
+
+	const clickHandler = (id, clicks) => {
+		updateClicks({id, clicks: clicks + 1}).then(result => {
+			setClicks(result.clicks);
+		})
+	}
 
 	return (
 		<Card key={key}>
 			<Card.Header>
-				<Card.Link className='title' href={link.url} target='_blank'>
-					{link.title}
+				<Card.Link className='title' href={link.url} target='_blank' onClick={() => clickHandler(link.id, link.clicks)} >
+					{link.title} ({link.clicks})
 				</Card.Link>
 				<Accordion.Toggle className='btn-toggle' variant='link' eventKey={link.id}>
 					<FontAwesomeIcon icon={faChevronDown} />

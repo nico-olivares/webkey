@@ -125,3 +125,18 @@ export async function updatedLink({ id, title, date, clicks, description, url, t
 		throw error;
 	}
 }
+
+export async function updateClicks({ id, clicks}) {
+	console.log('getting to update clicks with ', id, clicks);
+	try {
+		const { data: link } = await axios.patch(`api/links/${id}`, { clicks });
+		if (link) {
+			return link;
+			
+		} else {
+			return {};
+		}
+	} catch (error) {
+		console.error(error);
+	}
+}
