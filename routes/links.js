@@ -7,12 +7,14 @@ const { requireUser } = require('./utils');
 //linksRouter
 
 linksRouter.use((req, res, next) => {
+	console.log('entered links router');
 	next();
 });
 
 // get all links
 
-linksRouter.get('/', async (req, res, next) => {
+linksRouter.get('/', requireUser, async (req, res, next) => {
+	console.log('getting to the router get all links');
 	try {
 		const links = await getAllLinks(req.user.id);
 		if (links) {

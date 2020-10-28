@@ -2,6 +2,7 @@ import userUtil from '../utils/user';
 import axios from 'axios';
 
 export async function getLinks() {
+	console.log('getting to the api getLinks');
 	try {
 		const { token } = userUtil.getUserFromStorage();
 		const {
@@ -52,6 +53,21 @@ export async function login({ username, password }) {
 		}
 	} catch (error) {
 		throw error;
+	}
+}
+
+export async function getUserByToken(token) {
+	console.log('getting to the api getUserByToken', token);
+	try {
+		const { data: user } = await axios.get('api/users', { headers: { authorization: 'Bearer ' + token } });
+		console.log('the user from the api is ', user);
+		if (user) {
+			return user;
+		} else {
+			return {};
+		}
+	} catch (error) {
+		console.error(error);
 	}
 }
 

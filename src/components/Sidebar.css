@@ -1,6 +1,8 @@
+/** @format */
+
 #sidebar {
-    background: #F7F7F7;
-    height: 100%;
+    background: #f7f7f7;
+    height: 82vh;
     padding: 40px 30px;
     margin-bottom: 70px;
 }

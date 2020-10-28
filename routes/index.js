@@ -11,7 +11,7 @@ const tagsRouter = require('./tags');
 const linksTagsRouter = require('./links_tags');
 
 apiRouter.use(async (req, res, next) => {
-	
+	console.log('entered the main router');
 	
 	const prefix = 'Bearer ';
 	const auth = req.header('Authorization');
@@ -29,7 +29,10 @@ apiRouter.use(async (req, res, next) => {
 
 			if (id) {
 				req.user = await getUserById(id);
+				req.user.token = token;
 				next();
+			} else {
+				next({ name: 'expired token', message: 'the token has expired. Log in again' });
 			}
 		} catch ({ name, message }) {
 			next({ name, message });

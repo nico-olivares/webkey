@@ -15,7 +15,7 @@ import Footer from '../components/Footer';
 
 // set up page/view level containers
 
-import { getLinks, getTags } from '../api';
+import { getLinks, getTags, getUserByToken } from '../api';
 import Main from '../components/Main';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
@@ -28,18 +28,24 @@ const App = () => {
 	const [tags, setTags] = useState([]);
 	const [filteredTags, setFilteredTags] = useState([]);
 	const [user, setUser] = useState({});
+	
 
 	//user verification
-	function localStorageUser() {
+	async function localStorageUser() {
 		if (localStorage.getItem('user')) {
 			const localStorageUser = JSON.parse(localStorage.getItem('user'));
-			return localStorageUser;
+			const newUser = await getUserByToken(localStorageUser.token);  //{id, username}
+			return newUser;
 		} else {
 			return {};
 		}
 	}
 	useEffect(() => {
-		setUser(localStorageUser());
+		localStorageUser().then(result => {
+			console.log('the user now is ', result);
+			setUser(result);
+			
+		})
 	}, []);
 
 

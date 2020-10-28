@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const usersRouter = express.Router();
 const { createUser, getUserByUsername, getUser } = require("../db");
+const { requireUser } = require('./utils');
 
 usersRouter.post("/register", async (req, res, next) => {
     
@@ -82,4 +83,14 @@ usersRouter.post("/login", async (req, res, next) => {
         next(error);
     }
 });
+
+usersRouter.get('/', requireUser, async (req, res, next) => {
+    console.log('getting to router user with user ');
+    try {
+        res.send({ username: req.user.username, token: req.user.token });
+    } catch (error) {
+        throw error;
+    }
+})
+
 module.exports = usersRouter;
