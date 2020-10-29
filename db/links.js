@@ -71,6 +71,20 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 // input: link id and fields as an object
 // output: returns an updated link
 
+/*
+Needs review
+update link without tags
+get old tags and compare to new
+ignore tags that didn't change
+the tags that did change:
+list deletions and additions.
+For addition, check to see if already exists. If it does then just add to joint table. Else create
+in tags table and add to join table.
+For deletion check the number of instances of the tag in the joint table. If it's 1, then remove from
+joint table and from tags table.
+If it's more than 1 then just remove from join table
+*/
+
 async function updateLink(linkId, fields = {}, tags = []) {
 	
 	let newLink;
