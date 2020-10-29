@@ -27,7 +27,7 @@ const App = () => {
 	const [ filteredLinks, setFilteredLinks ] = useState([]);
 	const [tags, setTags] = useState([]);
 	const [filteredTags, setFilteredTags] = useState([]);
-	const [user, setUser] = useState({});
+	const [user, setUser] = useState({username: '', token: 'token'});
 	
 
 	//user verification

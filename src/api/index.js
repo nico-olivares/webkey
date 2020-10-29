@@ -121,17 +121,16 @@ export async function addNewLink({ title, description, url, tags = [] }) {
 	}
 }
 
-export async function updatedLink({ id, title, date, clicks, description, url, tags = [] }) {
+export async function updatedLink({ id, title, date, clicks, description, url, tags = [] }, token) {
 	try {
 		const { data: link } = await axios.patch(`api/links/${id}`, {
-			id,
 			title,
 			date,
 			clicks,
 			description,
 			url,
 			tags,
-		});
+		}, {headers: { authorization: 'Bearer ' + token}});
 		if (link) {
 			return link;
 		} else {

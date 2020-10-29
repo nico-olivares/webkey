@@ -49,6 +49,7 @@ linksRouter.post('/', requireUser, async (req, res, next) => {
 linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
 	const [link] = await getAllLinks(req.user.id, req.params.linkId);
 	const { url, title, description, tags } = req.body;
+	const linkId = req.params.linkId;
 	const updateFields = {};
 
 	if (url) {
@@ -60,9 +61,13 @@ linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
 	if (description) {
 		updateFields.description = description;
 	}
+	// if (tags.length > 0) {
+	// 	updateFields.tags = tags.map(tag => tag).join(' ');
+	// 	console.log('tags ', updateFields.tags);
+	// }
 
 	try {
-		if (link && link.creatorId === req.user.id) {
+		if (link) {
 			const updatedLink = await updateLink(link.id, updateFields, tags);
 			res.send({
 				link: updatedLink,

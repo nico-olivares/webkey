@@ -11,7 +11,7 @@ function Content({ user, links, setLinks, filteredLinks, setFilteredLinks }) {
     return (
         <Col id="content">
             <ContentHead user={user} links={links} setLinks={setLinks} setFilteredLinks={setFilteredLinks} />
-            <ContentBody links={links} filteredLinks={filteredLinks} setFilteredLinks={setFilteredLinks} />
+            <ContentBody user={user} links={links} filteredLinks={filteredLinks} setFilteredLinks={setFilteredLinks} />
         </Col>
     )
 }

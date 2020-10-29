@@ -11,7 +11,7 @@ import './ContentLink.css';
 
 import { updatedLink, updateClicks } from '../api/index';
 
-function ContentLink({ key, link }) {
+function ContentLink({ user, key, link }) {
 	const [id, setId] = useState(link.id);
 	const [url, setUrl] = useState(link.url);
 	const [description, setDescription] = useState(link.description);
@@ -21,7 +21,7 @@ function ContentLink({ key, link }) {
 
 	const submitHandler = function (event) {
 		event.preventDefault();
-		updatedLink({ id, url, title, description, tags })
+		updatedLink({ id, url, title, description, tags }, user.token)
 			.then((result) => {})
 			.catch((error) => {
 				throw error;
