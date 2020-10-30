@@ -68,7 +68,7 @@ async function destroyTag(userId, tagName) {
     }
 }
 
-async function getTagIdFromTitle(userId, tagTitle) {
+async function getTagIdFromTitle(tagTitle) {
     try {
         const {
             rows: [tagId],
@@ -76,10 +76,9 @@ async function getTagIdFromTitle(userId, tagTitle) {
             `
         SELECT id
         FROM tags
-        WHERE title=$1
-        AND "creatorId"=$2;
+        WHERE title=$1;
     `,
-            [tagTitle, userId]
+            [tagTitle]
         );
 
         if (tagId) {

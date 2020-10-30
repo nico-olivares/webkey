@@ -2,10 +2,11 @@
 
 const client = require('./client');
 //const bcrypt = require('bcrypt');
+const Promise = require('bluebird');
 
 const {
 	addTagToLink,
-	addTagsToLinkObject,
+	// addTagsToLinkObject,
 	getTagsFromLinkId,
 	removeTagFromLink,
 	tagIdStillPresentInJointTable,
@@ -24,7 +25,7 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 	let date = today.getFullYear() + '/' + today.getDate() + '/' + (today.getMonth() + 1);
 
 	try {
-		let {
+		const {
 			rows: [newLink],
 		} = await client.query(
 			`
@@ -41,27 +42,17 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 				message: `Couldn't create the new link. It may already exist`,
 			};
 		}
+		const tagsLength = tags.length;
 
 		if (tags.length > 0) {
-			tags.forEach(async function (tag) {
-				let tagId = await getTagIdFromTitle(creatorId, tag);
-				if (!tagId) {
-					const newTag = await createTag(creatorId, tag);
-					tagId = newTag.id;
-				}
-				await addTagToLink(newLink.id, tagId);
-			});
+			Promise.each(tags, async (tag, i, tagsLength) => {
+				await addTagToLink(creatorId, newLink.id, tag);
+			})
 		}
 
-		// newLink = await addTagsToLinkObject(newLink);
-		// Why is it not working?
-		// Office hours?
+		const newLinkWithTags = await getAllLinks(newLink.creatorId, newLink.id);
 
-		newLink = await getAllLinks(newLink.creatorId, newLink.id);
-
-		
-
-		return newLink;
+		return newLinkWithTags;
 	} catch (error) {
 		throw error;
 	}
@@ -249,23 +240,45 @@ async function getAllLinks(userId, linkId = null) {
             FROM links
             WHERE "creatorId"=${userId}
             ${linkId ? `AND id = ${linkId};` : ';'}
-        `);
-		await Promise.all(
-			links.map(async function (link) {
-				const { rows: tagsArr } = await client.query(`
+		`);
+		
+		const linksLength = links.length; 
 
-                SELECT (tags.title)
-                FROM tags
-                JOIN links_tags ON tags.id = links_tags."tagId"
-                WHERE links_tags."linkId" = ${link.id};
-              `);
-				
-				const tagTitleArray = tagsArr.map((tags) => {
-					return tags.title;
-				});
+		Promise.each(links, async (link, i, linksLength) => {
+			// const { rows: tagsArr } = await client.query(`
+
+            //     SELECT (tags.title)
+            //     FROM tags
+            //     JOIN links_tags ON tags.id = links_tags."tagId"
+            //     WHERE links_tags."linkId" = $1;
+            //   `, [ link.id ]);
+			// console.log('tags array raw ', tagsArr);
+			// 	const tagTitleArray = tagsArr.map((tags) => {
+			// 		return tags.title;
+			// 	});
+			// console.log('tags array ', tagTitleArray);
+
+			const tagTitleArray = await getTagsFromLinkId(link.id);
 				link.tags = tagTitleArray;
-			}),
-		);
+		})
+
+
+		// await Promise.all(
+		// 	links.map(async function (link) {
+		// 		const { rows: tagsArr } = await client.query(`
+
+        //         SELECT (tags.title)
+        //         FROM tags
+        //         JOIN links_tags ON tags.id = links_tags."tagId"
+        //         WHERE links_tags."linkId" = ${link.id};
+        //       `);
+				
+		// 		const tagTitleArray = tagsArr.map((tags) => {
+		// 			return tags.title;
+		// 		});
+		// 		link.tags = tagTitleArray;
+		// 	}),
+		// );
 		if (links) {
 			return links;
 		} else {

@@ -8,10 +8,7 @@ const bcrypt = require('bcrypt');
 
 // database methods
 
-async function getAllUsers() {
-	const { rows } = await client.query(`SELECT id, username FROM users;`);
-	return rows;
-}
+
 
 // goal: create a new user that can be validated
 // input: takes in username and password
@@ -102,5 +99,5 @@ module.exports = {
 	getUser,
 	getUserByUsername,
 	getUserById,
-	getAllUsers,
+	// getAllUsers,
 };

@@ -5,7 +5,7 @@
 const client = require('./client');
 
 const {
-	getAllUsers,
+	// getAllUsers,
 	createUser,
 	getUserByUsername,
 	getUserById,
@@ -128,10 +128,10 @@ async function createInitialLinks() {
 	try {
 		console.log('Starting to create links...');
 
-		const [Marcello, Kamikaze1, NicoIsCool, testUser] = await getAllUsers();
+		
 
 		const link1 = await createLink({
-			creatorId: Marcello.id,
+			creatorId: 1,
 			url: 'https://learn.fullstackacademy.com/workshop',
 			title: 'learn fullstack',
 			description: "This is fullstack's Learndot",
@@ -140,7 +140,7 @@ async function createInitialLinks() {
 		console.log('link 1: ', link1);
 
 		const link2 = await createLink({
-			creatorId: Kamikaze1.id,
+			creatorId: 2,
 			url: 'https://github.com',
 			title: 'Git Hub',
 			description: 'This is where the code lives',
@@ -149,7 +149,7 @@ async function createInitialLinks() {
 		console.log('link 2: ', link2);
 
 		const link3 = await createLink({
-			creatorId: NicoIsCool.id,
+			creatorId: 3,
 			url: 'https://zoom.com',
 			title: 'Zoom Room',
 			description: 'Use this to talk to teammates',
@@ -158,7 +158,7 @@ async function createInitialLinks() {
 		console.log('link 3: ', link3);
 
 		const link4 = await createLink({
-			creatorId: testUser.id,
+			creatorId: 4,
 			url: 'https://netflix.com',
 			title: 'Fun fun',
 			description: 'Use this to watch movies all day long',
@@ -167,7 +167,7 @@ async function createInitialLinks() {
 		console.log('link 4: ', link4);
 
 		const link5 = await createLink({
-			creatorId: testUser.id,
+			creatorId: 4,
 			url: 'https://news4jax.com',
 			title: 'Local news',
 			description: 'Stay informed',
@@ -176,7 +176,7 @@ async function createInitialLinks() {
 		console.log('link 5: ', link5);
 
 		const link6 = await createLink({
-			creatorId: testUser.id,
+			creatorId: 4,
 			url: 'https://amazon.com',
 			title: 'Buying spree',
 			description: 'Control yourself',
@@ -185,7 +185,7 @@ async function createInitialLinks() {
 		console.log('link 6: ', link6);
 
 		const link7 = await createLink({
-			creatorId: testUser.id,
+			creatorId: 4,
 			url: 'https://hulu.com',
 			title: 'Great shows',
 			description: 'Better than old TV',
@@ -324,11 +324,11 @@ async function populateInitialData() {
 		await createInitialUsers();
 		await getInitialUser();
 		await createInitialLinks();
-		await getInitialLinks();
-		await getLinksFromTags();
-		await updateInitialLinks();
-		await clickClick();
-		await getTags();
+		// await getInitialLinks();
+		// await getLinksFromTags();
+		// await updateInitialLinks();
+		// await clickClick();
+		// await getTags();
 	} catch (error) {
 		throw error;
 	}
