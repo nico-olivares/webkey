@@ -5,7 +5,7 @@ const client = require('./client');
 const Promise = require('bluebird');
 
 const {
-	addTagToLink,
+	addTagsToLink,
 	// addTagsToLinkObject,
 	getTagsFromLinkId,
 	removeTagFromLink,
@@ -25,6 +25,7 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 	let date = today.getFullYear() + '/' + today.getDate() + '/' + (today.getMonth() + 1);
 
 	try {
+		//create the new link without tags
 		const {
 			rows: [newLink],
 		} = await client.query(
@@ -42,15 +43,14 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 				message: `Couldn't create the new link. It may already exist`,
 			};
 		}
-		const tagsLength = tags.length;
-
+		
+		//add tags to link
 		if (tags.length > 0) {
-			Promise.each(tags, async (tag, i, tagsLength) => {
-				await addTagToLink(creatorId, newLink.id, tag);
-			})
+			await addTagsToLink(creatorId, newLink.id, tags);
 		}
 
-		const newLinkWithTags = await getAllLinks(newLink.creatorId, newLink.id);
+		//get link with tags attached
+		const newLinkWithTags = await Promise.delay(500, getAllLinks(newLink.creatorId, newLink.id));
 
 		return newLinkWithTags;
 	} catch (error) {
@@ -228,8 +228,10 @@ async function updateLink(linkId, fields = {}, tags = []) {
 }
 
 
-// goal: get a list of all links
-// input: linkId as null
+// goal: get a list of all links with tags attached. If a link id is provided then
+// it gets that link only.
+// These are the links that belong to the given user only.
+// input: userId and linkId (optional)
 // output: returns an array of objects (links with their tags)
 
 async function getAllLinks(userId, linkId = null) {
@@ -241,46 +243,16 @@ async function getAllLinks(userId, linkId = null) {
             WHERE "creatorId"=${userId}
             ${linkId ? `AND id = ${linkId};` : ';'}
 		`);
-		
-		const linksLength = links.length; 
 
-		Promise.each(links, async (link, i, linksLength) => {
-			// const { rows: tagsArr } = await client.query(`
-
-            //     SELECT (tags.title)
-            //     FROM tags
-            //     JOIN links_tags ON tags.id = links_tags."tagId"
-            //     WHERE links_tags."linkId" = $1;
-            //   `, [ link.id ]);
-			// console.log('tags array raw ', tagsArr);
-			// 	const tagTitleArray = tagsArr.map((tags) => {
-			// 		return tags.title;
-			// 	});
-			// console.log('tags array ', tagTitleArray);
-
+		const newLinkArray = Promise.map(links, async (link) => {
+			
 			const tagTitleArray = await getTagsFromLinkId(link.id);
 				link.tags = tagTitleArray;
+				return link;
 		})
 
-
-		// await Promise.all(
-		// 	links.map(async function (link) {
-		// 		const { rows: tagsArr } = await client.query(`
-
-        //         SELECT (tags.title)
-        //         FROM tags
-        //         JOIN links_tags ON tags.id = links_tags."tagId"
-        //         WHERE links_tags."linkId" = ${link.id};
-        //       `);
-				
-		// 		const tagTitleArray = tagsArr.map((tags) => {
-		// 			return tags.title;
-		// 		});
-		// 		link.tags = tagTitleArray;
-		// 	}),
-		// );
 		if (links) {
-			return links;
+			return newLinkArray;
 		} else {
 			return [];
 		}

@@ -1,23 +1,44 @@
 /** @format */
 
 const client = require("./client");
+const Promise = require('bluebird');
 const { getTagIdFromTitle, createTag, destroyTag } = require("./tags");
 
 // database methods
 
 //Add tag to link
-async function addTagToLink(userId, linkId, tagTitle) {
-    
+async function addTagsToLink(userId, linkId, tagArray) {
+    console.log('getting to add tags to link with ', userId, linkId, tagArray);
     try {
         //does tag already exist
-        let tagId = await getTagIdFromTitle(tagTitle);
-        //if it doesn't create tag
-        if (!tagId) {
-            const newTag = await createTag(userId, tagTitle);
-            tagId = newTag.id;
-        }
+        await Promise.map(tagArray, async (tagTitle) => {
+            let tagId = await getTagIdFromTitle(tagTitle);
+            if(!tagId) {
+                tagId = await createTag(userId, tagTitle).id;
+            }
+            await addOneTagToLink(linkId, tagId);
+        });
+        // console.log('tag ids array ', tagsIdArray);
+        // //if it doesn't create tag
+        // if (!tagId) {
+        //     const newTag = await createTag(userId, tagTitle);
+        //     tagId = newTag.id;
+        // }
+        // console.log('tag created or checked with id ', tagId);
+        // //then add links_tag
+        // await client.query(`
+        //     INSERT INTO links_tags ("linkId", "tagId")
+        //     VALUES ($1, $2)
+        //     ON CONFLICT ("linkId", "tagId") DO NOTHING;
+        // `, [ linkId, tagId ]);
+        return;
+    } catch (error) {
+        throw error;
+    }
+}
 
-        //then add links_tag
+async function addOneTagToLink(linkId, tagId) {
+    try {
         await client.query(`
             INSERT INTO links_tags ("linkId", "tagId")
             VALUES ($1, $2)
@@ -27,7 +48,6 @@ async function addTagToLink(userId, linkId, tagTitle) {
     } catch (error) {
         throw error;
     }
-
 }
 
 async function removeTagFromLink(userId, linkId, tagTitle) {
@@ -226,18 +246,16 @@ async function removeTagFromAllLinks(tagId) {
 }
 */
 async function getTagsFromLinkId(linkId) {
-    console.log('getting to get tags from link id');
+    console.log('getting to get tags from link id', linkId);
     try {
-        const { rows: tags } = await client.query(
+        const { rows: tags } = await Promise.delay(500, client.query(
             `
 				SELECT "tagId"
 				FROM links_tags
-				WHERE "linkId"=$1
-				;
-			`,
-            [linkId]
-		);
-		
+                WHERE "linkId"=$1;
+			`, [ linkId ]
+		));
+		console.log('the tags im getting are ', tags);
 		if (tags.length === 0) {
 			return [];
 		}
@@ -267,7 +285,7 @@ async function getTagsFromLinkId(linkId) {
 
 
 module.exports = {
-    addTagToLink,
+    addTagsToLink,
     removeTagFromLink,
     // removeTagFromAllLinks,
     // addTagsToLinkObject,
