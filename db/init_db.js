@@ -199,6 +199,14 @@ async function createInitialLinks() {
 	}
 }
 
+//delete tags
+async function deleteTags() {
+	console.log('deleting a repeated tag ', await removeTagFromLink(1, 1, 'test'));
+	console.log('deleting a single tag ', await removeTagFromLink(4, 6, 'scary'));
+}
+
+
+
 // log out all the initial links
 
 async function getInitialLinks() {
@@ -216,17 +224,17 @@ async function updateInitialLinks() {
 	try {
 		console.log('Starting to update links');
 
-		//2 tags to no tags
-		const updatedLink0 = await updateLink(1, {
+		//1 tags to no tags
+		const updatedLink0 = await updateLink(1, 1, {
 			url: 'https://cnn.com/',
 			title: 'The news',
 			description: 'Good news',
 		});
-		console.log('link 1.0: ', updatedLink0);
+		console.log('1 tag to no tags, link 1.0: ', updatedLink0);
 
 		//no tags to 1 tag (or 2 tags to 1 tag)
 		const updatedLink1 = await updateLink(
-			1,
+			1, 1,
 			{
 				url: 'https://cnn.com/',
 				title: 'The news',
@@ -234,11 +242,11 @@ async function updateInitialLinks() {
 			},
 			['newTag'],
 		);
-		console.log('link 1.1: ', updatedLink1);
+		console.log('no tags to 1 tag (newTag) link 1.1: ', updatedLink1);
 
 		//no tags to 1 tag
 		const updatedLink2 = await updateLink(
-			2,
+			2, 2,
 			{
 				url: 'https://github.com/',
 				title: 'Git Hub Repo',
@@ -246,11 +254,11 @@ async function updateInitialLinks() {
 			},
 			['newTag2'],
 		);
-		console.log('link 2: ', updatedLink2);
+		console.log('no tags to 1 tag (newTag2) link 2: ', updatedLink2);
 
 		//2 tags to one repeated and one new tag
 		const updatedLink3 = await updateLink(
-			3,
+			3, 3,
 			{
 				url: 'https://zoom.com/',
 				title: 'Zoom Room',
@@ -258,7 +266,7 @@ async function updateInitialLinks() {
 			},
 			['test', 'newTag3'],
 		);
-		console.log('link 3: ', updatedLink3);
+		console.log('2 tags to one repeated and one new tag (test, newTag3), link 3: ', updatedLink3);
 
 		console.log('Finished updating links');
 	} catch (error) {
@@ -270,7 +278,7 @@ async function getLinksFromTags() {
 	try {
 		// get links for user1 with tag name test
 		const links1 = await getLinksByTagName(1, 'another');
-		console.log('Links for user 1 with tag name "test": ', links1);
+		console.log('Links for user 1 with tag name "another": ', links1);
 		// non existing user, existing tag
 		const links2 = await getLinksByTagName(7, 'test');
 		console.log('Getting links for non existing user with existing tag ("test"): ', links2);
@@ -285,10 +293,10 @@ async function getLinksFromTags() {
 async function clickClick() {
 	try {
 		//2 clicks to link 1
-		await linkClick(1, 1);
-		console.log('2 clicks to link 1: ', await linkClick(1, 1));
+		await linkClick(1);
+		console.log('2 clicks to link 1: ', await linkClick(1));
 		//1 click to link 2
-		console.log('One click to link 2: ', await linkClick(2, 2));
+		console.log('One click to link 2: ', await linkClick(2));
 	} catch (error) {
 		throw error;
 	}
@@ -324,11 +332,12 @@ async function populateInitialData() {
 		await createInitialUsers();
 		await getInitialUser();
 		await createInitialLinks();
-		// await getInitialLinks();
-		// await getLinksFromTags();
-		// await updateInitialLinks();
-		// await clickClick();
-		// await getTags();
+		await deleteTags();
+		await getInitialLinks();
+		await getLinksFromTags();
+		await updateInitialLinks();
+		await clickClick();
+		await getTags();
 	} catch (error) {
 		throw error;
 	}

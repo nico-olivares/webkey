@@ -8,29 +8,18 @@ const { getTagIdFromTitle, createTag, destroyTag } = require("./tags");
 
 //Add tag to link
 async function addTagsToLink(userId, linkId, tagArray) {
-    console.log('getting to add tags to link with ', userId, linkId, tagArray);
+    
     try {
         //does tag already exist
-        await Promise.map(tagArray, async (tagTitle) => {
-            let tagId = await getTagIdFromTitle(tagTitle);
+        await Promise.mapSeries(tagArray, async (tagTitle) => {
+            let tagId = await getTagIdFromTitle(userId, tagTitle);      //working
             if(!tagId) {
-                tagId = await createTag(userId, tagTitle).id;
+                const tag = await createTag(userId, tagTitle);       //working
+                tagId = tag.id;
             }
-            await addOneTagToLink(linkId, tagId);
+            await addOneTagToLink(linkId, tagId);               //working
         });
-        // console.log('tag ids array ', tagsIdArray);
-        // //if it doesn't create tag
-        // if (!tagId) {
-        //     const newTag = await createTag(userId, tagTitle);
-        //     tagId = newTag.id;
-        // }
-        // console.log('tag created or checked with id ', tagId);
-        // //then add links_tag
-        // await client.query(`
-        //     INSERT INTO links_tags ("linkId", "tagId")
-        //     VALUES ($1, $2)
-        //     ON CONFLICT ("linkId", "tagId") DO NOTHING;
-        // `, [ linkId, tagId ]);
+        
         return;
     } catch (error) {
         throw error;
@@ -53,21 +42,28 @@ async function addOneTagToLink(linkId, tagId) {
 async function removeTagFromLink(userId, linkId, tagTitle) {
     try {
         //get tag id
-        const tagId = await getTagIdFromTitle(tagTitle);
+        const tagId = await getTagIdFromTitle(userId, tagTitle);            //working
+
         //how many instances of the tag are there in the joint table
+        //working
         const { rowCount } = await client.query(`
-            SELECT id
+            SELECT *
             FROM links_tags
             WHERE "tagId"=$1;
         `, [ tagId ]);
+        
         //remove from joint table
+        //working
+        
         await client.query(`
             DELETE
             FROM links_tags
             WHERE "linkId"=$1 
             AND "tagId"=$2;
         `, [ linkId, tagId ]);
+
         //if only one instance remove also from tags table
+        //not working yet
         if (rowCount === 1) {
             await destroyTag(userId, tagTitle);
         }
@@ -245,23 +241,27 @@ async function removeTagFromAllLinks(tagId) {
     }
 }
 */
+
+//working great 10/31
 async function getTagsFromLinkId(linkId) {
-    console.log('getting to get tags from link id', linkId);
+    
     try {
-        const { rows: tags } = await Promise.delay(500, client.query(
+        const { rows: tags } = await client.query(
             `
 				SELECT "tagId"
 				FROM links_tags
                 WHERE "linkId"=$1;
 			`, [ linkId ]
-		));
-		console.log('the tags im getting are ', tags);
+		);
+		
 		if (tags.length === 0) {
 			return [];
 		}
 		
-        const tagIds = tags;
-
+        const tagIds = tags.map(tag => {
+            return tag.tagId;
+        });
+        
         const conditionString = tagIds
             .map((tagId, index) => {
                 return `id=$${index + 1}`;
@@ -270,14 +270,17 @@ async function getTagsFromLinkId(linkId) {
         
         const { rows: tagTitles } = await client.query(
             `
-				SELECT *
+				SELECT title
 				FROM tags
 				WHERE ${conditionString};
 			`,
             tagIds
         );
-        console.log('the tags to be returned are ', tagTitles);
-        return tagTitles;
+        const tagTitleArray = tagTitles.map(tag => {
+            return tag.title;
+        })
+        
+        return tagTitleArray;
     } catch (error) {
         throw error;
     }
