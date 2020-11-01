@@ -40,13 +40,10 @@ async function createTag(userId, title) {
 // output: true if success, false otherwise
 
 async function destroyTag(userId, tagName) {
+    
     try {
-        const tagId = await getTagIdFromTitle(userId.id, tagName);
-
-        if (tagId) {
-            await removeTagFromAllLinks(tagId);
-
-            const { rowCount } = await client.query(
+            
+       await client.query(
                 `
         DELETE FROM tags
         WHERE "creatorId"=$1
@@ -55,19 +52,12 @@ async function destroyTag(userId, tagName) {
                 [userId, tagName]
             );
 
-            if (rowCount > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
     } catch (error) {
         throw error;
     }
 }
 
+//working
 async function getTagIdFromTitle(userId, tagTitle) {
     try {
         const {
@@ -76,13 +66,14 @@ async function getTagIdFromTitle(userId, tagTitle) {
             `
         SELECT id
         FROM tags
-        WHERE title=$1
-        AND "creatorId"=$2;
+        WHERE "creatorId"=$1
+        AND title=$2;
     `,
-            [tagTitle, userId]
+            [userId, tagTitle]
         );
 
         if (tagId) {
+        
             return tagId.id;
         } else {
             return false;

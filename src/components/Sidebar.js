@@ -118,6 +118,7 @@ function TagList({
 		});
 	}, [links]);
 
+
 	const tagClickHandler = (tag) => {
 		setFilteredTags([tag]);
 		setSearchStringValue('');

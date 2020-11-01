@@ -11,7 +11,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import ContentLink from './ContentLink';
 import { InputGroup, FormControl } from 'react-bootstrap';
 
-function ContentBody({ user, links, filteredLinks, setFilteredLinks }) {
+function ContentBody({ user, links, setTags, setFilteredTags, filteredLinks, setFilteredLinks }) {
 	const [linkSearchString, setLinkSearchString] = useState('');
 
 	const searchHandler = (event) => {
@@ -63,7 +63,7 @@ function ContentBody({ user, links, filteredLinks, setFilteredLinks }) {
 						<Accordion defaultActiveKey='1'>
 							{filteredLinks.length
 								? filteredLinks.map((link) => {
-									return <ContentLink user={user} key={link.id} link={link} />;
+									return <ContentLink user={user} key={link.id} link={link} setTags={setTags} setFilteredTags={setFilteredTags} />;
 								  })
 								: ''}
 						</Accordion>

@@ -1,6 +1,7 @@
 const express = require('express');
 const linksRouter = express.Router();
-const { getAllLinks, createLink, updateLink } = require('../db');
+const { getAllLinks, createLink, updateLink, linkClick } = require('../db');
+const links = require('../db/links');
 
 const { requireUser } = require('./utils');
 
@@ -44,12 +45,31 @@ linksRouter.post('/', requireUser, async (req, res, next) => {
 	}
 });
 
+// update click
+
+linksRouter.patch('/click/:linkId', requireUser, async (req, res, next) => {
+	
+	try {
+		const { linkId } = req.params;
+		const updatedLink = await linkClick(linkId);
+		if (updatedLink) {
+			res.send(updatedLink);
+		} else {
+			res.send({});
+		}
+	} catch (error) {
+		throw error;
+	}
+});
+
 // update link
 
 linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
-	const [link] = await getAllLinks(req.user.id, req.params.linkId);
+	console.log('getting to link update router');
+	const [link] = await getAllLinks(req.user.id, req.params.linkId);		//working
+	
 	const { url, title, description, tags } = req.body;
-	const linkId = req.params.linkId;
+	
 	const updateFields = {};
 
 	if (url) {
@@ -61,21 +81,18 @@ linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
 	if (description) {
 		updateFields.description = description;
 	}
-	// if (tags.length > 0) {
-	// 	updateFields.tags = tags.map(tag => tag).join(' ');
-	// 	console.log('tags ', updateFields.tags);
-	// }
+	
 
 	try {
 		if (link) {
-			const updatedLink = await updateLink(link.id, updateFields, tags);
-			res.send({
-				link: updatedLink,
-			});
+			const [ updatedLink ]  = await updateLink(req.user.id, link.id, updateFields, tags);
+			res.send(updatedLink);
 		}
 	} catch ({ name, message }) {
 		next({ name, message });
 	}
 });
+
+
 
 module.exports = linksRouter;

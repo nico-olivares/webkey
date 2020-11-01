@@ -20,6 +20,7 @@
     "@fortawesome/react-fontawesome": "^0.1.11",
     "axios": "^0.19.2",
     "bcrypt": "^5.0.0",
+    "bluebird": "^3.7.2",
     "bootstrap": "^4.5.2",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",

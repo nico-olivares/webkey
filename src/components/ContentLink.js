@@ -9,23 +9,39 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 import './ContentLink.css';
 
-import { updatedLink, updateClicks } from '../api/index';
+import { updatedLink, updateClicks, getTags } from '../api/index';
 
-function ContentLink({ user, key, link }) {
+function ContentLink({ user, key, link, setTags: setGlobalTags, setFilteredTags }) {
 	const [id, setId] = useState(link.id);
 	const [url, setUrl] = useState(link.url);
 	const [description, setDescription] = useState(link.description);
 	const [title, setTitle] = useState(link.title);
 	const [tags, setTags] = useState(link.tags);
 	const [ clicks, setClicks ] = useState(link.clicks);
+	const [ thisLink, setThisLink ] = useState(link);
 
 	const submitHandler = function (event) {
 		event.preventDefault();
 		updatedLink({ id, url, title, description, tags }, user.token)
-			.then((result) => {})
+			.then((result) => {
+				console.log('the link getting back is ', result);
+				setThisLink(result);
+				setUrl(result.url);
+				setDescription(result.description);
+				setTitle(result.title);
+				setTags(result.tags);
+			
+			}).then(() => {
+				getTags()
+			.then((result) => {
+				setGlobalTags(result);
+				setFilteredTags(result);
+			})
+			})
 			.catch((error) => {
-				throw error;
+				console.error(error);
 			});
+			
 	};
 
 	const onChange = (update) => (event) => {
@@ -38,8 +54,8 @@ function ContentLink({ user, key, link }) {
 		}
 	};
 
-	const clickHandler = (id, clicks) => {
-		updateClicks({id, clicks: clicks + 1}).then(result => {
+	const clickHandler = (id) => {
+		updateClicks(id, user.token).then(result => {
 			setClicks(result.clicks);
 		})
 	}
@@ -47,14 +63,14 @@ function ContentLink({ user, key, link }) {
 	return (
 		<Card key={key}>
 			<Card.Header>
-				<Card.Link className='title' href={link.url} target='_blank' onClick={() => clickHandler(link.id, link.clicks)} >
-					{link.title} ({link.clicks})
+				<Card.Link className='title' href={link.url} target='_blank' onClick={() => clickHandler(thisLink.id, thisLink.clicks)} >
+					{thisLink.title} ({clicks})
 				</Card.Link>
-				<Accordion.Toggle className='btn-toggle' variant='link' eventKey={link.id}>
+				<Accordion.Toggle className='btn-toggle' variant='link' eventKey={thisLink.id}>
 					<FontAwesomeIcon icon={faChevronDown} />
 				</Accordion.Toggle>
 			</Card.Header>
-			<Accordion.Collapse eventKey={link.id}>
+			<Accordion.Collapse eventKey={thisLink.id}>
 				<Card.Body>
 					<Form id='edit-link' onSubmit={submitHandler}>
 						<Form.Group className='col-md-12 col-sm-12'>
@@ -98,13 +114,15 @@ function ContentLink({ user, key, link }) {
 								onChange={onChange(setTags)}
 							/>
 						</Form.Group>
-						<Button
-							className='d-inline-block mt-2 mb-4 mx-3'
-							variant='primary'
-							type='submit'
-						>
-							Save Link
-						</Button>
+						<Accordion.Toggle className='btn-toggle' variant='link' eventKey={thisLink.id}>
+							<Button
+								className='d-inline-block mt-2 mb-4 mx-3'
+								variant='primary'
+								type='submit'
+							>
+								Save Link
+							</Button>
+						</Accordion.Toggle>
 					</Form>
 				</Card.Body>
 			</Accordion.Collapse>

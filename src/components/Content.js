@@ -7,11 +7,11 @@ import ContentHead from './ContentHead';
 import ContentBody from './ContentBody';
 import Col from 'react-bootstrap/Col';
 
-function Content({ user, links, setLinks, filteredLinks, setFilteredLinks }) {
+function Content({ user, links, setLinks, filteredLinks, setFilteredLinks, setTags, setFilteredTags }) {
     return (
         <Col id="content">
             <ContentHead user={user} links={links} setLinks={setLinks} setFilteredLinks={setFilteredLinks} />
-            <ContentBody user={user} links={links} filteredLinks={filteredLinks} setFilteredLinks={setFilteredLinks} />
+            <ContentBody user={user} links={links} filteredLinks={filteredLinks} setFilteredLinks={setFilteredLinks} setTags={setTags} setFilteredTags={setFilteredTags} />
         </Col>
     )
 }
