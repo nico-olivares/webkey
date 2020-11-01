@@ -24,7 +24,7 @@ async function createLink({ creatorId, url, title, description, tags = [] }) {
 	
 	let today = new Date();
 	let date = today.getFullYear() + '/' + today.getDate() + '/' + (today.getMonth() + 1);
-
+	url = urlConverter(url);
 	try {
 		//create the new link without tags
 		const {
@@ -67,7 +67,11 @@ async function updateLink(userId, linkId, fields = {}, tags = []) {
 	try {
 		const [ { tags: oldTags } ] = await getAllLinks(userId, linkId);
 		
-		console.log('old tags in updateLink ', oldTags);
+		
+			fields.url = urlConverter(fields.url);
+		
+		
+		
 		//update link without tags
 		const setString = Object.keys(fields)
 					.map((key, index) => `"${key}"=$${index + 1}`)
@@ -406,6 +410,14 @@ async function linkClick(linkId) {
 		return await getAllLinks(newLink.creatorId, linkId);
 	} catch (error) {
 		throw error;
+	}
+}
+
+function urlConverter(url) {
+	if (url.startsWith('http')) {
+		return url;
+	} else {
+		return 'https://' + url;
 	}
 }
 

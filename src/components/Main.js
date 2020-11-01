@@ -37,6 +37,8 @@ function Main({
 					setLinks={setLinks}
 					filteredLinks={filteredLinks}
 					setFilteredLinks={setFilteredLinks}
+					setTags={setTags}
+					setFilteredTags={setFilteredTags}
 				/>
 			</Row>
 		</Container>
