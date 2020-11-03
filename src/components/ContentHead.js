@@ -85,13 +85,12 @@ function ContentHead({ user, links = [], setLinks, setFilteredLinks }) {
 					<Modal.Title>Add A Link</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Form id='edit-link' onSubmit={submitHandler}>
+					<Form id='create-link' onSubmit={submitHandler}>
 						<Form.Group className='col-md-12 col-sm-12'>
 							<Form.Label htmlFor='link-url'>URL</Form.Label>
 							<Form.Control
 								placeholder='Enter a url'
-								id='link-url'
-								name='link-url'
+								
 								type='text'
 								onChange={handleUrlChange}
 							/>
@@ -100,8 +99,7 @@ function ContentHead({ user, links = [], setLinks, setFilteredLinks }) {
 							<Form.Label htmlFor='link-title'>Title</Form.Label>
 							<Form.Control
 								placeholder='Enter a name'
-								id='link-title'
-								name='link-title'
+								
 								type='text'
 								onChange={handleTitleChange}
 							/>
@@ -110,8 +108,7 @@ function ContentHead({ user, links = [], setLinks, setFilteredLinks }) {
 							<Form.Label>Description</Form.Label>
 							<Form.Control
 								placeholder='Enter a description'
-								id='link-desc'
-								name='link-desc'
+								
 								as='textarea'
 								rows='4'
 								onChange={handleDescriptionChange}
@@ -121,8 +118,7 @@ function ContentHead({ user, links = [], setLinks, setFilteredLinks }) {
 							<Form.Label htmlFor='link-tags'>Tags</Form.Label>
 							<Form.Control
 								placeholder='Enter tags separated by a space'
-								id='link-tags'
-								name='link-tags'
+								
 								type='text'
 								onChange={handleTagsChange}
 							/>

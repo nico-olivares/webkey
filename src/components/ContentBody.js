@@ -3,13 +3,11 @@ import React, { useState } from 'react';
 
 import './ContentBody.css';
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
+import { Container, Row, Col } from 'react-bootstrap';
+
 import Accordion from 'react-bootstrap/Accordion';
 import ContentLink from './ContentLink';
-import { InputGroup, FormControl } from 'react-bootstrap';
+import { InputGroup, FormControl, Button } from 'react-bootstrap';
 
 function ContentBody({ user, links, setTags, setFilteredTags, filteredLinks, setFilteredLinks }) {
 	const [linkSearchString, setLinkSearchString] = useState('');
@@ -49,9 +47,9 @@ function ContentBody({ user, links, setTags, setFilteredTags, filteredLinks, set
 								onChange={searchHandler}
 							/>
 							<InputGroup.Append>
-								<a href='#'>
-									<InputGroup.Text onClick={resetHandler}>x</InputGroup.Text>
-								</a>
+								
+									<InputGroup.Text as={Button} onClick={resetHandler}>x</InputGroup.Text>
+								
 							</InputGroup.Append>
 						</InputGroup>
 					</div>

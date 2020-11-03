@@ -73,13 +73,13 @@ function ContentLink({ user, link, setTags: setGlobalTags, setFilteredTags }) {
 			</Card.Header>
 			<Accordion.Collapse eventKey={thisLink.id}>
 				<Card.Body>
-					<Form id='edit-link' onSubmit={submitHandler}>
+					<Form className='edit-link' onSubmit={submitHandler}>
 						<Form.Group className='col-md-12 col-sm-12'>
 							<Form.Label htmlFor='link-url'>URL</Form.Label>
 							<Form.Control
 								value={url}
-								id='link-url'
-								name='link-url'
+								className='link-url'
+								
 								type='text'
 								onChange={onChange(setUrl)}
 							/>
@@ -88,18 +88,17 @@ function ContentLink({ user, link, setTags: setGlobalTags, setFilteredTags }) {
 							<Form.Label htmlFor='link-title'>Title</Form.Label>
 							<Form.Control
 								value={title}
-								id='link-title'
-								name='link-title'
+								className='link-title'
+								
 								type='text'
 								onChange={onChange(setTitle)}
 							/>
 						</Form.Group>
-						<Form.Group className='col-md-12'>
+						<Form.Group className='col-md-12 link-desc-group' >
 							<Form.Label>Description</Form.Label>
 							<Form.Control
 								value={description}
-								id='link-desc'
-								name='link-desc'
+								className='link-desc'
 								as='textarea'
 								rows='4'
 								onChange={onChange(setDescription)}
@@ -109,13 +108,13 @@ function ContentLink({ user, link, setTags: setGlobalTags, setFilteredTags }) {
 							<Form.Label htmlFor='link-tags'>Tags</Form.Label>
 							<Form.Control
 								value={tags.length > 0 ? tags.join(' ') : ''}
-								id='link-tags'
-								name='link-tags'
+								className='link-tags'
+								
 								type='text'
 								onChange={onChange(setTags)}
 							/>
 						</Form.Group>
-						<Form.Group id='update-link-btn'>
+						<Form.Group className='update-link-btn'>
 							
 								<Button
 									className='d-inline-block mt-2 mb-4 mx-3'

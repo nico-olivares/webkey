@@ -28,12 +28,13 @@
     grid-template-rows: auto;
 }
 
-#link-desc {
+.link-desc-group textarea {
     height: 60px;
 }
 
-#update-link-btn {
+.update-link-btn {
     display: flex;
     justify-content: flex-end;
     height: 70px;
+    margin-bottom: -20px;
 }
