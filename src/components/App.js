@@ -42,7 +42,7 @@ const App = () => {
 	}
 	useEffect(() => {
 		localStorageUser().then(result => {
-			console.log('the user now is ', result);
+			
 			setUser(result);
 			
 		})

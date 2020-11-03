@@ -85,7 +85,7 @@ usersRouter.post("/login", async (req, res, next) => {
 });
 
 usersRouter.get('/', requireUser, async (req, res, next) => {
-    console.log('getting to router user with user ');
+    
     try {
         res.send({ username: req.user.username, token: req.user.token });
     } catch (error) {

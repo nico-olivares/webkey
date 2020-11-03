@@ -5,17 +5,11 @@ const links = require('../db/links');
 
 const { requireUser } = require('./utils');
 
-//linksRouter
-
-linksRouter.use((req, res, next) => {
-	console.log('entered links router');
-	next();
-});
 
 // get all links
 
 linksRouter.get('/', requireUser, async (req, res, next) => {
-	console.log('getting to the router get all links');
+	
 	try {
 		const links = await getAllLinks(req.user.id);
 		if (links) {
@@ -65,7 +59,7 @@ linksRouter.patch('/click/:linkId', requireUser, async (req, res, next) => {
 // update link
 
 linksRouter.patch('/:linkId', requireUser, async (req, res, next) => {
-	console.log('getting to link update router');
+	
 	const [link] = await getAllLinks(req.user.id, req.params.linkId);		//working
 	
 	const { url, title, description, tags } = req.body;

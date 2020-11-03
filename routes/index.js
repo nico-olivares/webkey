@@ -11,7 +11,6 @@ const tagsRouter = require('./tags');
 const linksTagsRouter = require('./links_tags');
 
 apiRouter.use(async (req, res, next) => {
-	console.log('entered the main router');
 	
 	const prefix = 'Bearer ';
 	const auth = req.header('Authorization');

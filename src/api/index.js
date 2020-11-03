@@ -2,7 +2,7 @@ import userUtil from '../utils/user';
 import axios from 'axios';
 
 export async function getLinks() {
-	console.log('getting to the api getLinks');
+	
 	try {
 		const { token } = userUtil.getUserFromStorage();
 		const {
@@ -19,7 +19,7 @@ export async function getLinks() {
 }
 
 export async function register({ username, password }) {
-	console.log('im getting to the api');
+	
 	try {
 		const {
 			data: { user: newUser },
@@ -27,7 +27,7 @@ export async function register({ username, password }) {
 			username: username,
 			password: password,
 		});
-		console.log('new user in api ', newUser);
+		
 		if (newUser) {
 			localStorage.setItem('user', JSON.stringify(newUser));
 			return newUser;
@@ -57,10 +57,10 @@ export async function login({ username, password }) {
 }
 
 export async function getUserByToken(token) {
-	console.log('getting to the api getUserByToken', token);
+	
 	try {
 		const { data: user } = await axios.get('api/users', { headers: { authorization: 'Bearer ' + token } });
-		console.log('the user from the api is ', user);
+		
 		if (user) {
 			return user;
 		} else {
@@ -142,7 +142,7 @@ export async function updatedLink({ id, url, title, description, tags = [] }, to
 
 //working
 export async function updateClicks(linkId, token) {
-	console.log('getting to update clicks with ', linkId, token);
+	
 	try {
 		const { data: [link] } = await axios.patch(`api/links/click/${linkId}`, {}, { headers: { authorization: "Bearer " + token}});
 		if (link) {

@@ -24,7 +24,7 @@ function ContentLink({ user, key, link, setTags: setGlobalTags, setFilteredTags 
 		event.preventDefault();
 		updatedLink({ id, url, title, description, tags }, user.token)
 			.then((result) => {
-				console.log('the link getting back is ', result);
+				
 				setThisLink(result);
 				setUrl(result.url);
 				setDescription(result.description);
