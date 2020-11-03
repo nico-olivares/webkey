@@ -23,7 +23,8 @@ function Header({user, setUser}) {
         <Container id="header" fluid={true}>
             <Row>
                 <Col id="logo" md={6} sm={12}>
-                    <div>Web Key Logo</div>
+                    <img id='webkey-logo' src={require('../components/webkey-logo-white-150.jpg')} alt='spider web with key pointing at it' />
+                    <div id='webkey-logo-label' >Web Key</div>
                 </Col>
                 <Col id="info" md={6} sm={12}>
                     <Navbar>

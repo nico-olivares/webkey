@@ -89,7 +89,7 @@ function ContentHead({ user, links = [], setLinks, setFilteredLinks }) {
 						<Form.Group className='col-md-12 col-sm-12'>
 							<Form.Label htmlFor='link-url'>URL</Form.Label>
 							<Form.Control
-								placeholder='https://'
+								placeholder='Enter a url'
 								id='link-url'
 								name='link-url'
 								type='text'
@@ -107,7 +107,7 @@ function ContentHead({ user, links = [], setLinks, setFilteredLinks }) {
 							/>
 						</Form.Group>
 						<Form.Group className='col-md-12'>
-							<Form.Label>Enter Description</Form.Label>
+							<Form.Label>Description</Form.Label>
 							<Form.Control
 								placeholder='Enter a description'
 								id='link-desc'
@@ -120,7 +120,7 @@ function ContentHead({ user, links = [], setLinks, setFilteredLinks }) {
 						<Form.Group className='col-md-12'>
 							<Form.Label htmlFor='link-tags'>Tags</Form.Label>
 							<Form.Control
-								placeholder=''
+								placeholder='Enter tags separated by a space'
 								id='link-tags'
 								name='link-tags'
 								type='text'
@@ -128,14 +128,16 @@ function ContentHead({ user, links = [], setLinks, setFilteredLinks }) {
 							/>
 						</Form.Group>
 						
-							<Button
-								className='d-inline-block mt-2 mb-4 mx-3'
-								variant='primary'
-								type='submit'
-							>
-								Create Link
-							</Button>
-							<Button onClick={hideModal} className='d-inline-block mt-2 mb-4 mx-3' >Cancel</Button>
+							<Form.Group id='new-link-btns'>
+								<Button
+									className='d-inline-block mt-2 mb-4 mx-3'
+									variant='primary'
+									type='submit'
+								>
+									Create Link
+								</Button>
+								<Button onClick={hideModal} className='d-inline-block mt-2 mb-4 mx-3' >Cancel</Button>
+							</Form.Group >
 						
 					</Form>
 				</Modal.Body>

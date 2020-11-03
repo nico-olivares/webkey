@@ -7,3 +7,9 @@
     margin-bottom: 30px;
     padding-bottom: 10px; 
 }
+
+#new-link-btns {
+    display: flex;
+    justify-content: flex-end;
+    height: 70px;
+}

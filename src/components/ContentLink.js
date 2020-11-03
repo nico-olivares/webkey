@@ -94,7 +94,7 @@ function ContentLink({ user, key, link, setTags: setGlobalTags, setFilteredTags 
 							/>
 						</Form.Group>
 						<Form.Group className='col-md-12'>
-							<Form.Label>Enter Description</Form.Label>
+							<Form.Label>Description</Form.Label>
 							<Form.Control
 								value={description}
 								id='link-desc'
@@ -114,15 +114,17 @@ function ContentLink({ user, key, link, setTags: setGlobalTags, setFilteredTags 
 								onChange={onChange(setTags)}
 							/>
 						</Form.Group>
-						<Accordion.Toggle className='btn-toggle' variant='link' eventKey={thisLink.id}>
-							<Button
-								className='d-inline-block mt-2 mb-4 mx-3'
-								variant='primary'
-								type='submit'
-							>
-								Save Link
-							</Button>
-						</Accordion.Toggle>
+						<Form.Group id='update-link-btn'>
+							<Accordion.Toggle className='btn-toggle' variant='link' eventKey={thisLink.id}>
+								<Button
+									className='d-inline-block mt-2 mb-4 mx-3'
+									variant='primary'
+									type='submit'
+								>
+									Save Link
+								</Button>
+							</Accordion.Toggle>
+						</Form.Group>
 					</Form>
 				</Card.Body>
 			</Accordion.Collapse>

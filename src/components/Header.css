@@ -37,3 +37,11 @@
 .nav-link:last-child { 
     padding-right: 0;;
 }
+
+#webkey-logo {
+    width: 90px;
+}
+
+#webkey-logo-label {
+    margin-left: 20px;
+}

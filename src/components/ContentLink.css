@@ -19,3 +19,19 @@
 .floater {
     float: left;
 }
+
+.col-md-12 {
+    display: grid;
+    grid-template-columns: 1fr 6fr;
+    grid-template-rows: auto;
+}
+
+#link-desc {
+    height: 60px;
+}
+
+#update-link-btn {
+    display: flex;
+    justify-content: flex-end;
+    height: 30px;
+}
