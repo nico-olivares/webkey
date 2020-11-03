@@ -12,13 +12,13 @@ import './ContentLink.css';
 import { updatedLink, updateClicks, getTags } from '../api/index';
 import { useAccordionToggle } from 'react-bootstrap';
 
-function ContentLink({ user, key, link, setTags: setGlobalTags, setFilteredTags }) {
-	const [id, setId] = useState(link.id);
+function ContentLink({ user, link, setTags: setGlobalTags, setFilteredTags }) {
+	const id = link.id;
 	const [url, setUrl] = useState(link.url);
 	const [description, setDescription] = useState(link.description);
 	const [title, setTitle] = useState(link.title);
 	const [tags, setTags] = useState(link.tags);
-	const [ clicks, setClicks ] = useState(link.clicks);
+	const [clicks, setClicks] = useState(link.clicks);
 	const [ thisLink, setThisLink ] = useState(link);
 
 	const submitHandler = function (event) {
@@ -62,9 +62,9 @@ function ContentLink({ user, key, link, setTags: setGlobalTags, setFilteredTags 
 	}
 
 	return (
-		<Card key={key}>
+		<Card >
 			<Card.Header>
-				<Card.Link className='title' href={link.url} target='_blank' onClick={() => clickHandler(thisLink.id, thisLink.clicks)} >
+				<Card.Link className='title' href={link.url} target='_blank' onClick={() => clickHandler(thisLink.id)} >
 					{thisLink.title} ({clicks})
 				</Card.Link>
 				<Accordion.Toggle className='btn-toggle' variant='link' eventKey={thisLink.id}>
@@ -119,7 +119,7 @@ function ContentLink({ user, key, link, setTags: setGlobalTags, setFilteredTags 
 							
 								<Button
 									className='d-inline-block mt-2 mb-4 mx-3'
-									eventKey={thisLink.id}
+									
 									variant='primary'
 								type='submit'
 								onClick={useAccordionToggle(thisLink.id, () => { })}

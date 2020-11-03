@@ -80,7 +80,7 @@ function ContentHead({ user, links = [], setLinks, setFilteredLinks }) {
 					</Col>
 				</Row>
 			</Container>
-			<Modal size='lg' size='lg' centered show={isOpen} onHide={hideModal}>
+			<Modal size='lg' centered show={isOpen} onHide={hideModal}>
 				<Modal.Header>
 					<Modal.Title>Add A Link</Modal.Title>
 				</Modal.Header>

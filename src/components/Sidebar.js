@@ -3,9 +3,7 @@ import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 import { getTags } from '../api/index';
 
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import { InputGroup, ListGroup, ListGroupItem, Toast, FormControl } from 'react-bootstrap';
+import { Col, InputGroup, ListGroup, Toast, FormControl, Button } from 'react-bootstrap';
 
 function Sidebar({ user, links, tags, setTags, filteredTags, setFilteredTags, setFilteredLinks }) {
 	const [searchStringValue, setSearchStringValue] = useState('');
@@ -93,7 +91,7 @@ function SideFilter({
 					onChange={filterHandler}
 				/>
 				<InputGroup.Append>
-					<a href='#'><InputGroup.Text onClick={resetHandler} >x</InputGroup.Text></a>
+					<InputGroup.Text as={Button} onClick={resetHandler} >x</InputGroup.Text>
 				</InputGroup.Append>
 			
 			
