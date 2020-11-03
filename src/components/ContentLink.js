@@ -10,6 +10,7 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import './ContentLink.css';
 
 import { updatedLink, updateClicks, getTags } from '../api/index';
+import { useAccordionToggle } from 'react-bootstrap';
 
 function ContentLink({ user, key, link, setTags: setGlobalTags, setFilteredTags }) {
 	const [id, setId] = useState(link.id);
@@ -115,15 +116,17 @@ function ContentLink({ user, key, link, setTags: setGlobalTags, setFilteredTags 
 							/>
 						</Form.Group>
 						<Form.Group id='update-link-btn'>
-							<Accordion.Toggle className='btn-toggle' variant='link' eventKey={thisLink.id}>
+							
 								<Button
 									className='d-inline-block mt-2 mb-4 mx-3'
+									eventKey={thisLink.id}
 									variant='primary'
-									type='submit'
+								type='submit'
+								onClick={useAccordionToggle(thisLink.id, () => { })}
 								>
 									Save Link
 								</Button>
-							</Accordion.Toggle>
+							
 						</Form.Group>
 					</Form>
 				</Card.Body>

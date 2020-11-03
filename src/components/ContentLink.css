@@ -1,3 +1,5 @@
+/** @format */
+
 .card-header {
     align-items: center;
     display: flex;
@@ -6,7 +8,7 @@
     text-transform: capitalize;
 }
 
-.card-link { 
+.card-link {
     font-weight: 600;
 }
 
@@ -33,5 +35,5 @@
 #update-link-btn {
     display: flex;
     justify-content: flex-end;
-    height: 30px;
+    height: 70px;
 }
