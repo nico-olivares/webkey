@@ -1,5 +1,6 @@
 #Deployment
 https://web-key.herokuapp.com/
+(heroku puts the site to sleep after some time of inactivity so you may have to give it a few seconds to load the first time)
 
 # WEB-KEY A web link bookmark app like no other
 * By Brett Causey, John Marcello, and Nicolas Olivares
