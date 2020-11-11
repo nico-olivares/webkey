@@ -22,7 +22,7 @@ export async function register({ username, password }) {
 	
 	try {
 		const {
-			data: { user: newUser },
+			data: newUser
 		} = await axios.post('/api/users/register', {
 			username: username,
 			password: password,

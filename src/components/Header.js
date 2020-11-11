@@ -17,7 +17,7 @@ import Navbar from 'react-bootstrap/Navbar'
 function Header({user, setUser}) {
     const signOutHandler = (event) => {
         localStorage.removeItem('user');
-        setUser({});
+        setUser({username: '', token: 'token'});
     }
     return (
         <Container id="header" fluid={true}>
@@ -28,7 +28,7 @@ function Header({user, setUser}) {
                 </Col>
                 <Col id="info" md={6} sm={12}>
                     <Navbar>
-                        { user.token 
+                        { user.username !== '' 
                             ? <>
                                 <div className="nav-welcome">Welcome, { user.username }</div>
                                 <span>|</span>

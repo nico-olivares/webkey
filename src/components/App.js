@@ -15,7 +15,6 @@ import Footer from '../components/Footer';
 
 // set up page/view level containers
 
-
 import { getLinks, getTags, getUserByToken } from '../api';
 import Main from '../components/Main';
 import Login from '../pages/Login';
@@ -25,81 +24,74 @@ import Register from '../pages/Register';
 
 const App = () => {
 	const [links, setLinks] = useState([]);
-	const [ filteredLinks, setFilteredLinks ] = useState([]);
+	const [filteredLinks, setFilteredLinks] = useState([]);
 	const [tags, setTags] = useState([]);
 	const [filteredTags, setFilteredTags] = useState([]);
-	const [user, setUser] = useState({username: '', token: 'token'});
-	
+	const [user, setUser] = useState({ username: '', token: 'token' });
 
 	//user verification
 	async function localStorageUser() {
 		if (localStorage.getItem('user')) {
 			const localStorageUser = JSON.parse(localStorage.getItem('user'));
-			const newUser = await getUserByToken(localStorageUser.token);  //{id, username}
+			const newUser = await getUserByToken(localStorageUser.token); //{id, username}
 			return newUser;
 		} else {
-			return {};
+			return { username: '', token: 'token' };
 		}
 	}
 	useEffect(() => {
-		localStorageUser().then(result => {
-			
+		localStorageUser().then((result) => {
 			setUser(result);
-			
-		})
+		});
 	}, []);
 
-
-
 	useEffect(() => {
-		getLinks()
-			.then((response) => {
-				setLinks(response);
-				setFilteredLinks(response);
-				
-			})
-			.catch((error) => {
-				setLinks(error);
-			});
-		getTags()
-			.then((result) => {
-                setTags(result);
-                setFilteredTags(result);
-			})
-			.catch((error) => {
-				setTags(error);
-			});
+		if (user.username !== '') {
+			getLinks()
+				.then((response) => {
+					setLinks(response);
+					setFilteredLinks(response);
+				})
+				.catch((error) => {
+					setLinks(error);
+				});
+			getTags()
+				.then((result) => {
+					setTags(result);
+					setFilteredTags(result);
+				})
+				.catch((error) => {
+					setTags(error);
+				});
+		}
+		console.log('the user is ', user);
 	}, [user]);
 
 	return (
 		<div className='App'>
 			<Router>
 				<Header user={user} setUser={setUser} />
-				<main id='main'>
-					{user.token ? (
-						<div id='page' className='page-main'>
-							<Route
-								path='/'
-								exact
-								render={() => (
-									<Main
-										user={user}
-										links={links}
-										setLinks={setLinks}
-										tags={tags}
-										setTags={setTags}
-										filteredTags={filteredTags}
-										setFilteredTags={setFilteredTags}
-										filteredLinks={filteredLinks}
-										setFilteredLinks={setFilteredLinks}
-									/>
-								)}
-							/>
-							<Redirect
-								to='/'
-								exact
-								render={() => (
-									<Main
+				{user.username === '' ? (
+					<Switch>
+						<Route
+							path='/login'
+							exact
+							render={() => <Login user={user} setUser={setUser} />}
+						/>
+						<Route
+							path='/register'
+							exact
+							render={() => <Register user={user} setUser={setUser} />}
+						/>
+						<Redirect to='/login' />
+					</Switch>
+				) : (
+					<Switch>
+						<Route
+							path='/'
+							exact
+							render={() => (
+								<Main
 									user={user}
 									links={links}
 									setLinks={setLinks}
@@ -109,28 +101,13 @@ const App = () => {
 									setFilteredTags={setFilteredTags}
 									filteredLinks={filteredLinks}
 									setFilteredLinks={setFilteredLinks}
-									/>
-								)}
-							/>
-						</div>
-					) : (
-						<Switch>
-							<div id='page' className='page-entry'>
-								<Route
-									path='/login'
-									exact
-									render={() => <Login user={user} setUser={setUser} />}
 								/>
-								<Route
-									path='/register'
-									exact
-									render={() => <Register user={user} setUser={setUser} />}
-								/>
-								<Redirect to='/login' />
-							</div>
-						</Switch>
-					)}
-				</main>
+							)}
+						/>
+						<Redirect to='/' />
+					</Switch>
+				)}
+
 				<Footer />
 			</Router>
 		</div>

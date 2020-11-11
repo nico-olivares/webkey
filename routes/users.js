@@ -38,7 +38,7 @@ usersRouter.post("/register", async (req, res, next) => {
                 delete user.id;
                 user.token = token;
                 console.log('the user thats about to be sent', user);
-                res.send({ message: "The user was successfully created", user });
+                res.send(user);
             
         }
     } catch ({ name, message }) {
