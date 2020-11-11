@@ -27,7 +27,7 @@ export async function register({ username, password }) {
 			username: username,
 			password: password,
 		});
-		console.log('user getting back to the api ', newUser);
+		
 		if (newUser) {
 			localStorage.setItem('user', JSON.stringify(newUser));
 			return newUser;

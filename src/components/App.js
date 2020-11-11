@@ -64,7 +64,7 @@ const App = () => {
 					setTags(error);
 				});
 		}
-		console.log('the user is ', user);
+		
 	}, [user]);
 
 	return (
