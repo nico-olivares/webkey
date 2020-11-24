@@ -31,8 +31,8 @@ const App = () => {
 
 	//user verification
 	async function localStorageUser() {
-		if (localStorage.getItem('user')) {
-			const localStorageUser = JSON.parse(localStorage.getItem('user'));
+		if (localStorage.getItem('webkey-user')) {
+			const localStorageUser = JSON.parse(localStorage.getItem('webkey-user'));
 			const newUser = await getUserByToken(localStorageUser.token); //{id, username}
 			return newUser;
 		} else {

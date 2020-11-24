@@ -20,8 +20,12 @@ function Login({ user, setUser }) {
     const submitHandler = (event) => {
         event.preventDefault();
         login({username, password}).then((user) => {
-            localStorage.setItem('user', JSON.stringify(user));
+            if (!user.username) {
+                alert(user);
+            } else {
+            localStorage.setItem('webkey-user', JSON.stringify(user));
             setUser(user);
+            }
         }).catch((error) => { throw error});
     }
 

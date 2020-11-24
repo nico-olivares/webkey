@@ -50,7 +50,7 @@ usersRouter.post("/login", async (req, res, next) => {
     const { username, password } = req.body;
     // request must have both
     if (!username || !password) {
-        next({
+        res.send({
             name: "MissingCredentialsError",
             message: "Please supply both a username and password",
         });
@@ -58,7 +58,8 @@ usersRouter.post("/login", async (req, res, next) => {
     try {
         const user = await getUser({ username, password });
         if (!user) {
-            next({
+            console.log('getting to the no user at the route level');
+            res.send({
                 name: "IncorrectCredentialsError",
                 message: "Username or password is incorrect",
             });

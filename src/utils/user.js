@@ -1,5 +1,5 @@
 function getUserFromStorage() {
-    const user = JSON.parse(localStorage.getItem('user'))
+    const user = JSON.parse(localStorage.getItem('webkey-user'))
 
     if (!user) {
         

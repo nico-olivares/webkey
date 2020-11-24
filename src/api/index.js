@@ -40,16 +40,20 @@ export async function register({ username, password }) {
 }
 
 export async function login({ username, password }) {
+	
 	try {
 		const {
-			data: { user },
+			data: { user, message },
 		} = await axios.post('api/users/login', {
 			username,
 			password,
 		});
+		
 		if (user) {
-			localStorage.setItem('user', JSON.stringify(user));
+			localStorage.setItem('webkey-user', JSON.stringify(user));
 			return user;
+		} else if (message) {
+			return message;
 		}
 	} catch (error) {
 		throw error;
