@@ -15,13 +15,13 @@ usersRouter.post("/register", async (req, res, next) => {
         let securedPassword;
         const _user = await getUserByUsername({ username });
         if (_user) {
-            next({
+            res.send({
                 name: "UserExistsError",
                 message: "A user by that username already exists.",
             });
         }
         if (password.length <= 7) {
-            next({
+            res.send({
                 name: "PasswordLengthError",
                 message: "The password must be a minimum of at least 8 characters.",
             });

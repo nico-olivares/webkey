@@ -28,9 +28,11 @@ export async function register({ username, password }) {
 			password: password,
 		});
 		
-		if (newUser) {
+		if (newUser.username) {
 			localStorage.setItem('user', JSON.stringify(newUser));
 			return newUser;
+		} else if (newUser.message) {
+			return newUser.message;
 		} else {
 			return {message: 'Please login to access these features.'};
 		}

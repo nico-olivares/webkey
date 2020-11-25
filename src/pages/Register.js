@@ -24,8 +24,14 @@ function Register({ user, setUser }) {
 
         if (password1 === password2) {
             register({ username, password: password1 }).then((newUser) => {
+                if (newUser.username) {
                 setUser(newUser);
+                } else {
+                    alert(newUser);
+                }
             });
+        } else {
+            alert('Passwords must match');
         }
     };
 
