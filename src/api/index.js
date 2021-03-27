@@ -29,7 +29,7 @@ export async function register({ username, password }) {
 		});
 		
 		if (newUser.username) {
-			localStorage.setItem('user', JSON.stringify(newUser));
+			localStorage.setItem('webkey-user', JSON.stringify(newUser));
 			return newUser;
 		} else if (newUser.message) {
 			return newUser.message;

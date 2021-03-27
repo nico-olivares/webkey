@@ -34,7 +34,11 @@ const App = () => {
 		if (localStorage.getItem('webkey-user')) {
 			const localStorageUser = JSON.parse(localStorage.getItem('webkey-user'));
 			const newUser = await getUserByToken(localStorageUser.token); //{id, username}
-			return newUser;
+			if (newUser) {
+				return newUser;
+			} else {
+				return { username: '', token: 'token' };
+			}
 		} else {
 			return { username: '', token: 'token' };
 		}
