@@ -1,5 +1,5 @@
 const express = require('express');
-const { getTagIdFromTitle, addTagToLink, removeTagFromLink } = require('../db');
+const { addTagToLink, removeTagFromLink } = require('../db/links_tags');
 const { requireUser } = require('./utils');
 const linksTagsRouter = express.Router();
 

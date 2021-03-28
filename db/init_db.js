@@ -4,23 +4,12 @@
 
 const client = require('./client');
 
-const {
-	// getAllUsers,
-	createUser,
-	getUserByUsername,
-	getUserById,
-	getAllLinks,
-	createLink,
-	updateLink,
-	createTag,
-	addTagToLink,
-	getLinksByTagName,
-	removeTagFromLink,
-	destroyTag,
-	linkClick,
-	getTagsForUser,
-} = require('./index');
-const { addTagsToLinkObject } = require('./links_tags');
+
+const { createUser, getUserByUsername, getUserById } = require('./users');
+const { createLink, getAllLinks, updateLink, getLinksByTagName, linkClick } = require('./links');
+const { getTagsForUser} = require('./tags')
+const { removeTagFromLink } = require('./links_tags');
+
 
 // drop the tables before rebuilding
 

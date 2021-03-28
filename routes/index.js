@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 
 
-const { getUserById } = require('../db/index.js');
+const { getUserById } = require('../db/users');
 
 const linksRouter = require('./links');
 const usersRouter = require('./users');

@@ -1,6 +1,6 @@
 const express = require('express');
 const linksRouter = express.Router();
-const { getAllLinks, createLink, updateLink, linkClick } = require('../db');
+const { getAllLinks, createLink, updateLink, linkClick } = require('../db/links');
 const links = require('../db/links');
 
 const { requireUser } = require('./utils');

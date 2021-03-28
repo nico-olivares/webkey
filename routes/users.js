@@ -4,7 +4,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const usersRouter = express.Router();
-const { createUser, getUserByUsername, getUser } = require("../db");
+const { createUser, getUserByUsername, getUser } = require("../db/users");
 const { requireUser } = require('./utils');
 
 usersRouter.post("/register", async (req, res, next) => {
