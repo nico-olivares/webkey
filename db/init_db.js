@@ -333,7 +333,7 @@ async function populateInitialData() {
 		await clickClick();
 		await getTags();
 	} catch (error) {
-		throw error;
+		console.error('error running the tests, ', error);
 	}
 }
 
@@ -341,5 +341,5 @@ async function populateInitialData() {
 
 rebuildDb()
 	.then(populateInitialData)
-	.catch(console.error)
+	.catch((error) => console.error('error with the then catch sequence, ', error))
 	.finally(() => client.end());
