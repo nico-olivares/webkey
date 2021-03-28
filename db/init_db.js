@@ -22,7 +22,7 @@ async function dropTables() {
             DROP TABLE IF EXISTS users;
     `);
 	} catch (error) {
-		throw error;
+		console.error('Error dropping the tables', error);
 	}
 }
 
@@ -60,7 +60,7 @@ async function createTables() {
 			);
         `);
 	} catch (error) {
-		throw error;
+		console.error('error creating the tables ', error);
 	}
 }
 
@@ -95,7 +95,7 @@ async function createInitialUsers() {
 
 		console.log('finsihed creating intitial users..');
 	} catch (error) {
-		throw error;
+		console.error('error creating initial users, ', error);
 	}
 }
 
@@ -107,7 +107,7 @@ async function getInitialUser() {
 		const userById1 = await getUserById(1);
 		console.log('Getting user by id=1: ', userById1);
 	} catch (error) {
-		throw error;
+		console.error('error getting initial user, ', error);
 	}
 }
 
@@ -184,14 +184,19 @@ async function createInitialLinks() {
 
 		console.log('finished creating links...');
 	} catch (error) {
-		throw error;
+		console.error('error creating links, ', error);
 	}
 }
 
 //delete tags
 async function deleteTags() {
-	console.log('deleting a repeated tag ', await removeTagFromLink(1, 1, 'test'));
+	try {
+		console.log('deleting a repeated tag ', await removeTagFromLink(1, 1, 'test'));
 	console.log('deleting a single tag ', await removeTagFromLink(4, 6, 'scary'));
+	} catch (error) {
+		console.error('error deleting tags, ', error);
+	}
+	
 }
 
 
@@ -203,7 +208,7 @@ async function getInitialLinks() {
 		console.log('Getting initial links for user 1: ', await getAllLinks(1));
 		console.log('Getting only one link (2) for user 2', await getAllLinks(2, 2));
 	} catch (error) {
-		throw error;
+		console.error('error getting initial links, ', error);
 	}
 }
 
@@ -259,7 +264,7 @@ async function updateInitialLinks() {
 
 		console.log('Finished updating links');
 	} catch (error) {
-		throw error;
+		console.error('error updating initial links, ', error);
 	}
 }
 
@@ -275,7 +280,7 @@ async function getLinksFromTags() {
 		const link3 = await getLinksByTagName(1, 'front-end');
 		console.log('Getting links from existing user, but wrong tag: ', link3);
 	} catch (error) {
-		throw error;
+		console.error('error getting links from tags, ', error);
 	}
 }
 
@@ -287,7 +292,7 @@ async function clickClick() {
 		//1 click to link 2
 		console.log('One click to link 2: ', await linkClick(2));
 	} catch (error) {
-		throw error;
+		console.error('error clicking links, ', error);
 	}
 }
 
@@ -296,7 +301,7 @@ async function getTags() {
 		//All tags for user 1
 		console.log('All tags for user 1: ', await getTagsForUser(1));
 	} catch (error) {
-		throw error;
+		console.error('error getting tags, ', error);
 	}
 }
 
@@ -310,7 +315,7 @@ async function rebuildDb() {
 
 		console.log('finished rebuilding db..');
 	} catch (error) {
-		throw error;
+		console.error('error rebuilding DB, ', error);
 	}
 }
 
