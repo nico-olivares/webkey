@@ -4,7 +4,6 @@ const client = require("./client");
 
 //const bcrypt = require('bcrypt');
 
-const { removeTagFromAllLinks } = require("./links_tags.js");
 
 // database methods
 
